@@ -3,8 +3,8 @@
 <!-- 프로젝트 배너 (선택 사항) -->
 ![프로젝트 로고](배너 이미지 URL)
 
-## Tech Stack  
-![AppVeyor](https://img.shields.io/static/v1?label=&message=JavaScript&color=yellow) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Node.js&color=green) ![AppVeyor](https://img.shields.io/static/v1?label=&message=React-Native&color=blue) 
+## Tech Stack
+![AppVeyor](https://img.shields.io/static/v1?label=&message=JavaScript&color=yellow) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Node.js&color=green) ![AppVeyor](https://img.shields.io/static/v1?label=&message=express.js&color=black)
 
 ## 소개
 
