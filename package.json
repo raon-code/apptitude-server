@@ -1,0 +1,23 @@
+{
+  "name": "apptitude-server",
+  "version": "1.0.0",
+  "description": "<!-- 프로젝트 배너 (선택 사항) --> ![프로젝트 로고](배너 이미지 URL)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raon-code/apptitude-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raon-code/apptitude-server/issues"
+  },
+  "homepage": "https://github.com/raon-code/apptitude-server#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
