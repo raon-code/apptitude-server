@@ -4,6 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "local": "node NODE_ENV=local server.js",
+    "development": "node NODE_ENV=dev server.js",
+    "production": "node NODE_ENV=prod server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
