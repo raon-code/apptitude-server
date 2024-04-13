@@ -2,10 +2,11 @@
  * server.js
  *  서버 초기화 및 실행 파일
  */
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
+
+const db = require('./config/database');
 
 const app = express();
 
@@ -21,5 +22,5 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running`);
 });
