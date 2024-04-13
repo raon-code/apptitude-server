@@ -1,0 +1,27 @@
+my-express-app/
+│
+├── app/
+│   ├── models/
+│   │   └── user.js           # 데이터 모델
+│   ├── controllers/
+│   │   └── userController.js # 비즈니스 로직 처리
+│   └── views/
+│       └── user.ejs          # UI 템플릿
+│
+├── config/
+│   ├── db.js                 # 데이터베이스 설정
+│   └── index.js              # 기타 설정 파일
+│
+├── routes/
+│   └── userRoutes.js         # 라우트 설정
+│
+├── public/
+│   ├── images/
+│   ├── stylesheets/
+│   └── javascripts/
+│
+├── node_modules/             # npm 패키지 폴더
+│
+├── .gitignore                # Git에서 추적하지 않을 파일 목록
+├── package.json              # 프로젝트 정보 및 의존성 명시
+└── server.js                 # 서버 초기화 및 실행 파일
