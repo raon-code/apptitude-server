@@ -1,0 +1,27 @@
+{
+  "name": "apptitude-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "NODE_ENV=dev node server.js",
+    "start:prod": "NODE_ENV=prod node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raon-code/apptitude-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raon-code/apptitude-server/issues"
+  },
+  "homepage": "https://github.com/raon-code/apptitude-server#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  }
+}
