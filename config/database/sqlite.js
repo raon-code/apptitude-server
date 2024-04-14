@@ -4,7 +4,9 @@
  */
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
-const dbPath = './database.sqlite';
+
+const ROOT_DIR = process.cwd();
+const sqliteConfig = require(ROOT_DIR + '/config').database.sqlite;
 
 // 데이터베이스 파일 삭제
 // if (fs.existsSync(dbPath)) {
@@ -12,7 +14,7 @@ const dbPath = './database.sqlite';
 // }
 
 // 새 데이터베이스 파일 생성
-const db = new sqlite3.Database(dbPath, (err) => {
+const db = new sqlite3.Database(sqliteConfig.storagePath, (err) => {
   if (err) {
     return console.error(err.message);
   }
@@ -35,4 +37,4 @@ process.on('SIGINT', () => {
   });
 });
 
-module.exports = db;
+module.exports = { db };
