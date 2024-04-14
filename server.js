@@ -5,6 +5,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// 프로젝트 루트 경로
 const ROOT_DIR = process.cwd();
 
 // Configs
