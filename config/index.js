@@ -12,7 +12,9 @@ const DEFAULT_NODE_ENV = 'local';
 const config = {
   nodeEnv: process.env.NODE_ENV || DEFAULT_NODE_ENV,
   port: process.env.PORT || DEFAULT_PORT,
-  // Database
+  database: {
+
+  },
   // Other..
 };
 
