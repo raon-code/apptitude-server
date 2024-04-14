@@ -22,7 +22,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-const PORT = config.port;
-app.listen(PORT, () => {
+app.listen(config.port, () => {
   console.log(`Server is running`);
 });

@@ -1,11 +1,12 @@
 /**
  * db.js
- *  데이터 베이스 설정
- *  실행환경별로 관리하기 위함 
+ *  데이터베이스 관련 설정
  */
+const config = require('../');  // config/index
+
 let db;
 
-switch(process.env.NODE_ENV) {
+switch(config.nodeEnv) {
   case 'dev': // 개발환경
     break; 
 
