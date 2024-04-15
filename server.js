@@ -44,13 +44,13 @@ async function initialize() {
 }
 initialize();
 
+// Routes
+routes.initialize(app);
+
 // Home Page
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-
-// Routes settings
-routes.initialize(app);
 
 app.listen(config.port, () => {
   console.log(`Server is running`);
