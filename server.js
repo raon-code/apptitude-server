@@ -23,13 +23,12 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-///////////////////////////////////////////////////////////////////////////
-/* Sequelize TEST(임시코드) */
 async function initialize() {
   try {
     await sequelize.sync();
     console.log('모든 모델이 동기화되었습니다.');
 
+    /* Sequelize TEST(임시코드) */
     const testListSize = await testService.getTestSize();
     if (testListSize === 0) {
       console.log('데이터가 비어있으므로 임의생성');
@@ -37,15 +36,13 @@ async function initialize() {
         await testService.createTest(`앱티튜트 테스트 제목 ${i}`, `앱티튜트 테스트 내용 ${i}`);
       }
     }
+
     console.log('서버 초기화 성공');
   } catch (error) {
     console.error('서버 초기화 중 오류 발생:', error);
   }
 }
 initialize();
-
-/* Sequelize TEST */
-///////////////////////////////////////////////////////////////////////////
 
 // Home Page
 app.get('/', (req, res) => {
