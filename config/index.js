@@ -17,10 +17,10 @@ const config = {
   database: {
     sqlite: {
       storagePath: ROOT_DIR + '/database.sqlite'
-    },
+    }
   },
   models: {
-    forceSync: false 
+    forceSync: false
   }
   // Other..
 };
