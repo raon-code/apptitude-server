@@ -1,7 +1,7 @@
 /**
  * models/index.js
- *  Sequelize ORM
- *  데이터베이스 스키마 설정 메인
+ *    Sequelize ORM
+ *    데이터베이스 스키마 설정 메인
  */
 const { Sequelize } = require('sequelize');
 
