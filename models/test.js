@@ -7,6 +7,7 @@ const { Model, DataTypes } = require('sequelize');
 const ROOT_DIR = process.cwd();
 const sequelize = require(ROOT_DIR + '/models');
 const isForce = require(ROOT_DIR + '/config').models.forceSync;
+const logger = require(ROOT_DIR + '/config/logger');
 
 class Test extends Model {}
 
@@ -47,9 +48,9 @@ Test.init(
 async function syncModel() {
   try {
     await Test.sync({ force: isForce });
-    console.log('Test 테이블 동기화 성공');
+    logger.info('Test 테이블 동기화 성공');
   } catch (error) {
-    console.error('Test 테이블 동기화 실패: ', error);
+    logger.error('Test 테이블 동기화 실패: ', error);
   }
 }
 syncModel();

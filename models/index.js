@@ -7,6 +7,7 @@ const { Sequelize } = require('sequelize');
 
 const ROOT_DIR = process.cwd();
 const config = require(ROOT_DIR + '/config');
+const logger = require(ROOT_DIR + '/config/logger');
 
 // 데이터베이스 연결 인스턴스 생성
 const sequelize = new Sequelize(getInitParam());
@@ -15,13 +16,21 @@ const sequelize = new Sequelize(getInitParam());
 function getInitParam() {
   switch (config.nodeEnv) {
     case 'dev': // 개발환경
-      return {};
+      return {
+        logging: true
+      };
     case 'prod': // 운영환경
-      return {};
+      return {
+        logging: false
+      };
     default: // 로컬환경
       return {
         dialect: 'sqlite',
-        storage: config.database.sqlite.storagePath
+        storage: config.database.sqlite.storagePath,
+        logging: (query, time) => {
+          console.log('[' + time + 'ms] ' + query);
+        },
+        benchmark: true
       };
   }
 }
@@ -33,9 +42,9 @@ authenticate();
 async function authenticate() {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    logger.info('[Sequelize] 데이터베이스 연결 성공');
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    logger.error('[Sequelize] 데이터베이스에 연결할 수 없음:', error);
   }
 }
 
@@ -44,11 +53,11 @@ process.on('SIGINT', () => {
   sequelize
     .close()
     .then(() => {
-      console.log('Sequelize 연결이 닫혔습니다.');
+      logger.info('Sequelize 연결 닫힘');
       process.exit(0); // 프로세스 종료
     })
     .catch((err) => {
-      console.error('Sequelize 연결 닫기 실패:', err.message);
+      logger.error('Sequelize 연결 닫기 실패:', err.message);
       process.exit(1); // 에러를 반환하며 프로세스 종료
     });
 });
