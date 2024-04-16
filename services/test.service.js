@@ -2,14 +2,17 @@
  * test.service.js
  *  테스트 서비스
  */
+const moment = require('moment-timezone');
+
 const ROOT_DIR = process.cwd();
 const Test = require(ROOT_DIR + '/models/test');
+const convertor = require(ROOT_DIR + '/common/convertor');
 
 // CREATE
 async function createTest(title, contents) {
   try {
     const newTest = await Test.create({
-      dateTime: new Date(),
+      dateTime: moment(new Date()).tz('Asia/Seoul').format(),
       title: title,
       contents: contents
     });
@@ -23,6 +26,7 @@ async function createTest(title, contents) {
 async function getTestList() {
   try {
     const testList = await Test.findAll();
+    testList.map((test) => (test.dateTime = moment(test.dateTime).format()));
     return testList;
   } catch (error) {
     console.error('데이터 조회 중 오류 발생:', error);

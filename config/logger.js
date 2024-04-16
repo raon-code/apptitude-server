@@ -47,7 +47,6 @@ function getInitParam() {
       winston.format.colorize({
         all: true
       }),
-
       winston.format.printf((info) => {
         return `${info.level} ${info.timestamp}    ${info.message}`;
       })
