@@ -32,16 +32,25 @@ function getInitParam() {
   return {
     level: level,
     format: winston.format.combine(
-      winston.format.colorize({
-        all: true
-      }),
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss'
       }),
-      winston.format.printf(
-        (info) =>
-          `[${info.level.toUpperCase()}] ${info.timestamp} ${info.message}`
-      )
+      winston.format((info) => {
+        // 대문자로 변환
+        info.level = info.level.toUpperCase();
+        // 공백 칸 수 고정
+        info.level = info.level.padEnd(5, ' ');
+        // [LEVEL] 변환
+        info.level = `[${info.level}]`;
+        return info;
+      })(),
+      winston.format.colorize({
+        all: true
+      }),
+
+      winston.format.printf((info) => {
+        return `${info.level} ${info.timestamp}    ${info.message}`;
+      })
     ),
     transports: [
       new winston.transports.File({ filename: filename }),
@@ -50,9 +59,9 @@ function getInitParam() {
   };
 }
 
-logger.error('This is an error message');
-logger.warn('This is a warning message');
-logger.info('This is an info message');
-logger.debug('This is a debug message');
+// logger.error('This is an error message');
+// logger.warn('This is a warning message');
+// logger.info('This is an info message');
+// logger.debug('This is a debug message');
 
 module.exports = logger;
