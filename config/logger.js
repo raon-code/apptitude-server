@@ -31,14 +31,28 @@ function getInitParam() {
 
   return {
     level: level,
-    format: winston.format.json(),
+    format: winston.format.combine(
+      winston.format.colorize({
+        all: true
+      }),
+      winston.format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss'
+      }),
+      winston.format.printf(
+        (info) =>
+          `[${info.level.toUpperCase()}] ${info.timestamp} ${info.message}`
+      )
+    ),
     transports: [
       new winston.transports.File({ filename: filename }),
-      new winston.transports.Console({
-        format: winston.format.simple()
-      })
+      new winston.transports.Console()
     ]
   };
 }
+
+logger.error('This is an error message');
+logger.warn('This is a warning message');
+logger.info('This is an info message');
+logger.debug('This is a debug message');
 
 module.exports = logger;
