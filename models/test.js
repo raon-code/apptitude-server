@@ -4,10 +4,9 @@
  */
 const { Model, DataTypes } = require('sequelize');
 
-const ROOT_DIR = process.cwd();
-const sequelize = require(ROOT_DIR + '/models');
-const isForce = require(ROOT_DIR + '/config').models.forceSync;
-const logger = require(ROOT_DIR + '/config/logger');
+const sequelize = require('@/models');
+const isForce = require('@/config').models.forceSync;
+const logger = require('@/config/logger');
 
 class Test extends Model {}
 

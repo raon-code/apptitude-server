@@ -2,8 +2,7 @@
  * db.js
  *  데이터베이스 관련 설정
  */
-const ROOT_DIR = process.cwd();
-const config = require(ROOT_DIR + '/config'); // config/index
+const config = require('@/config'); // config/index
 
 let db; // db 인스턴스
 
