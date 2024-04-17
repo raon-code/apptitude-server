@@ -4,8 +4,7 @@
  */
 const router = require('express').Router();
 
-const ROOT_DIR = process.cwd();
-const testService = require(ROOT_DIR + '/services/test.service');
+const testService = require('@/services/test.service');
 
 router.get('/', getTestList);
 async function getTestList(req, res) {

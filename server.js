@@ -2,21 +2,23 @@
  * server.js
  *  서버 초기화 및 실행 파일
  */
+// 경로 전역설정 적용
+require('module-alias/register');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
 // 프로젝트 루트 경로
-const ROOT_DIR = process.cwd();
 
 // Configs
-const config = require(ROOT_DIR + '/config');
-const db = require(ROOT_DIR + '/config/database');
-const logger = require(ROOT_DIR + '/config/logger');
+const config = require('@/config');
+const db = require('@/config/database');
+const logger = require('@/config/logger');
 
 // API
-const sequelize = require(ROOT_DIR + '/models');
-const testService = require(ROOT_DIR + '/services/test.service');
-const routes = require(ROOT_DIR + '/routes');
+const sequelize = require('@/models');
+const testService = require('@/services/test.service');
+const routes = require('@/routes');
 
 const app = express();
 
@@ -34,7 +36,10 @@ async function initialize() {
     if (testListSize === 0) {
       logger.info('데이터가 비어있으므로 임의생성');
       for (let i = 1; i <= 100; i++) {
-        await testService.createTest(`앱티튜트 테스트 제목 ${i}`, `앱티튜트 테스트 내용 ${i}`);
+        await testService.createTest(
+          `앱티튜트 테스트 제목 ${i}`,
+          `앱티튜트 테스트 내용 ${i}`
+        );
       }
     }
 

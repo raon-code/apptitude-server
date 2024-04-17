@@ -5,9 +5,8 @@
  */
 const { Sequelize } = require('sequelize');
 
-const ROOT_DIR = process.cwd();
-const config = require(ROOT_DIR + '/config');
-const logger = require(ROOT_DIR + '/config/logger');
+const config = require('@/config');
+const logger = require('@/config/logger');
 
 // 데이터베이스 연결 인스턴스 생성
 const sequelize = new Sequelize(getInitParam());

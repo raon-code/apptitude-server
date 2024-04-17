@@ -2,9 +2,8 @@
  * test.service.js
  *  테스트 서비스
  */
-const ROOT_DIR = process.cwd();
-const Test = require(ROOT_DIR + '/models/test');
-const convertor = require(ROOT_DIR + '/common/convertor');
+const Test = require('@/models/test');
+const convertor = require('@/common/convertor');
 
 // CREATE
 async function createTest(title, contents) {

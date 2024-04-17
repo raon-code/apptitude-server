@@ -5,9 +5,8 @@
 const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
-const ROOT_DIR = process.cwd();
-const sqliteConfig = require(ROOT_DIR + '/config').database.sqlite;
-const logger = require(ROOT_DIR + '/config/logger');
+const sqliteConfig = require('@/config').database.sqlite;
+const logger = require('@/config/logger');
 
 // 데이터베이스 파일 삭제
 // if (fs.existsSync(dbPath)) {

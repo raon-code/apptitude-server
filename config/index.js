@@ -16,7 +16,7 @@ const config = {
   port: process.env.PORT || DEFAULT_PORT,
   database: {
     sqlite: {
-      storagePath: ROOT_DIR + '/database.sqlite'
+      storagePath: `${ROOT_DIR}/database.sqlite`
     }
   },
   models: {

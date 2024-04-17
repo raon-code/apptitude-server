@@ -5,8 +5,7 @@
 
 const winston = require('winston');
 
-const ROOT_DIR = process.cwd();
-const config = require(ROOT_DIR + '/config');
+const config = require('@/config');
 
 const logger = winston.createLogger(getInitParam());
 
