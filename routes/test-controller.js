@@ -5,7 +5,7 @@
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 
-const testService = require('@/services/test.service');
+const testService = require('@/services/test-service');
 const response = require('@/common/response');
 
 router.get('/', getTestList);

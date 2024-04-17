@@ -4,7 +4,7 @@
  */
 
 function initialize(app) {
-  app.use('/test', require('@/routes/test.controller'));
+  app.use('/test', require('@/routes/test-controller'));
 }
 
 module.exports = { initialize };

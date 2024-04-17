@@ -15,9 +15,12 @@ const config = require('@/config');
 const db = require('@/config/database');
 const logger = require('@/config/logger');
 
+// Middleware
+const handleException = require('@/middleware/exception-handler');
+
 // API
 const sequelize = require('@/models');
-const testService = require('@/services/test.service');
+const testService = require('@/services/test-service');
 const routes = require('@/routes');
 
 const app = express();
@@ -31,17 +34,7 @@ async function initialize() {
     await sequelize.sync();
     logger.info('모든 모델이 동기화되었습니다.');
 
-    /* Sequelize TEST(임시코드) */
-    const testListSize = await testService.getTestSize();
-    if (testListSize === 0) {
-      logger.info('데이터가 비어있으므로 임의생성');
-      for (let i = 1; i <= 100; i++) {
-        await testService.createTest(
-          `앱티튜트 테스트 제목 ${i}`,
-          `앱티튜트 테스트 내용 ${i}`
-        );
-      }
-    }
+    initializeForTest();
 
     logger.info('서버 초기화 성공');
   } catch (error) {
@@ -61,3 +54,22 @@ app.get('/', (req, res) => {
 app.listen(config.port, () => {
   logger.info(`Server is running`);
 });
+
+// Middleware
+app.use((err, req, res, next) => {
+  handleException(err, req, res, next);
+});
+
+async function initializeForTest() {
+  /* Sequelize TEST(임시코드) */
+  const testListSize = await testService.getTestSize();
+  if (testListSize === 0) {
+    logger.info('데이터가 비어있으므로 임의생성');
+    for (let i = 1; i <= 100; i++) {
+      await testService.createTest(
+        `앱티튜트 테스트 제목 ${i}`,
+        `앱티튜트 테스트 내용 ${i}`
+      );
+    }
+  }
+}
