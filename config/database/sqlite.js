@@ -9,14 +9,14 @@ const sqliteConfig = require('@/config').database.sqlite;
 const logger = require('@/config/logger');
 
 // 데이터베이스 파일 삭제
-// if (fs.existsSync(dbPath)) {
-//     fs.unlinkSync(dbPath);
+// if (fs.existsSync(sqliteConfig.storagePath)) {
+//     fs.unlinkSync(sqliteConfig.storagePath);
 // }
 
 // 새 데이터베이스 파일 생성
 const db = new sqlite3.Database(sqliteConfig.storagePath, (err) => {
   if (err) {
-    return console.error(err.message);
+    return logger.error(err.message);
   }
   logger.info('새로운 데이터베이스 파일이 성공적으로 생성되었습니다.');
 });
@@ -31,7 +31,7 @@ db.serialize(() => {
 process.on('SIGINT', () => {
   db.close((err) => {
     if (err) {
-      return console.error(err.message);
+      return logger.error(err.message);
     }
     logger.info('데이터베이스 연결이 닫혔습니다.');
   });

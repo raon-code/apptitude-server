@@ -27,7 +27,7 @@ function getInitParam() {
         dialect: 'sqlite',
         storage: config.database.sqlite.storagePath,
         logging: (query, time) => {
-          console.log('[' + time + 'ms] ' + query);
+          logger.debug('[' + time + 'ms] ' + query);
         },
         benchmark: true
       };
