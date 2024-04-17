@@ -8,15 +8,13 @@ require('module-alias/register');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-// 프로젝트 루트 경로
-
-// Configs
+// Config
 const config = require('@/config');
 const db = require('@/config/database');
 const logger = require('@/config/logger');
 
 // Middleware
-const handleException = require('@/middleware/exception-handler');
+const { handleException } = require('@/middleware/exception-handler');
 
 // API
 const sequelize = require('@/models');
@@ -24,7 +22,6 @@ const testService = require('@/services/test-service');
 const routes = require('@/routes');
 
 const app = express();
-
 // 서버 기본 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -34,31 +31,12 @@ async function initialize() {
     await sequelize.sync();
     logger.info('모든 모델이 동기화되었습니다.');
 
-    initializeForTest();
-
     logger.info('서버 초기화 성공');
   } catch (error) {
     logger.error('서버 초기화 중 오류 발생:', error);
   }
 }
 initialize();
-
-// Routes
-routes.initialize(app);
-
-// Home Page
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.listen(config.port, () => {
-  logger.info(`Server is running`);
-});
-
-// Middleware
-app.use((err, req, res, next) => {
-  handleException(err, req, res, next);
-});
 
 async function initializeForTest() {
   /* Sequelize TEST(임시코드) */
@@ -73,3 +51,21 @@ async function initializeForTest() {
     }
   }
 }
+initializeForTest();
+
+// Routes
+routes.initialize(app);
+
+// Index Page
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(config.port, () => {
+  logger.info(`Server is running`);
+});
+
+// Error Handle Middleware
+app.use((err, req, res, next) => {
+  handleException(err, req, res, next);
+});
