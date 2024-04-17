@@ -29,6 +29,7 @@
     "winston": "^3.13.0"
   },
   "_moduleAliases": {
-    "@": "."
+    "@": ".",
+    "@_comment": "@ is module alias of root directory"
   }
 }
