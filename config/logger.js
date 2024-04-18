@@ -9,7 +9,7 @@ const config = require('@/config');
 
 const logger = winston.createLogger(getInitParam());
 
-// 환경에 따른 초기 파라미터 설정
+// 실행환경에 따른 초기 파라미터 설정
 function getInitParam() {
   let level, filename;
 
@@ -43,20 +43,25 @@ function getInitParam() {
         info.level = `[${info.level}]`;
         return info;
       })(),
+      // 색깔 출력 활성화
       winston.format.colorize({
         all: true
       }),
+      // 출력 포맷 설정
       winston.format.printf((info) => {
         return `${info.level} ${info.timestamp}    ${info.message}`;
       })
     ),
     transports: [
+      // 파일저장
       new winston.transports.File({ filename: filename }),
+      // 콘솔출력
       new winston.transports.Console()
     ]
   };
 }
 
+// 테스트
 // logger.error('This is an error message');
 // logger.warn('This is a warning message');
 // logger.info('This is an info message');

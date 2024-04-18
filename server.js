@@ -8,6 +8,9 @@ require('module-alias/register');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// Common
+const crypto = require('@/common/crypto');
+
 // Config
 const config = require('@/config');
 const db = require('@/config/database');
@@ -26,8 +29,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// 서버 초기화
 async function initialize() {
   try {
+    // DB 인터페이스 초기화
     await sequelize.sync();
     logger.info('모든 모델이 동기화되었습니다.');
 
@@ -38,6 +43,7 @@ async function initialize() {
 }
 initialize();
 
+// 테스트용 서버 초기화
 async function initializeForTest() {
   /* Sequelize TEST(임시코드) */
   const testListSize = await testService.getTestSize();
@@ -53,7 +59,7 @@ async function initializeForTest() {
 }
 initializeForTest();
 
-// Routes
+// Routes 초기화
 routes.initialize(app);
 
 // Index Page

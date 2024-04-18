@@ -4,21 +4,30 @@
  */
 const dotenv = require('dotenv');
 
-const { ROOT_DIR, DEFAULT } = require('./const');
+const { ROOT_DIR, SERVER_DEFAULT } = require('./const');
 
 // .env 파일을 읽고 process.env에 세팅합니다.
 dotenv.config();
 
 const config = {
-  nodeEnv: process.env.NODE_ENV || DEFAULT.NODE_ENV,
-  port: process.env.PORT || DEFAULT.PORT,
+  // 노드 실행환경
+  nodeEnv: process.env.NODE_ENV || SERVER_DEFAULT.NODE_ENV,
+  // 포트
+  port: process.env.PORT || SERVER_DEFAULT.PORT,
+  // 데이터베이스 관련
   database: {
+    // SQLite
     sqlite: {
       storagePath: `${ROOT_DIR}/database.sqlite`
     }
   },
+  // DB 인터페이스 설정
   models: {
     forceSync: false
+  },
+  crypto: {
+    algorithm: 'aes-256-cbc',
+    seedKey: 'apptitude-crypto-12345'
   }
   // Other..
 };

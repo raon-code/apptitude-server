@@ -16,11 +16,17 @@ function getInitParam() {
   switch (config.nodeEnv) {
     case 'dev': // 개발환경
       return {
-        logging: true
+        dialect: 'mysql',
+        logging: (query, time) => {
+          logger.debug('[' + time + 'ms] ' + query);
+        },
+        benchmark: true
       };
     case 'prod': // 운영환경
       return {
-        logging: false
+        dialect: 'mysql',
+        logging: false,
+        benchmark: false
       };
     default: // 로컬환경
       return {
@@ -34,9 +40,6 @@ function getInitParam() {
   }
 }
 
-// sequelize 초기화
-authenticate();
-
 // 데이터베이스 연결 검증
 async function authenticate() {
   try {
@@ -46,6 +49,7 @@ async function authenticate() {
     logger.error('[Sequelize] 데이터베이스에 연결할 수 없음:', error);
   }
 }
+authenticate();
 
 // SIGINT 신호 감지후 처리
 process.on('SIGINT', () => {

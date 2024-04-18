@@ -11,8 +11,8 @@ const { BizError } = require('@/error');
  * 미들웨어를 통해 예외처리를 관리하기 위함
  * 모든 routes 시작점에 포함
  *
- * @param {*} func
- * @returns
+ * @param {function} func controller 함수
+ * @returns 예외처리 관리가 가능한 함수(+middleware)
  */
 function asyncException(func) {
   return function (req, res, next) {
@@ -21,12 +21,12 @@ function asyncException(func) {
 }
 
 /**
- * 에러에 대해 응답 처리
+ * 에러에 대한 응답 처리
  *
- * @param {*} err
- * @param {*} req
- * @param {*} res
- * @param {*} next
+ * @param {Error} err 에러
+ * @param {Request} req 요청
+ * @param {Response} res 응답
+ * @param {function} next next 미들웨어 함수
  */
 function handleException(err, req, res, next) {
   // print stack trace by logger
@@ -56,8 +56,12 @@ function handleException(err, req, res, next) {
 }
 
 /**
- * Plain Text로 변환
- * @param {*} stack
+ * Error 스택 Json 형식에 알맞게 변환
+ * 1. 색깔 제거
+ * 2. 공백 제거
+ * 3. 개행 처리
+ *
+ * @param {string} stack 에러스택 정보
  * @returns
  */
 function cleanStackTrace(stack) {
