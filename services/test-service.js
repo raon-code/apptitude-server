@@ -3,7 +3,6 @@
  *  테스트 서비스
  */
 const Test = require('@/models/test');
-const convertor = require('@/common/convertor');
 const logger = require('@/config/logger');
 const { BizError } = require('@/error');
 
@@ -36,6 +35,7 @@ async function getTestSize() {
 // UPDATE
 // DELETE
 
+// TEST
 async function getBizError() {
   throw new BizError('에러 테스트 입니다!!');
 }
@@ -45,5 +45,6 @@ module.exports = {
   getTestList,
   getTestById,
   getTestSize,
+
   getBizError
 };

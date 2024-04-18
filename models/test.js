@@ -43,7 +43,7 @@ Test.init(
   }
 );
 
-// sequelize와 동기화
+// 테이블 명세 sequelize와 동기화
 async function syncModel() {
   try {
     await Test.sync({ force: isForce });
