@@ -18,6 +18,7 @@ function sha256Hash(input) {
 
 function encrypt(text) {
   const iv = crypto.randomBytes(16); // 매번 새로운 IV를 사용
+
   const cipher = crypto.createCipheriv(algorithm, key, iv);
   let encrypted = cipher.update(text, 'utf8', 'base64');
   encrypted += cipher.final('base64');
@@ -29,6 +30,7 @@ function encrypt(text) {
 function decrypt(input) {
   const parts = input.split(':'); // IV를 분리
   const iv = Buffer.from(parts.shift(), 'base64');
+
   const encryptedText = parts.join(':');
   const decipher = crypto.createDecipheriv(algorithm, key, iv);
   let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
