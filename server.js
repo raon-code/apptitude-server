@@ -8,6 +8,9 @@ require('module-alias/register');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// Common
+const crypto = require('@/common/crypto');
+
 // Config
 const config = require('@/config');
 const db = require('@/config/database');

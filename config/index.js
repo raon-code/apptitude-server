@@ -24,6 +24,10 @@ const config = {
   // DB 인터페이스 설정
   models: {
     forceSync: false
+  },
+  crypto: {
+    algorithm: 'aes-256-cbc',
+    seedKey: 'apptitude-crypto-12345'
   }
   // Other..
 };
