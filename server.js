@@ -18,6 +18,7 @@ const logger = require('@/config/logger');
 
 // Middleware
 const { handleException } = require('@/middleware/exception-handler');
+const ddosDefender = require('@/middleware/ddos-defender');
 
 // API
 const sequelize = require('@/models');
@@ -28,6 +29,8 @@ const app = express();
 // 서버 기본 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(ddosDefender);
 
 // 서버 초기화
 async function initialize() {

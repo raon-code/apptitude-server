@@ -11,5 +11,8 @@ module.exports = {
     NODE_ENV: 'local'
   },
   // 디버그 모드 여부
-  DEBUG_MODE: !process.env.NODE_ENV
+  DEBUG_MODE: !process.env.NODE_ENV,
+  // 시간
+  SEC_TO_MS: 1000,
+  API_BASE_PATH: '/api'
 };
