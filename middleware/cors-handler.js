@@ -5,7 +5,7 @@
 const cors = require('cors');
 
 const corsOption = {
-  origin: '*' // 허용할 출처 목록
+  origin: '*' // 허용할 출처 목록 ['A', 'B', ...]
 };
 
 const corsHandler = cors(corsOption);
