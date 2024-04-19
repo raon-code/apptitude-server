@@ -24,13 +24,13 @@ const ddosDefender = require('@/middleware/ddos-defender');
 const sequelize = require('@/models');
 const testService = require('@/services/test-service');
 const routes = require('@/routes');
+const corsHandler = require('@/middleware/cors-handler');
 
 const app = express();
+
 // 서버 기본 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(ddosDefender);
 
 // 서버 초기화
 async function initialize() {
@@ -61,6 +61,10 @@ async function initializeForTest() {
   }
 }
 initializeForTest();
+
+// 미들웨어 설정
+app.use(ddosDefender);
+app.use(corsHandler);
 
 // Routes 초기화
 routes.initialize(app);
