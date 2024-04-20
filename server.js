@@ -19,6 +19,7 @@ const logger = require('@/config/logger');
 // Middleware
 const { handleException } = require('@/middleware/exception-handler');
 const ddosDefender = require('@/middleware/ddos-defender');
+const authHandler = require('@/middleware/auth-handler');
 
 // API
 const sequelize = require('@/models');
@@ -65,6 +66,7 @@ initializeForTest();
 // 미들웨어 설정
 app.use(ddosDefender);
 app.use(corsHandler);
+app.use(authHandler.initialize());
 
 // Routes 초기화
 routes.initialize(app);
@@ -82,3 +84,12 @@ app.listen(config.port, () => {
 app.use((err, req, res, next) => {
   handleException(err, req, res, next);
 });
+
+// test
+app.get(
+  '/protected',
+  authHandler.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.send('You have accessed a protected route!');
+  }
+);

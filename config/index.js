@@ -28,6 +28,12 @@ const config = {
   crypto: {
     algorithm: 'aes-256-cbc',
     seedKey: 'apptitude-crypto-12345'
+  },
+  jwt: {
+    secret: 'SLEPe87w7eEue337ehndn3hHDjjKKDK',
+    option: {
+      expiresIn: '1h'
+    }
   }
   // Other..
 };

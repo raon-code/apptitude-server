@@ -7,16 +7,18 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const logger = require('@/config/logger');
+const config = require('@/config');
 
-// TODO: 세션관리, JWT 설정
-function initializeSessionManager() {
-  passport.use(new JWTStrategy({}, (payload, next) => {}));
-}
-
-// TODO: 로그인 정책설정
-function authenticate() {}
-
-module.exports = {
-  initializeSessionManager,
-  authenticate
+const passportOption = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.jwt.secret
 };
+
+const authHandler = passport.use(
+  new JWTStrategy(passportOption, (jwt_payload, done) => {
+    // 인증로직
+    return done(null, true);
+  })
+);
+
+module.exports = authHandler;
