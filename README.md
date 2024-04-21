@@ -4,7 +4,7 @@
 ![프로젝트 로고](배너 이미지 URL)
 
 ## Tech Stack
-![AppVeyor](https://img.shields.io/static/v1?label=&message=JavaScript&color=yellow) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Node.js&color=green) ![AppVeyor](https://img.shields.io/static/v1?label=&message=express.js&color=black)
+![AppVeyor](https://img.shields.io/static/v1?label=&message=JavaScript&color=yellow) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Node.js&color=green) ![AppVeyor](https://img.shields.io/static/v1?label=&message=express.js&color=black) ![AppVeyor](https://img.shields.io/static/v1?label=&message=SQLite&color=blue) ![AppVeyor](https://img.shields.io/static/v1?label=&message=MYSQL&color=blue) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Sequelize&color=whiteblue)
 
 ## 소개
 
@@ -50,4 +50,7 @@ npm install
 ## 감사의 말
 
 프로젝트에 도움을 준 사람들이나 프로젝트에 영감을 준 다른 프로젝트에 대한 감사의 말을 추가할 수 있습니다.
+
+
+
 
