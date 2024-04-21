@@ -6,6 +6,8 @@
 require('module-alias/register');
 
 const express = require('express');
+// 에러 발생시 다음 미들웨어로 넘겨주는 패키지
+require('express-async-errors');
 const bodyParser = require('body-parser');
 
 // Common
@@ -13,18 +15,22 @@ const crypto = require('@/common/crypto');
 
 // Config
 const config = require('@/config');
-const db = require('@/config/database');
+require('@/config/database');
 const logger = require('@/config/logger');
 
 // Middleware
 const { handleException } = require('@/middleware/exception-handler');
+const ddosDefender = require('@/middleware/ddos-defender');
+const { authHandler } = require('@/middleware/auth-handler');
 
 // API
 const sequelize = require('@/models');
 const testService = require('@/services/test-service');
 const routes = require('@/routes');
+const corsHandler = require('@/middleware/cors-handler');
 
 const app = express();
+
 // 서버 기본 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -59,8 +65,16 @@ async function initializeForTest() {
 }
 initializeForTest();
 
+// 미들웨어 설정
+app.use(ddosDefender);
+app.use(corsHandler);
+app.use(authHandler.initialize());
+
 // Routes 초기화
 routes.initialize(app);
+
+// Error Handle Middleware
+app.use(handleException);
 
 // Index Page
 app.get('/', (req, res) => {
@@ -69,9 +83,4 @@ app.get('/', (req, res) => {
 
 app.listen(config.port, () => {
   logger.info(`Server is running`);
-});
-
-// Error Handle Middleware
-app.use((err, req, res, next) => {
-  handleException(err, req, res, next);
 });
