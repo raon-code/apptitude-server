@@ -8,19 +8,6 @@ const logger = require('@/config/logger');
 const { BizError } = require('@/error');
 
 /**
- * 미들웨어를 통해 예외처리를 관리하기 위함
- * 모든 routes 시작점에 포함
- *
- * @param {function} func controller 함수
- * @returns 예외처리 관리가 가능한 함수(+middleware)
- */
-function asyncException(func) {
-  return function (req, res, next) {
-    Promise.resolve(func(req, res, next)).catch(next);
-  };
-}
-
-/**
  * 에러에 대한 응답 처리
  *
  * @param {Error} err 에러

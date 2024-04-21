@@ -15,10 +15,20 @@ const passportOption = {
 };
 
 const authHandler = passport.use(
-  new JWTStrategy(passportOption, (jwt_payload, done) => {
-    // 인증로직
-    return done(null, true);
+  new JWTStrategy(passportOption, async (payload, done) => {
+    try {
+      // 인증로직
+      const user = 1; // User.findById(payload.id);
+      if (user) return done(null, user);
+    } catch (error) {
+      return done(error);
+    }
   })
 );
 
-module.exports = authHandler;
+const authMiddleware = authHandler.authenticate('jwt', { session: false });
+
+module.exports = {
+  authMiddleware,
+  authHandler
+};

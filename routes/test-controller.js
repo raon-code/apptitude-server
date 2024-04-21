@@ -11,7 +11,7 @@ const { asyncException } = require('@/middleware/exception-handler');
 
 // 라우터 명세
 // asyncException 포함 필수 (미들웨어를 통해 예외를 잡기위함)
-router.get('/', asyncException(getTestList));
+router.get('/', getTestList);
 // 컨트롤러 함수 정의
 async function getTestList(req, res) {
   const testList = await testService.getTestList();
@@ -19,7 +19,7 @@ async function getTestList(req, res) {
   response(res, StatusCodes.OK, '조회성공', dataList);
 }
 
-router.get('/error', asyncException(getTestError));
+router.get('/error', getTestError);
 async function getTestError(req, res) {
   await testService.getBizError();
   response(res, StatusCodes.OK, 'Not reach here');
