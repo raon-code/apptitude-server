@@ -5,9 +5,9 @@
 // 경로 전역설정 적용
 require('module-alias/register');
 
+// Server Main
 const express = require('express');
-// 에러 발생시 다음 미들웨어로 넘겨주는 패키지
-require('express-async-errors');
+require('express-async-errors'); // 에러 발생시 다음 미들웨어로 넘겨주는 패키지
 const bodyParser = require('body-parser');
 
 // Common
@@ -20,32 +20,40 @@ const logger = require('@/config/logger');
 
 // Middleware
 const { handleException } = require('@/middleware/exception-handler');
-const ddosDefender = require('@/middleware/ddos-defender');
 const { authHandler } = require('@/middleware/auth-handler');
-
-// API
-const sequelize = require('@/models');
-const testService = require('@/services/test-service');
-const routes = require('@/routes');
+const ddosDefender = require('@/middleware/ddos-defender');
 const corsHandler = require('@/middleware/cors-handler');
 
-const app = express();
+// MVC
+const sequelize = require('@/models');
+const routes = require('@/routes');
+
+const testService = require('@/services/test-service');
+const { swaggerUi, specs } = require('./config/docs/swagger');
+
+const server = express();
 
 // 서버 기본 설정
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json());
+
+// 미들웨어 설정(Before Biz Process)
+server.use(ddosDefender);
+server.use(corsHandler);
+server.use(authHandler.initialize());
+
+// Routes 초기화
+routes.initialize(server);
+
+// 미들웨어 설정(After Biz Process)
+server.use((err, req, res, next) => handleException(err, req, res, next));
 
 // 서버 초기화
 async function initialize() {
-  try {
-    // DB 인터페이스 초기화
-    await sequelize.sync();
-    logger.info('모든 모델이 동기화되었습니다.');
-
-    logger.info('서버 초기화 성공');
-  } catch (error) {
-    logger.error('서버 초기화 중 오류 발생:', error);
-  }
+  // DB 초기화
+  await sequelize.sync();
+  logger.info('모든 모델이 동기화되었습니다.');
+  logger.info('서버 초기화 성공');
 }
 initialize();
 
@@ -65,22 +73,16 @@ async function initializeForTest() {
 }
 initializeForTest();
 
-// 미들웨어 설정
-app.use(ddosDefender);
-app.use(corsHandler);
-app.use(authHandler.initialize());
-
-// Routes 초기화
-routes.initialize(app);
-
-// Error Handle Middleware
-app.use(handleException);
-
 // Index Page
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(config.port, () => {
+// Swagger
+server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+server.listen(config.port, () => {
   logger.info(`Server is running`);
 });
+
+module.exports = server;
