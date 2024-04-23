@@ -11,7 +11,13 @@ function initialize(app) {
   // Auth 설정(모든 /api 로 시작하는 URL에 적용)
   // app.use(`${API_BASE_PATH}/`, authMiddleware);
 
-  app.use(`${API_BASE_PATH}/test`, require('@/routes/test-controller'));
+  /**
+   * @swagger
+   * tags:
+   *  name: Tests
+   *  description: 테스트용 API
+   */
+  app.use(`${API_BASE_PATH}/tests`, require('@/routes/test-controller'));
 }
 
 module.exports = { initialize };
