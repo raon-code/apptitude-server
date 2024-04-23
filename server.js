@@ -29,6 +29,7 @@ const sequelize = require('@/models');
 const routes = require('@/routes');
 
 const testService = require('@/services/test-service');
+const { swaggerUi, specs } = require('./config/docs/swagger');
 
 const server = express();
 
@@ -36,14 +37,16 @@ const server = express();
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 
-// 미들웨어 설정
+// 미들웨어 설정(Before Biz Process)
 server.use(ddosDefender);
 server.use(corsHandler);
 server.use(authHandler.initialize());
-server.use(handleException);
 
 // Routes 초기화
 routes.initialize(server);
+
+// 미들웨어 설정(After Biz Process)
+server.use((err, req, res, next) => handleException(err, req, res, next));
 
 // 서버 초기화
 async function initialize() {
@@ -74,6 +77,9 @@ initializeForTest();
 server.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+// Swagger
+server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 server.listen(config.port, () => {
   logger.info(`Server is running`);

@@ -19,7 +19,7 @@ function handleException(err, req, res, next) {
   // print stack trace by logger
   logger.error(err.stack);
 
-  const isDefinedError = !checkDefinedError(err);
+  const isDefinedError = checkDefinedError(err);
 
   // 에러 상태코드
   const errorStatus = isDefinedError ? err.status : 500;
