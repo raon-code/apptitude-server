@@ -72,6 +72,5 @@ function checkDefinedError(err) {
 }
 
 module.exports = {
-  asyncException,
   handleException
 };
