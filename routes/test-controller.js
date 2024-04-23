@@ -233,6 +233,7 @@ async function getTestError(req, res) {
  *   patch:
  *     summary: Update a test
  *     description: Updates a test's title and content based on the given ID.
+ *     tags: [Tests]
  *     parameters:
  *       - in: path
  *         name: id
@@ -289,6 +290,49 @@ async function updateTest(req, res) {
   const updateParams = req.body.updateParams;
   const updatedTest = await testService.updateTest(id, updateParams);
   response(res, StatusCodes.OK, '업데이트 성공', updatedTest);
+}
+
+/**
+ * @swagger
+ * /api/tests/{id}:
+ *   delete:
+ *     summary: Delete a test
+ *     description: Deletes a test based on the given ID.
+ *     tags: [Tests]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the test to update.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Test updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "삭제 성공"
+ *                 data:
+ *                   type: object
+ *                   example: {}
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
+router.delete('/:id', deleteTest);
+async function deleteTest(req, res) {
+  const id = req.params.id;
+  await testService.deleteTest(id);
+  response(res, StatusCodes.OK, '삭제 성공', {});
 }
 
 module.exports = router;

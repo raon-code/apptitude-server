@@ -46,7 +46,13 @@ async function updateTest(id, updateParams) {
 }
 
 // DELETE
-async function deleteTest(id) {}
+async function deleteTest(id) {
+  const test = await Test.findByPk(id);
+  if (isEmpty(test)) {
+    throw new BizError('삭제할 데이터가 없습니다. 다시 확인해주세요.');
+  }
+  await test.destroy();
+}
 
 // TEST
 async function getBizError() {
