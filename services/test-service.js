@@ -5,6 +5,8 @@
 const Test = require('@/models/test');
 const logger = require('@/config/logger');
 const { BizError } = require('@/error');
+const { updateProperties } = require('@/common/object-util');
+const { isEmpty } = require('@/common/validate');
 
 // CREATE
 async function createTest(title, contents) {
@@ -22,9 +24,9 @@ async function getTestList() {
   return testList;
 }
 
-async function getTestById(id) {
+async function getTest(id) {
   const test = await Test.findByPk(id);
-  return test;
+  return test || {};
 }
 
 async function getTestSize() {
@@ -33,7 +35,18 @@ async function getTestSize() {
 }
 
 // UPDATE
+async function updateTest(id, updateParams) {
+  const test = await Test.findByPk(id);
+  if (isEmpty(test)) {
+    throw new BizError('수정할 데이터가 없습니다. 다시 확인해주세요.');
+  }
+  updateProperties(test, updateParams);
+  await test.save();
+  return test;
+}
+
 // DELETE
+async function deleteTest(id) {}
 
 // TEST
 async function getBizError() {
@@ -43,8 +56,9 @@ async function getBizError() {
 module.exports = {
   createTest,
   getTestList,
-  getTestById,
+  getTest,
   getTestSize,
-
+  updateTest,
+  deleteTest,
   getBizError
 };
