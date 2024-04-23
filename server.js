@@ -35,7 +35,7 @@ const server = express();
 
 // 서버 기본 설정
 server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+server.use(bodyParser.json()); // Body JSON 파싱 활성화
 
 // 미들웨어 설정(Before Biz Process)
 server.use(ddosDefender);
