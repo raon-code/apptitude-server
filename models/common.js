@@ -13,7 +13,7 @@ Common.init(
   {
     codeValue: {
       type: DataTypes.STRING(10),
-      primaryKey: true,
+      primaryKey: true, // default: not null
       comment: '코드 값'
     },
     description: {
@@ -23,11 +23,11 @@ Common.init(
     }
   },
   {
-    sequelize,
-    modelName: 'common',
-    comment: '공통코드',
-    underscored: true,
-    timestamps: true
+    sequelize, // 초기화한 Sequelize 인스턴스
+    modelName: 'common', // 테이블 이름
+    comment: '공통코드', // 테이블 설명
+    underscored: true, // 카멜케이스를 스네이크케이스로 변경
+    timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
 
