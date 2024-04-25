@@ -52,15 +52,6 @@ async function authenticate() {
 }
 authenticate();
 
-async function syncModel(Model) {
-  try {
-    await Model.sync({ force: isForce });
-    logger.info(`${Model.tableName} 테이블 동기화 성공`);
-  } catch (error) {
-    logger.error(`${Model.tableName} 테이블 동기화 실패: `, error);
-  }
-}
-
 // SIGINT 신호 감지후 처리
 process.on('SIGINT', () => {
   sequelize
@@ -74,5 +65,19 @@ process.on('SIGINT', () => {
       process.exit(1); // 에러를 반환하며 프로세스 종료
     });
 });
+
+/**
+ * 데이터베이스로부터 대상 스키마를 동기화
+ *
+ * @param {Model} Model 명세 테이블 클래스명
+ */
+async function syncModel(Model) {
+  try {
+    await Model.sync({ force: isForce });
+    logger.info(`${Model.tableName} 테이블 동기화 성공`);
+  } catch (error) {
+    logger.error(`${Model.tableName} 테이블 동기화 실패: `, error);
+  }
+}
 
 module.exports = { sequelize, syncModel };
