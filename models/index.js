@@ -6,6 +6,7 @@
 const { Sequelize } = require('sequelize');
 
 const config = require('@/config');
+const isForce = require('@/config').models.forceSync;
 const logger = require('@/config/logger');
 
 // 데이터베이스 연결 인스턴스 생성
@@ -51,6 +52,15 @@ async function authenticate() {
 }
 authenticate();
 
+async function syncModel(Model) {
+  try {
+    await Model.sync({ force: isForce });
+    logger.info(`${Model.tableName} 테이블 동기화 성공`);
+  } catch (error) {
+    logger.error(`${Model.tableName} 테이블 동기화 실패: `, error);
+  }
+}
+
 // SIGINT 신호 감지후 처리
 process.on('SIGINT', () => {
   sequelize
@@ -65,4 +75,4 @@ process.on('SIGINT', () => {
     });
 });
 
-module.exports = sequelize;
+module.exports = { sequelize, syncModel };

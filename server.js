@@ -25,7 +25,7 @@ const ddosDefender = require('@/middleware/ddos-defender');
 const corsHandler = require('@/middleware/cors-handler');
 
 // MVC
-const sequelize = require('@/models');
+const { sequelize } = require('@/models');
 const routes = require('@/routes');
 
 const testService = require('@/services/test-service');

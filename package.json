@@ -7,7 +7,7 @@
     "start": "node server.js",
     "start:dev": "NODE_ENV=dev node server.js",
     "start:prod": "NODE_ENV=prod node server.js",
-    "start:test": "cross-env NODE_ENV=test jest"
+    "start:test": "jest"
   },
   "repository": {
     "type": "git",
