@@ -53,6 +53,9 @@ async function initialize() {
   // DB 초기화
   await sequelize.sync();
   logger.info('모든 모델이 동기화되었습니다.');
+
+  // 테스트 초기화
+  await initializeForTest();
   logger.info('서버 초기화 성공');
 }
 initialize();
@@ -71,7 +74,6 @@ async function initializeForTest() {
     }
   }
 }
-initializeForTest();
 
 // Index Page
 server.get('/', (req, res) => {
