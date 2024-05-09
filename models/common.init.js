@@ -13,7 +13,10 @@ const ENUM_LIST = require('@/enum');
 async function initCommonData(Common) {
   ENUM_LIST.forEach(async (enums) => {
     for (const key in enums) {
-      await Common.upsert(enums[key].common);
+      await Common.upsert({
+        codeValue: enums[key].getCode(),
+        description: enums[key].getValue()
+      });
     }
   });
 }

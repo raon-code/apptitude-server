@@ -1,9 +1,15 @@
+const CommonTemplate = require('@/enum/common-template');
+
+/**
+ * status-type.js
+ *  대결 상태 타입
+ */
 const STATUS_TYPE = {
-  WAIT: { common: { codeValue: 'ST0', description: '대기' } },
-  REJECT: { common: { codeValue: 'ST1', description: '반려' } },
-  PROCEED: { common: { codeValue: 'ST2', description: '진행' } },
-  CANCEL: { common: { codeValue: 'ST3', description: '취소' } },
-  END: { common: { codeValue: 'ST4', description: '종료' } }
+  WAIT: new CommonTemplate('ST0', '대기'),
+  REJECT: new CommonTemplate('ST1', '반려'),
+  PROCEED: new CommonTemplate('ST2', '진행'),
+  CANCEL: new CommonTemplate('ST3', '취소'),
+  END: new CommonTemplate('ST4', '종료')
 };
 
 module.exports = STATUS_TYPE;
