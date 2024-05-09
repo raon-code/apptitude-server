@@ -6,6 +6,10 @@ const { Model, DataTypes } = require('sequelize');
 
 const { sequelize, syncModel } = require('@/models');
 
+const User = require('./User');
+
+const Battle = require('./battle');
+
 class Battle_Detail extends Model {}
 
 Battle_Detail.init(
@@ -34,8 +38,8 @@ Battle_Detail.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별id',
-      reference: {
-        model: 'User',
+      references: {
+        model: User,
         key: 'id'
       }
     },
@@ -43,8 +47,8 @@ Battle_Detail.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '대결 식별id',
-      reference: {
-        model: 'Battle',
+      references: {
+        model: Battle,
         key: 'id'
       }
     }
