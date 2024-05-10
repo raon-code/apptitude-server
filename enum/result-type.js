@@ -1,7 +1,13 @@
+const CommonTemplate = require('@/enum/common-template');
+
+/**
+ * result-type.js
+ *  대결 결과 타입
+ */
 const RESULT_TYPE = {
-  DEFEAT: { common: { codeValue: 'RT0', description: '패배' } },
-  WIN: { common: { codeValue: 'RT1', description: '승리' } },
-  DRAW: { common: { codeValue: 'RT2', description: '무승부' } }
+  DEFEAT: new CommonTemplate('RT0', '패배'),
+  WIN: new CommonTemplate('RT1', '승리'),
+  DRAW: new CommonTemplate('RT2', '무승부')
 };
 
 module.exports = RESULT_TYPE;

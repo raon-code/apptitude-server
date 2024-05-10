@@ -33,7 +33,8 @@ const config = {
     secret: 'SLEPe87w7eEue337ehndn3hHDjjKKDK',
     option: {
       expiresIn: '1h'
-    }
+    },
+    algorithm: ['HS256']
   }
   // Other..
 };

@@ -1,6 +1,12 @@
+const CommonTemplate = require('@/enum/common-template');
+
+/**
+ * gender.js
+ *  성별 도메인
+ */
 const GENDER = {
-  FEMALE: { common: { codeValue: 'GD0', description: '여자' } },
-  MALE: { common: { codeValue: 'GD1', description: '남자' } }
+  FEMALE: new CommonTemplate('GD0', '여자'),
+  MALE: new CommonTemplate('GD1', '남자')
 };
 
 module.exports = GENDER;
