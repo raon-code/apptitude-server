@@ -24,7 +24,7 @@ const authHandler = passport.use(
     // 여기서 사용자의 추가적인 인증 로직을 구현할 수 있습니다.
     // 예를 들어, jwt_payload의 사용자 정보를 바탕으로 데이터베이스를 조회할 수 있습니다.
 
-    // 인증로직
+    // TODO: 올바른 페이로드인지 검증 로직
     if (jwtPayload.id !== 1) {
       return done(null, false);
     }
@@ -43,7 +43,6 @@ const authMiddleware = (req, res, next) => {
       response(res, StatusCodes.UNAUTHORIZED, '권한없음');
       return;
     }
-
     req.user = user;
     next();
   })(req, res, next);
