@@ -1,12 +1,63 @@
-// urls: {
-//     // 인가 코드받기
-//     getAuth: 'https://kauth.kakao.com/oauth/authorize',
-//     // 토큰 발급하기
-//     generateToken: 'https://kauth.kakao.com/oauth/token',
-//     // 토큰 정보보기
-//     getTokenInfo: 'https://kapi.kakao.com/v1/user/access_token_info',
-//     // 유저 정보보기
-//     getUserInfo: 'https://kapi.kakao.com/v2/user/me',
-//     // 로그아웃
-//     logout: 'https://kapi.kakao.com/v1/user/logout'
-//   },
+const axios = require('axios');
+const kakaoConfig = require('@/config').kakao;
+
+// 인가코드 URL
+function getAuthUrl() {
+  return (
+    'https://kauth.kakao.com/oauth/authorize?response_type=code' +
+    `&client_id=${kakaoConfig.restApiKey}&redirect_uri=${kakaoConfig.redirectUrl}`
+  );
+}
+
+// 토큰발급
+async function getToken(auth) {
+  const params = new URLSearchParams();
+  params.append('grant_type', 'authorization_code');
+  params.append('client_id', kakaoConfig.restApiKey);
+  params.append('redirect_uri', kakaoConfig.redirectUrl);
+  params.append('code', auth);
+
+  const response = await axios.post(
+    'https://kauth.kakao.com/oauth/token',
+    params.toString(),
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+  );
+
+  return response;
+}
+
+// 토큰정보 조회
+async function getTokenInfo(accessToken) {
+  const response = await axios.get(
+    'https://kapi.kakao.com/v1/user/access_token_info',
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  );
+
+  return response;
+}
+
+// 유저정보 조회
+async function getUserInfo(token) {
+  const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  return response;
+}
+
+module.exports = {
+  getAuthUrl,
+  getToken,
+  getTokenInfo,
+  getUserInfo
+};
