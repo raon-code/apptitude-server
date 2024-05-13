@@ -35,6 +35,10 @@ const config = {
       expiresIn: '1h'
     },
     algorithm: ['HS256']
+  },
+  kakao: {
+    restApiKey: '6b42072c0ab619483e4fe33d615880fe',
+    redirectUrl: 'https://'
   }
   // Other..
 };
