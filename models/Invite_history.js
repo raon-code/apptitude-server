@@ -1,14 +1,15 @@
 /**
- * Invite_history.js
+ * invite_history.js
  */
 const { Model, DataTypes } = require('sequelize');
 
-//const { sequelize, syncModel } = require('@/models');
+const { sequelize, syncModel } = require('@/models');
+
+const Battle = require('./battle');
 
 class Invite_history extends Model {}
 
-const Invite_history = sequelize.define(
-  'Invite_history',
+Invite_history.init(
   {
     id: {
       type: DataTypes.BIGINT,
@@ -39,11 +40,11 @@ const Invite_history = sequelize.define(
     battle_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: '대결 식별ID'
-      //   references: {
-      //     model: battle,
-      //     key: 'id'
-      //   }
+      comment: '대결 식별ID',
+      references: {
+        model: Battle,
+        key: 'id'
+      }
     }
   },
   {
@@ -55,6 +56,6 @@ const Invite_history = sequelize.define(
   }
 );
 
-//syncModel(Invite_history);
+syncModel(Invite_history);
 
 module.exports = Invite_history;

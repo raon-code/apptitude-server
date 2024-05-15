@@ -1,9 +1,9 @@
 /**
- * Friend.js
+ * friend.js
  */
 const { Model, DataTypes } = require('sequelize');
-//const { sequelize, syncModel } = require('@/models');
-const User = require('./User');
+const { sequelize, syncModel } = require('@/models');
+const User = require('./user');
 
 class Friend extends Model {}
 
@@ -36,7 +36,7 @@ Friend.init(
   },
   {
     sequelize, // 초기화한 Sequelize 인스턴스
-    modelName: 'Friend', // 테이블 이름
+    modelName: 'friend', // 테이블 이름
     comment: '친구 정보', // 테이블 설명
     underscored: true, // 카멜케이스를 스네이크케이스로 변경
     timestamps: true // createAt, updateAt 추가 및 자동관리

@@ -1,9 +1,9 @@
 /**
- * Login_platform.js
+ * login_platform.js
  */
 const { Model, DataTypes } = require('sequelize');
-//const { sequelize, syncModel } = require('@/models');
-const User = require('./User');
+const { sequelize, syncModel } = require('@/models');
+const User = require('./user');
 
 class Login_platform extends Model {}
 
@@ -52,6 +52,6 @@ Login.init(
   }
 );
 
-//syncModel(Login_platform);
+syncModel(Login_platform);
 
 module.exports = Login_platform;

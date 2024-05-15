@@ -1,9 +1,9 @@
 /**
- * User_device.js
+ * user_device.js
  */
 const { Model, DataTypes } = require('sequelize');
-//const { sequelize, syncModel } = require('@/models');
-const User = require('./User');
+const { sequelize, syncModel } = require('@/models');
+const User = require('./user');
 
 class User_device extends Model {}
 
@@ -51,13 +51,13 @@ User_device.init(
   },
   {
     sequelize, // 초기화한 Sequelize 인스턴스
-    modelName: 'login_platform', // 테이블 이름
-    comment: '로그인 정보', // 테이블 설명
+    modelName: 'user_device', // 테이블 이름
+    comment: '사용자기기정보', // 테이블 설명
     underscored: true, // 카멜케이스를 스네이크케이스로 변경
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
 
-//syncModel(User_device);
+syncModel(User_device);
 
 module.exports = User_device;
