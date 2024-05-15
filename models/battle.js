@@ -6,7 +6,7 @@ const { Model, DataTypes } = require('sequelize');
 
 const { sequelize, syncModel } = require('@/models');
 
-const User = require('./User');
+const User = require('./user');
 
 class Battle extends Model {}
 

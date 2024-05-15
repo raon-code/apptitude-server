@@ -1,14 +1,13 @@
 /**
- * Access_history.js
+ * access_history.js
  */
 const { Model, DataTypes } = require('sequelize');
-//const { sequelize, syncModel } = require('@/models');
-const User = require('./User');
+const { sequelize, syncModel } = require('@/models');
+const User = require('./user');
 
 class Access_history extends Model {}
 
-const Access_history = sequelize.define(
-  'Access_history',
+Access_history.init(
   {
     id: {
       type: DataTypes.BIGINT,

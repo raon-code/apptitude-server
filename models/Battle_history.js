@@ -1,14 +1,16 @@
 /**
- * Battle_history.js
+ * battle_history.js
  */
 const { Model, DataTypes } = require('sequelize');
 
-//const { sequelize, syncModel } = require('@/models');
+const { sequelize, syncModel } = require('@/models');
+
+const User = require('./user');
+const Battle = require('./battle');
 
 class Battle_history extends Model {}
 
-const Battle_history = sequelize.define(
-  'Battle_history',
+battle_history.init(
   {
     id: {
       type: DataTypes.BIGINT,
@@ -30,20 +32,20 @@ const Battle_history = sequelize.define(
     battle_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: '대결 식별ID'
-      // references: {
-      //   model: Battle,
-      //   key: 'id'
-      // }
+      comment: '대결 식별ID',
+      references: {
+        model: Battle,
+        key: 'id'
+      }
     },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: '사용자 식별ID'
-      // references: {
-      //   model: Battle,
-      //   key: 'id'
-      // }
+      comment: '사용자 식별ID',
+      references: {
+        model: User,
+        key: 'id'
+      }
     }
   },
   {
@@ -55,5 +57,5 @@ const Battle_history = sequelize.define(
   }
 );
 
-//syncModel(Battle_history);
+syncModel(Battle_history);
 module.exports = Battle_history;

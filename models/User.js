@@ -1,9 +1,9 @@
 /**
- * User.js
+ * user.js
  */
 const { Model, DataTypes } = require('sequelize');
 
-//const { sequelize, syncModel } = require('@/models');
+const { sequelize, syncModel } = require('@/models');
 
 class User extends Model {}
 
@@ -77,13 +77,13 @@ User.init(
   },
   {
     sequelize, // 초기화한 Sequelize 인스턴스
-    modelName: 'User', // 테이블 이름
+    modelName: 'user', // 테이블 이름
     comment: '사용자 정보', // 테이블 설명
     underscored: true, // 카멜케이스를 스네이크케이스로 변경
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
 
-//syncModel(User);
+syncModel(User);
 
 module.exports = User;
