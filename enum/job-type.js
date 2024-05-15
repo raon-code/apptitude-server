@@ -1,9 +1,15 @@
+const CommonTemplate = require('@/enum/common-template');
+
+/**
+ * job-type.js
+ *  직업 종류 도메인
+ */
 const JOB_TYPE = {
-  STUDENT: { common: { codeValue: 'JT0', description: '학생' } },
-  EXAMINEE: { common: { codeValue: 'JT1', description: '고시생' } },
-  JOB_SEEKER: { common: { codeValue: 'JT2', description: '취준생' } },
-  WORKER: { common: { codeValue: 'JT3', description: '직장인' } },
-  OTHERS: { common: { codeValue: 'JT99', description: '그외(직접입력)' } }
+  STUDENT: new CommonTemplate('JT0', '학생'),
+  EXAMINEE: new CommonTemplate('JT1', '고시생'),
+  JOB_SEEKER: new CommonTemplate('JT2', '취준생'),
+  WORKER: new CommonTemplate('JT3', '직장인'),
+  OTHERS: new CommonTemplate('JT4', '그외(직접입력)')
 };
 
 module.exports = JOB_TYPE;

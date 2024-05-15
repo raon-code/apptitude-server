@@ -23,4 +23,9 @@ const ENUM_LIST = [
   QUOTE // 명언
 ];
 
+// 객체의 값을 변경하지 못하도록 설정
+ENUM_LIST.map((enums) => {
+  Object.freeze(enums);
+});
+
 module.exports = ENUM_LIST;
