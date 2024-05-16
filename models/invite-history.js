@@ -2,14 +2,13 @@
  * invite_history.js
  */
 const { Model, DataTypes } = require('sequelize');
-
 const { sequelize, syncModel } = require('@/models');
 
-const Battle = require('./battle');
+const Battle = require('@/models/battle');
 
-class Invite_history extends Model {}
+class InviteHistory extends Model {}
 
-Invite_history.init(
+InviteHistory.init(
   {
     id: {
       type: DataTypes.BIGINT,
@@ -56,6 +55,6 @@ Invite_history.init(
   }
 );
 
-syncModel(Invite_history);
+syncModel(InviteHistory);
 
-module.exports = Invite_history;
+module.exports = InviteHistory;

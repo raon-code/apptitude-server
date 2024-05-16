@@ -3,16 +3,14 @@
  *  대결상세 스키마
  */
 const { Model, DataTypes } = require('sequelize');
-
 const { sequelize, syncModel } = require('@/models');
 
-const User = require('./user');
+const User = require('@/models/user');
+const Battle = require('@/models/battle');
 
-const Battle = require('./battle');
+class BattleDetail extends Model {}
 
-class Battle_Detail extends Model {}
-
-Battle_Detail.init(
+BattleDetail.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -62,6 +60,6 @@ Battle_Detail.init(
   }
 );
 
-syncModel(Battle_Detail);
+syncModel(BattleDetail);
 
-module.exports = Battle_Detail;
+module.exports = BattleDetail;

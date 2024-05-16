@@ -3,11 +3,12 @@
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');
-const User = require('./user');
 
-class Access_history extends Model {}
+const User = require('@/models/user');
 
-Access_history.init(
+class AccessHistory extends Model {}
+
+AccessHistory.init(
   {
     id: {
       type: DataTypes.BIGINT,
@@ -39,6 +40,6 @@ Access_history.init(
   }
 );
 
-syncModel(Access_history);
+syncModel(AccessHistory);
 
-module.exports = Access_history;
+module.exports = AccessHistory;

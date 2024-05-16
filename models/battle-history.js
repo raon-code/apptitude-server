@@ -2,15 +2,14 @@
  * battle_history.js
  */
 const { Model, DataTypes } = require('sequelize');
-
 const { sequelize, syncModel } = require('@/models');
 
-const User = require('./user');
-const Battle = require('./battle');
+const User = require('@/models/user');
+const Battle = require('@/models/battle');
 
-class Battle_history extends Model {}
+class BattleHistory extends Model {}
 
-battle_history.init(
+BattleHistory.init(
   {
     id: {
       type: DataTypes.BIGINT,
@@ -57,5 +56,6 @@ battle_history.init(
   }
 );
 
-syncModel(Battle_history);
-module.exports = Battle_history;
+syncModel(BattleHistory);
+
+module.exports = BattleHistory;
