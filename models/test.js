@@ -3,7 +3,6 @@
  *  작동 테스트용 스키마
  */
 const { Model, DataTypes } = require('sequelize');
-
 const { sequelize, syncModel } = require('@/models');
 
 class Test extends Model {}
