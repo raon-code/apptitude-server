@@ -22,25 +22,25 @@ UserDevice.init(
       comment: '기기식별값'
     },
 
-    os_type: {
+    osType: {
       type: DataTypes.STRING(10),
       allowNull: true,
       comment: '운영체제타입'
     },
 
-    os_version: {
+    osVersion: {
       type: DataTypes.STRING(50),
       allowNull: true,
       comment: '운영체제버전'
     },
 
-    is_using: {
+    isUsing: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       comment: '사용여부'
     },
 
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별ID',

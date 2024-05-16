@@ -16,7 +16,7 @@ Friend.init(
       autoIncrement: true,
       comment: '친구식별ID'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별ID',
@@ -25,7 +25,7 @@ Friend.init(
         key: 'id'
       }
     },
-    friend_id: {
+    friendId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '친구 사용자 식별ID',

@@ -33,22 +33,22 @@ User.init(
       allowNull: true,
       comment: '성별'
     },
-    age_range: {
+    ageRange: {
       type: DataTypes.STRING(10),
       allowNull: true,
       comment: '연령대'
     },
-    job_type: {
+    jobType: {
       type: DataTypes.STRING(10),
       allowNull: true,
       comment: '직업타입'
     },
-    job_detail: {
+    jobDetail: {
       type: DataTypes.STRING(50),
       allowNull: true,
       comment: '직업상세'
     },
-    profile_photo_path: {
+    profilePhotoPath: {
       type: DataTypes.STRING(200),
       allowNull: true,
       comment: '프로필 사진 경로'
@@ -58,17 +58,17 @@ User.init(
       allowNull: true,
       comment: '토큰값'
     },
-    token_expire: {
+    tokenExpire: {
       type: DataTypes.DATE,
       allowNull: true,
       comment: '토큰 만료일자'
     },
-    withdraw_date: {
+    withdrawDate: {
       type: DataTypes.DATE,
       allowNull: true,
       comment: '탈퇴날짜'
     },
-    last_login: {
+    lastLogin: {
       type: DataTypes.DATE,
       allowNull: true,
       comment: '마지막 로그인 일자'

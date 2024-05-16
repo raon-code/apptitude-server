@@ -17,22 +17,22 @@ BattleDetail.init(
       primaryKey: true, // default: not null
       comment: '대결상세 식별 id'
     },
-    detox_total_time: {
+    detoxTotalTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '디톡스 총 시간(분)'
     },
-    detox_time: {
+    detoxTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '디톡스 수행시간(분)'
     },
-    result_type: {
+    resultType: {
       type: DataTypes.STRING(10),
       allowNull: false,
       comment: '결과타입'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별id',
@@ -41,7 +41,7 @@ BattleDetail.init(
         key: 'id'
       }
     },
-    battle_id: {
+    battleId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '대결 식별id',

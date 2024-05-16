@@ -18,17 +18,17 @@ BattleHistory.init(
       allowNull: false,
       comment: '대결식별 ID'
     },
-    detox_time: {
+    detoxTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '디톡스 수행시간(분)'
     },
-    battle_date: {
+    battleDate: {
       type: DataTypes.DATE,
       allowNull: false,
       comment: '대결 날짜'
     },
-    battle_id: {
+    battleId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: '대결 식별ID',
@@ -37,7 +37,7 @@ BattleHistory.init(
         key: 'id'
       }
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: '사용자 식별ID',
