@@ -7,10 +7,17 @@ const jwt = require('jsonwebtoken');
 
 const jwtConfig = require('@/config').jwt;
 
-function generateJwtToken(payload) {
-  return jwt.sign(payload, jwtConfig.secret, jwtConfig.option);
+function generateJwtAccessToken(payload) {
+  return jwt.sign(payload, jwtConfig.secret, jwtConfig.option.access);
+}
+
+function reissueJwtAccessToken() {}
+
+function generateJwtRefreshToken(payload) {
+  return jwt.sign(payload, jwtConfig.secret, jwtConfig.option.refresh);
 }
 
 module.exports = {
-  generateJwtToken
+  generateJwtAccessToken,
+  generateJwtRefreshToken
 };

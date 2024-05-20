@@ -1,4 +1,5 @@
 const CommonTemplate = require('@/enum/common-template');
+const { getEnumMap } = require('@/enum');
 
 /**
  * os-type.js
@@ -10,4 +11,6 @@ const OS_TYPE = {
   OTHERS: new CommonTemplate('OT99', '그 외')
 };
 
-module.exports = OS_TYPE;
+const OS_TYPE_MAP = getEnumMap(OS_TYPE);
+
+module.exports = { OS_TYPE, OS_TYPE_MAP };

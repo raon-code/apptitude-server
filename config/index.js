@@ -32,7 +32,8 @@ const config = {
   jwt: {
     secret: 'SLEPe87w7eEue337ehndn3hHDjjKKDK',
     option: {
-      expiresIn: '1h'
+      access: { expiresIn: '1h' },
+      refresh: { expiresIn: '7d' }
     },
     algorithm: ['HS256']
   },

@@ -53,15 +53,15 @@ User.init(
       allowNull: true,
       comment: '프로필 사진 경로'
     },
-    token: {
+    accessJwt: {
       type: DataTypes.STRING(150),
       allowNull: true,
       comment: '토큰값'
     },
-    tokenExpire: {
-      type: DataTypes.DATE,
+    refreshJwt: {
+      type: DataTypes.STRING(150),
       allowNull: true,
-      comment: '토큰 만료일자'
+      comment: '갱신토큰값'
     },
     withdrawDate: {
       type: DataTypes.DATE,

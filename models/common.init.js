@@ -2,7 +2,7 @@
  *  common.init.js
  *    공통코드 값 초기화
  */
-const ENUM_LIST = require('@/enum');
+const { ENUM_LIST } = require('@/enum');
 
 /**
  * common 테이블에 명세한 데이터리스트를 추가합니다.
@@ -14,8 +14,8 @@ async function initCommonData(Common) {
   ENUM_LIST.forEach(async (enums) => {
     for (const key in enums) {
       await Common.upsert({
-        codeValue: enums[key].getCode(),
-        description: enums[key].getValue()
+        codeValue: enums[key].code,
+        description: enums[key].value
       });
     }
   });

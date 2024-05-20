@@ -25,7 +25,10 @@ function initialize(app) {
    *  name: Auth
    *  description: 인증 API
    */
-  app.use(`${API_BASE_PATH}/auth`, require('@/routes/auth-controller'));
+  app.use(
+    `${API_BASE_PATH}/auth/tests`,
+    require('@/routes/auth-test-controller')
+  );
 }
 
 module.exports = { initialize };

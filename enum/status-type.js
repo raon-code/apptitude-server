@@ -1,4 +1,5 @@
 const CommonTemplate = require('@/enum/common-template');
+const { getEnumMap } = require('@/enum');
 
 /**
  * status-type.js
@@ -12,4 +13,6 @@ const STATUS_TYPE = {
   END: new CommonTemplate('ST4', '종료')
 };
 
-module.exports = STATUS_TYPE;
+const STATUS_TYPE_MAP = getEnumMap(STATUS_TYPE);
+
+module.exports = { STATUS_TYPE, STATUS_TYPE_MAP };

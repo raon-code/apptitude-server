@@ -1,4 +1,5 @@
 const CommonTemplate = require('@/enum/common-template');
+const { getEnumMap } = require('@/enum');
 
 /**
  * age-range.js
@@ -16,4 +17,6 @@ const AGE_RANGE = {
   AGE_OVER_90: new CommonTemplate('AR8', '90대 이상')
 };
 
-module.exports = AGE_RANGE;
+const AGE_RANGE_MAP = getEnumMap(AGE_RANGE);
+
+module.exports = { AGE_RANGE, AGE_RANGE_MAP };

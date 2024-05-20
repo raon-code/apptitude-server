@@ -1,4 +1,5 @@
 const CommonTemplate = require('@/enum/common-template');
+const { getEnumMap } = require('@/enum');
 
 /**
  * job-type.js
@@ -12,4 +13,6 @@ const JOB_TYPE = {
   OTHERS: new CommonTemplate('JT4', '그외(직접입력)')
 };
 
-module.exports = JOB_TYPE;
+const JOB_TYPE_MAP = getEnumMap(this.JOB_TYPE_MAP);
+
+module.exports = { JOB_TYPE, JOB_TYPE_MAP };

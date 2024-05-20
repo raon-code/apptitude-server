@@ -1,4 +1,5 @@
 const CommonTemplate = require('@/enum/common-template');
+const { getEnumMap } = require('@/enum');
 
 /**
  * message-type.js
@@ -8,4 +9,6 @@ const MESSAGE_TYPE = {
   UNKNOWN: new CommonTemplate('MT0', '?')
 };
 
-module.exports = MESSAGE_TYPE;
+const MESSAGE_TYPE_MAP = getEnumMap(MESSAGE_TYPE);
+
+module.exports = { MESSAGE_TYPE, MESSAGE_TYPE_MAP };
