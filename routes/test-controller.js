@@ -1,5 +1,5 @@
 /**
- * test.controller.js
+ * test-controller.js
  *  테스트 컨트롤러
  */
 const router = require('express').Router();

@@ -11,8 +11,6 @@ function generateJwtAccessToken(payload) {
   return jwt.sign(payload, jwtConfig.secret, jwtConfig.option.access);
 }
 
-function reissueJwtAccessToken() {}
-
 function generateJwtRefreshToken(payload) {
   return jwt.sign(payload, jwtConfig.secret, jwtConfig.option.refresh);
 }

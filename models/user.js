@@ -53,11 +53,6 @@ User.init(
       allowNull: true,
       comment: '프로필 사진 경로'
     },
-    accessJwt: {
-      type: DataTypes.STRING(150),
-      allowNull: true,
-      comment: '토큰값'
-    },
     refreshJwt: {
       type: DataTypes.STRING(150),
       allowNull: true,
