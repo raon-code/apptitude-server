@@ -1,5 +1,8 @@
 const CommonTemplate = require('@/enum/common-template');
-const { getEnumMap } = require('@/enum');
+const {
+  convertToEnumMap,
+  convertToEnumCodeList
+} = require('@/common/convertor');
 
 /**
  * quote.js
@@ -12,6 +15,7 @@ const QUOTE = {
   )
 };
 
-const QUOTE_MAP = getEnumMap(QUOTE);
+const QUOTE_MAP = convertToEnumMap(QUOTE);
+const QUOTE_CODE = convertToEnumCodeList(QUOTE);
 
-module.exports = { QUOTE, QUOTE_MAP };
+module.exports = { QUOTE, QUOTE_MAP, QUOTE_CODE };

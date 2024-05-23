@@ -1,5 +1,8 @@
 const CommonTemplate = require('@/enum/common-template');
-const { getEnumMap } = require('@/enum');
+const {
+  convertToEnumMap,
+  convertToEnumCodeList
+} = require('@/common/convertor');
 
 /**
  * result-type.js
@@ -11,6 +14,7 @@ const RESULT_TYPE = {
   DRAW: new CommonTemplate('RT2', '무승부')
 };
 
-const RESULT_TYPE_MAP = getEnumMap(RESULT_TYPE);
+const RESULT_TYPE_MAP = convertToEnumMap(RESULT_TYPE);
+const RESULT_TYPE_CODE = convertToEnumCodeList(RESULT_TYPE);
 
-module.exports = { RESULT_TYPE, RESULT_TYPE_MAP };
+module.exports = { RESULT_TYPE, RESULT_TYPE_MAP, RESULT_TYPE_CODE };

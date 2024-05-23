@@ -1,5 +1,8 @@
 const CommonTemplate = require('@/enum/common-template');
-const { getEnumMap } = require('@/enum');
+const {
+  convertToEnumMap,
+  convertToEnumCodeList
+} = require('@/common/convertor');
 
 /**
  * status-type.js
@@ -13,6 +16,7 @@ const STATUS_TYPE = {
   END: new CommonTemplate('ST4', '종료')
 };
 
-const STATUS_TYPE_MAP = getEnumMap(STATUS_TYPE);
+const STATUS_TYPE_MAP = convertToEnumMap(STATUS_TYPE);
+const STATUS_TYPE_CODE = convertToEnumCodeList(STATUS_TYPE);
 
-module.exports = { STATUS_TYPE, STATUS_TYPE_MAP };
+module.exports = { STATUS_TYPE, STATUS_TYPE_MAP, STATUS_TYPE_CODE };

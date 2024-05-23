@@ -22,6 +22,14 @@ function initialize(app) {
   /**
    * @swagger
    * tags:
+   *  name: Users
+   *  description: 사용자 관련 API
+   */
+  app.use(`${API_BASE_PATH}/users`, require('@/routes/user-controller'));
+
+  /**
+   * @swagger
+   * tags:
    *  name: Auth
    *  description: 인증 API
    */
