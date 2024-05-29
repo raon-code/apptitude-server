@@ -17,7 +17,7 @@ function initialize(app) {
    *  name: Tests
    *  description: 테스트용 API
    */
-  app.use(`${API_BASE_PATH}/tests`, require('@/routes/test-controller'));
+  app.use(`${API_BASE_PATH}/tests`, require('@/routes/test/test-controller'));
 
   /**
    * @swagger
@@ -35,7 +35,7 @@ function initialize(app) {
    */
   app.use(
     `${API_BASE_PATH}/auth/tests`,
-    require('@/routes/auth-test-controller')
+    require('@/routes/test/auth-test-controller')
   );
 }
 

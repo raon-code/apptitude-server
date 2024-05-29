@@ -33,36 +33,36 @@ const CreateUserDTO = require('@/types/dto/create-user-dto');
  *               - profilePhotoPath
  *             properties:
  *               email:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string
+ *                 description: 이메일
+ *                 example: sb92120@gmail.com
  *               nickname:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string
+ *                 description: 닉네임
+ *                 example: NoPainNoLife
  *               gender:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string(enum)
+ *                 description: 성별(공통코드)
+ *                 example: GD1
  *               ageRange:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string(enum)
+ *                 description: 연령대(공통코드)
+ *                 example: AR2
  *               jobType:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string(enum)
+ *                 description: 직업타입(공통코드)
+ *                 example: JT0
  *               jobDetail:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string
+ *                 description: 직업상세, 직접입력 선택시 활성화
+ *                 example: 만년백수
  *               profilePhotoPath:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
+ *                 type: string
+ *                 description: 프로필사진 경로, 호스트 url은 제외
+ *                 example: /path/to/the/profile/photo.jpg
  *     responses:
  *       201:
- *         description: <대상>을 성공적으로 생성
+ *         description: 사용자를 성공적으로 생성
  *         content:
  *           application/json:
  *             schema:
@@ -76,15 +76,7 @@ const CreateUserDTO = require('@/types/dto/create-user-dto');
  *                   example: 'Created'
  *                 data:
  *                   type: object
- *                   properties:
- *                     <반환값-1>:
- *                       type: <타입>
- *                       description: <설명>
- *                       example: <예>
- *                     <등등..>:
- *                       type: <타입>
- *                       description: <설명>
- *                       example: <예>
+ *                   description: 생성한 사용자 정보
  *               required:
  *                 - statusCode
  *                 - message
@@ -96,7 +88,7 @@ async function createUser(req, res) {
   const createUserDto = CreateUserDTO.fromPlainObject(req.body);
   createUserDto.validate();
 
-  const newUser = await userService.createUser();
+  const newUser = await userService.createUser(createUserDto);
   response(res, StatusCodes.CREATED, 'Created', newUser);
 }
 

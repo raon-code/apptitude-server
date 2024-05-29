@@ -28,8 +28,9 @@ const corsHandler = require('@/middleware/cors-handler');
 const { sequelize } = require('@/models');
 const routes = require('@/routes');
 
-const testService = require('@/services/test-service');
-const { swaggerUi, specs } = require('./config/docs/swagger');
+const testService = require('@/services/test/test-service');
+const { swaggerUi, specs } = require('@/config/docs/swagger');
+const { ENUM_MAP_LIST, ENUM_CODE_LIST } = require('@/enum');
 
 const server = express();
 

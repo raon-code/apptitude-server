@@ -1,6 +1,7 @@
 /**
  * 공통코드 리스트
  */
+const logger = require('@/config/logger');
 const {
   AGE_RANGE,
   AGE_RANGE_MAP,
@@ -78,7 +79,7 @@ ENUM_MAP_LIST.map((enumMap) => {
 });
 
 // 객체의 값을 변경하지 못하도록 설정
-ENUM_MAP_CODE.map((enumCode) => {
+ENUM_CODE_LIST.map((enumCode) => {
   Object.freeze(enumCode);
 });
 
