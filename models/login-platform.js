@@ -16,6 +16,7 @@ LoginPlatform.init(
       autoIncrement: true,
       comment: '로그인플랫폼 식별ID'
     },
+
     platformType: {
       type: DataTypes.STRING(10),
       allowNull: true,
@@ -26,12 +27,6 @@ LoginPlatform.init(
       type: DataTypes.STRING(200),
       allowNull: true,
       comment: '플랫폼식별ID'
-    },
-
-    isUsing: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      comment: '사용여부'
     },
 
     userId: {
