@@ -48,6 +48,10 @@ LoginPlatform.init(
   }
 );
 
+// 사용자와 로그인플랫폼은 1:1 관계
+User.hasOne(LoginPlatform, { foreignKey: 'userId', sourceKey: 'id' });
+LoginPlatform.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
 syncModel(LoginPlatform);
 
 module.exports = LoginPlatform;

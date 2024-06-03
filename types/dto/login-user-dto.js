@@ -1,13 +1,13 @@
 /**
  * login-user-dto.js
  */
-const { PLATFORM_TYPE } = require('@/enum/platform-type');
+const { PLATFORM_TYPE_CODE } = require('@/enum/platform-type');
 const { BizError } = require('@/error');
 const Joi = require('joi');
 
 const validateSchema = Joi.object({
   platformType: Joi.string()
-    .valid(...Object.values(PLATFORM_TYPE))
+    .valid(...Object.values(PLATFORM_TYPE_CODE))
     .required()
     .messages({
       'any.only': '플랫폼 타입은 미리 정의된 값 중 하나여야 합니다',

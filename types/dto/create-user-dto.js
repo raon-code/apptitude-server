@@ -4,7 +4,7 @@
 const { AGE_RANGE_CODE } = require('@/enum/age-range');
 const { GENDER_CODE } = require('@/enum/gender');
 const { JOB_TYPE_CODE } = require('@/enum/job-type');
-const { PLATFORM_TYPE, PLATFORM_TYPE_CODE } = require('@/enum/platform-type');
+const { PLATFORM_TYPE_CODE } = require('@/enum/platform-type');
 const { BizError } = require('@/error');
 const Joi = require('joi');
 
@@ -44,16 +44,15 @@ const validateSchema = Joi.object({
   profilePhotoPath: Joi.string().optional().messages({
     'string.base': '프로필 사진 경로는 문자열이어야 합니다'
   }),
-  platformType: Joi.string()
-    .valid(...Object.values(PLATFORM_TYPE_CODE))
-    .required()
-    .messages({
-      'any.only': '플랫폼 타입은 미리 정의된 값 중 하나여야 합니다',
-      'any.required': '플랫폼 타입을 입력해주세요'
+  LoginPlatform: Joi.object({
+    platformType: Joi.string().required().messages({
+      'string.base': '플랫폼 유형은 문자열이어야 합니다',
+      'any.required': '플랫폼 유형을 입력해주세요'
     }),
-  uuid: Joi.string().required().messages({
-    'string.base': 'UUID는 문자열이어야 합니다',
-    'any.required': 'UUID를 입력해주세요'
+    uuid: Joi.string().required().messages({
+      'string.base': 'UUID는 문자열이어야 합니다',
+      'any.required': 'UUID를 입력해주세요'
+    })
   })
 });
 
@@ -66,8 +65,12 @@ class CreateUserDTO {
   jobDetail;
   profilePhotoPath;
 
-  platformType; // 공통코드
-  uuid;
+  // 로그인 플랫폼 정보
+  LoginPlatform;
+  // {
+  //   platformType; // 공통코드
+  //   uuid;
+  // }
 
   constructor({
     email,
@@ -77,8 +80,7 @@ class CreateUserDTO {
     jobType,
     jobDetail,
     profilePhotoPath,
-    platformType,
-    uuid
+    LoginPlatform = { platformType: '', uuid: '' } // 필수
   }) {
     this.email = email;
     this.nickname = nickname;
@@ -87,8 +89,7 @@ class CreateUserDTO {
     this.jobType = jobType;
     this.jobDetail = jobDetail;
     this.profilePhotoPath = profilePhotoPath;
-    this.platformType = platformType;
-    this.uuid = uuid;
+    this.LoginPlatform = LoginPlatform;
   }
 
   static fromPlainObject(obj) {

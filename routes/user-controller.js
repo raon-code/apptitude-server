@@ -92,11 +92,10 @@ const CreateUserDTO = require('@/types/dto/create-user-dto');
  */
 router.post('/', createUser);
 async function createUser(req, res) {
-  // parse & validation
-  const createUserDto = CreateUserDTO.fromPlainObject(req.body);
-  createUserDto.validate();
+  const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
+  createUserDTO.validate();
 
-  const newUser = await userService.createUser(createUserDto);
+  const newUser = await userService.createUser(createUserDTO);
   response(res, StatusCodes.CREATED, 'Created', newUser);
 }
 

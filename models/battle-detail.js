@@ -60,6 +60,25 @@ BattleDetail.init(
   }
 );
 
+// 사용자와 대결상세는 1:N 관계
+User.hasMany(BattleDetail, {
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+BattleDetail.belongsTo(User, {
+  foreignKey: 'userId',
+  targetKey: 'id'
+});
+
+// 대결과 대결상세는 1:M 관계
+Battle.hasMany(BattleDetail, {
+  foreignKey: 'battleId',
+  sourceKey: 'id'
+});
+BattleDetail.belongsTo(Battle, {
+  foreignKey: 'battleId',
+  targetKey: 'id'
+});
 syncModel(BattleDetail);
 
 module.exports = BattleDetail;

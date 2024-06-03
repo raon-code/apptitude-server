@@ -7,6 +7,7 @@ const { StatusCodes } = require('http-status-codes');
 
 const testService = require('@/services/test/test-service');
 const response = require('@/common/response');
+const logger = require('@/config/logger');
 
 /**
  * @swagger

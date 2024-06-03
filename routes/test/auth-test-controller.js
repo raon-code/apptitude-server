@@ -13,7 +13,31 @@ router.use(authMiddleware);
 
 /**
  * @swagger
- * /api/auth/protected
+ * /api/auth/tests/protected:
+ *   get:
+ *     summary: auth 테스트
+ *     description: 인증 테스트
+ *     tags: [Tests]
+ *     responses:
+ *       200:
+ *         description: Test retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: 'Auth success'
+ *                 data:
+ *                   type: object
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.get('/protected', afterProtected);
 async function afterProtected(req, res) {

@@ -44,6 +44,14 @@ Friend.init(
   }
 );
 
+// 사용자와 친구는 1:N 관계(사용자)
+User.hasMany(Friend, { foreignKey: 'userId', sourceKey: 'id' });
+Friend.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
+// 사용자와 친구는 1:N 관계(친구 사용자)
+User.hasMany(Friend, { foreignKey: 'friendId', sourceKey: 'id' });
+Friend.belongsTo(User, { foreignKey: 'friendId', targetKey: 'id' });
+
 syncModel(Friend);
 
 module.exports = Friend;

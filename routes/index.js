@@ -22,6 +22,17 @@ function initialize(app) {
   /**
    * @swagger
    * tags:
+   *  name: Tests
+   *  description: 테스트용 API
+   */
+  app.use(
+    `${API_BASE_PATH}/auth/tests`,
+    require('@/routes/test/auth-test-controller')
+  );
+
+  /**
+   * @swagger
+   * tags:
    *  name: Users
    *  description: 사용자 관련 API
    */
@@ -30,13 +41,10 @@ function initialize(app) {
   /**
    * @swagger
    * tags:
-   *  name: Auth
-   *  description: 인증 API
+   *  name: Sessions
+   *  description: 사용자 세션 관련 API
    */
-  app.use(
-    `${API_BASE_PATH}/auth/tests`,
-    require('@/routes/test/auth-test-controller')
-  );
+  app.use(`${API_BASE_PATH}/sessions`, require('@/routes/session-controller'));
 }
 
 module.exports = { initialize };

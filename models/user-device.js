@@ -59,6 +59,10 @@ UserDevice.init(
   }
 );
 
+// 사용자와 사용자기기정보는 1:N 관계
+User.hasMany(UserDevice, { foreignKey: 'userId', sourceKey: 'id' });
+UserDevice.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+
 syncModel(UserDevice);
 
 module.exports = UserDevice;

@@ -6,9 +6,6 @@ const User = require('@/models/user');
 
 const logger = require('@/config/logger');
 
-const { BizError } = require('@/error');
-const { generateJwtRefreshToken } = require('@/config/security/jwt');
-
 const CreateUserDTO = require('@/types/dto/create-user-dto');
 const LoginPlatform = require('@/models/login-platform');
 
@@ -19,22 +16,26 @@ const LoginPlatform = require('@/models/login-platform');
  * @returns {User} 새롭게 생성한 사용자 정보
  */
 async function createUser(createUserDTO) {
-  // 사용자 생성
-  const newUser = await User.create(createUserDTO);
+  // 로그인 플랫폼은 사용자와 1:1 관계이므로, 생성된 사용자 정보에 로그인 플랫폼 정보를 추가해준다.
+  const newUser = await User.create(createUserDTO, {
+    include: [LoginPlatform]
+  });
   logger.debug(newUser);
 
-  // 로그인 플랫폼 정보 생성
-  const newLoginPlatform = await LoginPlatform.create({
-    platformType: createUserDTO.platformType,
-    uuid: createUserDTO.uuid,
-    userId: newUser.id
-  });
-  logger.debug(newLoginPlatform);
+  // TODO: 사용자 기기 정보를 추가해준다.
 
   return newUser;
 }
 
+/**
+ * 사용자 조회
+ *
+ */
+async function getUser() {}
+
 // TODO: 사용자 수정
+//  JWT 토큰으로 사용자 정보를 저장하고 있으므로
+//  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
 
 // TODO: 사용자 탈퇴(삭제)
 
