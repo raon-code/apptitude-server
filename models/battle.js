@@ -82,7 +82,7 @@ Battle.init(
 
 // 사용자와 대결은 1:N 관계
 User.hasMany(Battle, { foreignKey: 'userId', sourceKey: 'id' });
-Battle.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
+Battle.belongsTo(User, { foreignKey: 'userId', sourceKey: 'id' });
 
 syncModel(Battle);
 

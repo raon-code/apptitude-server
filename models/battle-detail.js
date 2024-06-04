@@ -67,7 +67,7 @@ User.hasMany(BattleDetail, {
 });
 BattleDetail.belongsTo(User, {
   foreignKey: 'userId',
-  targetKey: 'id'
+  sourceKey: 'id'
 });
 
 // 대결과 대결상세는 1:M 관계
@@ -77,7 +77,7 @@ Battle.hasMany(BattleDetail, {
 });
 BattleDetail.belongsTo(Battle, {
   foreignKey: 'battleId',
-  targetKey: 'id'
+  sourceKey: 'id'
 });
 syncModel(BattleDetail);
 

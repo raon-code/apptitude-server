@@ -60,14 +60,20 @@ const CreateUserDTO = require('@/types/dto/create-user-dto');
  *                 type: string
  *                 description: 프로필사진 경로, 호스트 url은 제외
  *                 example: /path/to/the/profile/photo.jpg
- *               platformType:
- *                 type: string(enum)
- *                 description: 플랫폼 타입(공통코드)
- *                 example: PT1
- *               uuid:
- *                 type: string
- *                 description: UUID
- *                 example: 1234567890
+ *               LoginPlatform:
+ *                 type: object
+ *                 required:
+ *                 - platformType
+ *                 - uuid
+ *                 properties:
+ *                   platformType:
+ *                     type: string(enum)
+ *                     description: 플랫폼 타입(공통코드)
+ *                     example: PT0
+ *                   uuid:
+ *                     type: string
+ *                     description: UUID
+ *                     example: 1234567890
  *     responses:
  *       201:
  *         description: 사용자를 성공적으로 생성

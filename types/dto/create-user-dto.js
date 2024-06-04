@@ -45,10 +45,13 @@ const validateSchema = Joi.object({
     'string.base': '프로필 사진 경로는 문자열이어야 합니다'
   }),
   LoginPlatform: Joi.object({
-    platformType: Joi.string().required().messages({
-      'string.base': '플랫폼 유형은 문자열이어야 합니다',
-      'any.required': '플랫폼 유형을 입력해주세요'
-    }),
+    platformType: Joi.string()
+      .valid(...Object.values(PLATFORM_TYPE_CODE))
+      .required()
+      .messages({
+        'string.base': '플랫폼 유형은 미리 정의된 값 중 하나여야 합니다',
+        'any.required': '플랫폼 유형을 입력해주세요'
+      }),
     uuid: Joi.string().required().messages({
       'string.base': 'UUID는 문자열이어야 합니다',
       'any.required': 'UUID를 입력해주세요'
