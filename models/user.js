@@ -2,7 +2,6 @@
  * user.js
  */
 const { Model, DataTypes } = require('sequelize');
-
 const { sequelize, syncModel } = require('@/models');
 
 class User extends Model {}

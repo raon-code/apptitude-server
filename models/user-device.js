@@ -1,30 +1,37 @@
 /**
- * login_platform.js
+ * user-device.js
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');
-const User = require('./user');
 
-class Login_platform extends Model {}
+const User = require('@/models/user');
 
-Login.init(
+class UserDevice extends Model {}
+
+UserDevice.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      comment: '로그인플랫폼 식별ID'
+      comment: '사용자기기정보 식별ID'
     },
-    platform_type: {
-      type: DataTypes.STRING(10),
+    uuid: {
+      type: DataTypes.STRING(100),
       allowNull: true,
-      comment: '플랫폼타입'
+      comment: '기기식별값'
     },
 
-    uuid: {
-      type: DataTypes.STRING(200),
+    os_type: {
+      type: DataTypes.STRING(10),
       allowNull: true,
-      comment: '플랫폼식별ID'
+      comment: '운영체제타입'
+    },
+
+    os_version: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      comment: '운영체제버전'
     },
 
     is_using: {
@@ -35,8 +42,8 @@ Login.init(
 
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      comment: '사용자 식별id',
+      allowNull: false,
+      comment: '사용자 식별ID',
       references: {
         model: User,
         key: 'id'
@@ -45,13 +52,13 @@ Login.init(
   },
   {
     sequelize, // 초기화한 Sequelize 인스턴스
-    modelName: 'login_platform', // 테이블 이름
-    comment: '로그인 정보', // 테이블 설명
+    modelName: 'user_device', // 테이블 이름
+    comment: '사용자기기정보', // 테이블 설명
     underscored: true, // 카멜케이스를 스네이크케이스로 변경
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
 
-syncModel(Login_platform);
+syncModel(UserDevice);
 
-module.exports = Login_platform;
+module.exports = UserDevice;

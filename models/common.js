@@ -3,7 +3,6 @@
  *  공통코드 스키마
  */
 const { Model, DataTypes } = require('sequelize');
-
 const { sequelize, syncModel } = require('@/models');
 const initCommonData = require('@/models/common.init');
 

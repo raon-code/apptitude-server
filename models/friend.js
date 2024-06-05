@@ -3,7 +3,8 @@
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');
-const User = require('./user');
+
+const User = require('@/models/user');
 
 class Friend extends Model {}
 
