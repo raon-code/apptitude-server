@@ -44,7 +44,7 @@ const validateSchema = Joi.object({
   profilePhotoPath: Joi.string().optional().messages({
     'string.base': '프로필 사진 경로는 문자열이어야 합니다'
   }),
-  LoginPlatform: Joi.object({
+  loginPlatform: Joi.object({
     platformType: Joi.string()
       .valid(...Object.values(PLATFORM_TYPE_CODE))
       .required()
@@ -69,7 +69,7 @@ class CreateUserDTO {
   profilePhotoPath;
 
   // 로그인 플랫폼 정보
-  LoginPlatform;
+  loginPlatform;
   // {
   //   platformType; // 공통코드
   //   uuid;
@@ -83,7 +83,7 @@ class CreateUserDTO {
     jobType,
     jobDetail,
     profilePhotoPath,
-    LoginPlatform = { platformType: '', uuid: '' } // 필수
+    loginPlatform = { platformType: '', uuid: '' } // 필수
   }) {
     this.email = email;
     this.nickname = nickname;
@@ -92,7 +92,7 @@ class CreateUserDTO {
     this.jobType = jobType;
     this.jobDetail = jobDetail;
     this.profilePhotoPath = profilePhotoPath;
-    this.LoginPlatform = LoginPlatform;
+    this.loginPlatform = loginPlatform;
   }
 
   static fromPlainObject(obj) {

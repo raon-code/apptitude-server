@@ -31,12 +31,14 @@ const routes = require('@/routes');
 const testService = require('@/services/test/test-service');
 const { swaggerUi, specs } = require('@/config/docs/swagger');
 const { ENUM_MAP_LIST, ENUM_CODE_LIST } = require('@/enum');
+const cookieParser = require('cookie-parser');
 
 const server = express();
 
 // 서버 기본 설정
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json()); // Body JSON 파싱 활성화
+server.use(cookieParser()); // 쿠키 파싱 활성화
 
 // 미들웨어 설정(Before Biz Process)
 server.use(ddosDefender);

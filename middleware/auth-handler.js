@@ -12,9 +12,18 @@ const { StatusCodes } = require('http-status-codes');
 const { UnauthorizeError } = require('@/error');
 const response = require('@/common/response');
 const { isEmpty } = require('@/common/validate');
+const {
+  getJwtPayload,
+  setJwtTokenCookie,
+  getJwtTokenCookie
+} = require('@/config/security/jwt');
+const { reissue } = require('@/services/session-service');
 
 const passportOption = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    getJwtTokenCookie, // 쿠키 토큰 사용
+    ExtractJwt.fromAuthHeaderAsBearerToken() // 헤더 토큰 사용
+  ]),
   secretOrKey: config.jwt.secret,
   algorithms: config.jwt.algorithm
 };
@@ -27,42 +36,46 @@ const authHandler = passport.use(
       (토큰 유효기간 검증 및 갱신, 권한 검증 등)
       예를 들어, jwt_payload의 사용자 정보를 바탕으로 데이터베이스를 조회할 수 있습니다.
     */
-
-    // TODO: 올바른 페이로드인지 검증 로직
-    const expiration = jwtPayload.exp;
-    if (isEmpty(expiration)) {
-      return done(new UnauthorizeError('잘못된 토큰 정보'), false);
-    }
-
-    if (isExpired(expiration)) {
-      // TODO: 토큰 갱신 로직
-    }
-
-    // if (jwtPayload.id !== 1) {
-    //   return done(null, false);
-    // }
-
     return done(null, jwtPayload);
   })
 );
 
 const authMiddleware = (req, res, next) => {
-  authHandler.authenticate('jwt', { session: false }, (err, user, info) => {
-    // 인증로직에서 에러 발생 또는 권한이 없는 경우
-    if (err || !user) {
-      // TODO: 에러 로그로 잘못된 접근에 대한 기록이 필요해보임
-      response(res, StatusCodes.UNAUTHORIZED, '권한없음');
-      return;
-    }
-    req.user = user;
-    next();
-  })(req, res, next);
-};
+  authHandler.authenticate(
+    'jwt',
+    { session: false },
+    async (err, user, info) => {
+      try {
+        // 토큰 만료 시 재발급
+        if (info && info.name === 'TokenExpiredError') {
+          const accessToken = req.headers['authorization'].split(' ')[1];
+          const payload = getJwtPayload(accessToken);
 
-function isExpired(expiration) {
-  const now = new Date().getTime() / 1000;
-  return now > expiration;
-}
+          if (payload) {
+            const newAccessToken = await reissue(payload.refreshJwt);
+            setJwtTokenCookie(res, newAccessToken);
+            req.user = getJwtPayload(newAccessToken);
+            next();
+            return;
+          }
+        }
+
+        // 검증 실패
+        if (err || !user) {
+          throw new UnauthorizeError('권한이 없습니다.');
+        }
+      } catch (error) {
+        logger.error(error);
+        response(res, StatusCodes.UNAUTHORIZED, '권한없음');
+        return;
+      }
+
+      // 인증 성공
+      req.user = user;
+      next();
+    }
+  )(req, res, next);
+};
 
 module.exports = {
   authMiddleware,

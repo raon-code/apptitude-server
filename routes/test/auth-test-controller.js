@@ -43,7 +43,7 @@ router.get('/protected', afterProtected);
 async function afterProtected(req, res) {
   // 인증 미들웨어로부터 넘겨받은 유저 정보
   // logger.debug(req.user);
-  response(res, StatusCodes.OK, 'Auth success');
+  response(res, StatusCodes.OK, 'Auth success', { user: req.user });
 }
 
 module.exports = router;

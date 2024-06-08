@@ -60,8 +60,16 @@ UserDevice.init(
 );
 
 // 사용자와 사용자기기정보는 1:N 관계
-User.hasMany(UserDevice, { foreignKey: 'userId', sourceKey: 'id' });
-UserDevice.belongsTo(User, { foreignKey: 'userId', sourceKey: 'id' });
+User.hasMany(UserDevice, {
+  as: 'userDevice',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+UserDevice.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
 
 syncModel(UserDevice);
 

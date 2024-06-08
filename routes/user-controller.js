@@ -60,7 +60,7 @@ const CreateUserDTO = require('@/types/dto/create-user-dto');
  *                 type: string
  *                 description: 프로필사진 경로, 호스트 url은 제외
  *                 example: /path/to/the/profile/photo.jpg
- *               LoginPlatform:
+ *               loginPlatform:
  *                 type: object
  *                 required:
  *                 - platformType

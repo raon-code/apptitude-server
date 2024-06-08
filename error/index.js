@@ -13,6 +13,15 @@ class BizError extends Error {
   }
 }
 
+class UnauthorizeError extends Error {
+  status = StatusCodes.UNAUTHORIZED;
+  constructor(message = '권한이 없습니다.') {
+    super(message);
+    this.name = `Unauthorized`;
+  }
+}
+
 module.exports = {
-  BizError
+  BizError,
+  UnauthorizeError
 };

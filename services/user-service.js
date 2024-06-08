@@ -18,7 +18,7 @@ const LoginPlatform = require('@/models/login-platform');
 async function createUser(createUserDTO) {
   // 로그인 플랫폼은 사용자와 1:1 관계이므로, 생성된 사용자 정보에 로그인 플랫폼 정보를 추가해준다.
   const newUser = await User.create(createUserDTO, {
-    include: [{ model: LoginPlatform, as: 'LoginPlatform' }]
+    include: [{ model: LoginPlatform, as: 'loginPlatform' }]
   });
   logger.debug(newUser);
 
@@ -31,9 +31,15 @@ async function createUser(createUserDTO) {
 
 /**
  * 사용자 조회
- *
+ * @param {string} userId
+ * @returns
  */
-async function getUser() {}
+async function getUser(userId) {
+  const user = await User.findByPk(userId);
+  logger.debug(user);
+
+  return user;
+}
 
 // TODO: 사용자 수정
 //  JWT 토큰으로 사용자 정보를 저장하고 있으므로

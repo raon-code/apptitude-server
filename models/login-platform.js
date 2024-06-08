@@ -50,12 +50,12 @@ LoginPlatform.init(
 
 // 사용자와 로그인플랫폼은 1:1 관계
 User.hasOne(LoginPlatform, {
-  as: 'LoginPlatform',
+  as: 'loginPlatform',
   foreignKey: 'userId',
   sourceKey: 'id'
 });
 LoginPlatform.belongsTo(User, {
-  as: 'LoginPlatform',
+  as: 'user',
   foreignKey: 'userId',
   sourceKey: 'id'
 });

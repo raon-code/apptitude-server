@@ -9,6 +9,11 @@ const sessionService = require('@/services/session-service');
 const response = require('@/common/response');
 
 const LoginUserDTO = require('@/types/dto/login-user-dto');
+const { authMiddleware } = require('@/middleware/auth-handler');
+const {
+  setJwtTokenCookie,
+  clearJwtTokenCookie
+} = require('@/config/security/jwt');
 
 /**
  * @swagger
@@ -67,7 +72,41 @@ async function createSession(req, res) {
 
   const accessToken = await sessionService.login(loginUserDTO);
 
+  // 액세스 토큰을 쿠키에 저장
+  setJwtTokenCookie(res, accessToken);
   response(res, StatusCodes.OK, '세션생성 성공', { accessToken });
+}
+
+/**
+ * @swagger
+ * /api/sessions:
+ *   delete:
+ *     summary: 세션을 삭제(로그아웃)
+ *     description: 세션을 삭제
+ *     tags: [Sessions]
+ *     responses:
+ *       200:
+ *         description: 세션(토큰기반)을 성공적으로 삭제
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: '세션삭제 성공'
+ *               required:
+ *                 - statusCode
+ *                 - message
+ */
+router.delete('/', authMiddleware, deleteSession);
+async function deleteSession(req, res) {
+  // 액세스 토큰을 쿠키에서 삭제
+  clearJwtTokenCookie(res);
+  response(res, StatusCodes.NO_CONTENT, '세션삭제 성공');
 }
 
 module.exports = router;
