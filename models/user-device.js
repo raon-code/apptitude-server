@@ -22,25 +22,25 @@ UserDevice.init(
       comment: '기기식별값'
     },
 
-    os_type: {
+    osType: {
       type: DataTypes.STRING(10),
       allowNull: true,
       comment: '운영체제타입'
     },
 
-    os_version: {
+    osVersion: {
       type: DataTypes.STRING(50),
       allowNull: true,
       comment: '운영체제버전'
     },
 
-    is_using: {
+    isUsing: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
       comment: '사용여부'
     },
 
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별ID',
@@ -58,6 +58,18 @@ UserDevice.init(
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
+
+// 사용자와 사용자기기정보는 1:N 관계
+User.hasMany(UserDevice, {
+  as: 'userDevice',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+UserDevice.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
 
 syncModel(UserDevice);
 

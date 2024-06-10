@@ -17,15 +17,34 @@ function initialize(app) {
    *  name: Tests
    *  description: 테스트용 API
    */
-  app.use(`${API_BASE_PATH}/tests`, require('@/routes/test-controller'));
+  app.use(`${API_BASE_PATH}/tests`, require('@/routes/test/test-controller'));
 
   /**
    * @swagger
    * tags:
-   *  name: Auth
-   *  description: 인증 API
+   *  name: Tests
+   *  description: 테스트용 API
    */
-  app.use(`${API_BASE_PATH}/auth`, require('@/routes/auth-controller'));
+  app.use(
+    `${API_BASE_PATH}/auth/tests`,
+    require('@/routes/test/auth-test-controller')
+  );
+
+  /**
+   * @swagger
+   * tags:
+   *  name: Users
+   *  description: 사용자 관련 API
+   */
+  app.use(`${API_BASE_PATH}/users`, require('@/routes/user-controller'));
+
+  /**
+   * @swagger
+   * tags:
+   *  name: Sessions
+   *  description: 사용자 세션 관련 API
+   */
+  app.use(`${API_BASE_PATH}/sessions`, require('@/routes/session-controller'));
 }
 
 module.exports = { initialize };

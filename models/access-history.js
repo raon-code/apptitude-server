@@ -16,12 +16,12 @@ AccessHistory.init(
       autoIncrement: true,
       comment: '접속내역 식별ID'
     },
-    access_date: {
+    accessDate: {
       type: DataTypes.DATE,
       allowNull: true,
       comment: '접속 날짜'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: '사용자 식별ID',

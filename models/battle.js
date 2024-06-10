@@ -21,22 +21,22 @@ Battle.init(
       allowNull: false,
       comment: '대결명'
     },
-    start_date: {
+    startDate: {
       type: DataTypes.DATE,
       allowNull: false,
       comment: '시작일'
     },
-    end_date: {
+    endDate: {
       type: DataTypes.DATE,
       allowNull: false,
       comment: '종료일'
     },
-    invite_link: {
+    inviteLink: {
       type: DataTypes.STRING(200),
       allowNull: false,
       comment: '초대링크'
     },
-    valid_wait_tile: {
+    validWaitTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '대기유효시간(분)'
@@ -46,22 +46,22 @@ Battle.init(
       allowNull: false,
       comment: '보상'
     },
-    is_reward_paid: {
+    isRewardPaid: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       comment: '보상여부'
     },
-    status_type: {
+    statusType: {
       type: DataTypes.STRING(10),
       allowNull: false,
       comment: '상태타입'
     },
-    create_at: {
+    createAt: {
       type: DataTypes.DATE,
       allowNull: false,
       comment: '생성날짜'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별id',
@@ -79,6 +79,18 @@ Battle.init(
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
+
+// 사용자와 대결은 1:N 관계
+User.hasMany(Battle, {
+  as: 'battle',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+Battle.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
 
 syncModel(Battle);
 

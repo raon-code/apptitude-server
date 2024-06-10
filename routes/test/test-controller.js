@@ -1,12 +1,13 @@
 /**
- * test.controller.js
+ * test-controller.js
  *  테스트 컨트롤러
  */
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 
-const testService = require('@/services/test-service');
+const testService = require('@/services/test/test-service');
 const response = require('@/common/response');
+const logger = require('@/config/logger');
 
 /**
  * @swagger

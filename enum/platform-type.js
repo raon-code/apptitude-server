@@ -1,4 +1,8 @@
 const CommonTemplate = require('@/enum/common-template');
+const {
+  convertToEnumMap,
+  convertToEnumCodeList
+} = require('@/common/convertor');
 
 /**
  * platform-type.js
@@ -8,4 +12,7 @@ const PLATFORM_TYPE = {
   KAKAO: new CommonTemplate('PT0', '카카오')
 };
 
-module.exports = PLATFORM_TYPE;
+const PLATFORM_TYPE_MAP = convertToEnumMap(PLATFORM_TYPE);
+const PLATFORM_TYPE_CODE = convertToEnumCodeList(PLATFORM_TYPE);
+
+module.exports = { PLATFORM_TYPE, PLATFORM_TYPE_MAP, PLATFORM_TYPE_CODE };

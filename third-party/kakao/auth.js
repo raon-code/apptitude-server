@@ -1,3 +1,7 @@
+/**
+ * kakao/auth.js
+ *  카카오 인증 API
+ */
 const axios = require('axios');
 const kakaoConfig = require('@/config').kakao;
 
@@ -9,7 +13,11 @@ function getAuthUrl() {
   );
 }
 
-// 토큰발급
+/**
+ * 토큰발급
+ * @param {*} auth
+ * @returns
+ */
 async function getToken(auth) {
   const params = new URLSearchParams();
   params.append('grant_type', 'authorization_code');
@@ -30,7 +38,11 @@ async function getToken(auth) {
   return response;
 }
 
-// 토큰정보 조회
+/**
+ * 토큰정보 조회
+ * @param {*} accessToken
+ * @returns
+ */
 async function getTokenInfo(accessToken) {
   const response = await axios.get(
     'https://kapi.kakao.com/v1/user/access_token_info',
@@ -44,7 +56,11 @@ async function getTokenInfo(accessToken) {
   return response;
 }
 
-// 유저정보 조회
+/**
+ * 유저정보 조회
+ * @param {*} token
+ * @returns
+ */
 async function getUserInfo(token) {
   const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
     headers: {

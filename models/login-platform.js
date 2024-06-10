@@ -16,7 +16,8 @@ LoginPlatform.init(
       autoIncrement: true,
       comment: '로그인플랫폼 식별ID'
     },
-    platform_type: {
+
+    platformType: {
       type: DataTypes.STRING(10),
       allowNull: true,
       comment: '플랫폼타입'
@@ -28,13 +29,7 @@ LoginPlatform.init(
       comment: '플랫폼식별ID'
     },
 
-    is_using: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
-      comment: '사용여부'
-    },
-
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: '사용자 식별id',
@@ -52,6 +47,18 @@ LoginPlatform.init(
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
+
+// 사용자와 로그인플랫폼은 1:1 관계
+User.hasOne(LoginPlatform, {
+  as: 'loginPlatform',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+LoginPlatform.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
 
 syncModel(LoginPlatform);
 

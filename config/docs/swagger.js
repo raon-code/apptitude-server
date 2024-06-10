@@ -22,9 +22,24 @@ const swaggerOption = {
       {
         url: 'http://localhost:3000' // 요청 URL
       }
+    ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Enter JWT token in the format Bearer {token}'
+        }
+      }
+    },
+    security: [
+      {
+        BearerAuth: []
+      }
     ]
   },
-  apis: ['./routes/*.js'] // 파일 연동
+  apis: ['./routes/test/*.js', './routes/*.js'] // 파일 연동
 };
 
 const specs = swaggerJsdoc(swaggerOption);

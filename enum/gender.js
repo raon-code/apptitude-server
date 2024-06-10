@@ -1,4 +1,8 @@
 const CommonTemplate = require('@/enum/common-template');
+const {
+  convertToEnumMap,
+  convertToEnumCodeList
+} = require('@/common/convertor');
 
 /**
  * gender.js
@@ -9,4 +13,7 @@ const GENDER = {
   MALE: new CommonTemplate('GD1', '남자')
 };
 
-module.exports = GENDER;
+const GENDER_MAP = convertToEnumMap(GENDER);
+const GENDER_CODE = convertToEnumCodeList(GENDER);
+
+module.exports = { GENDER, GENDER_MAP, GENDER_CODE };

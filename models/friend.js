@@ -16,7 +16,7 @@ Friend.init(
       autoIncrement: true,
       comment: '친구식별ID'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별ID',
@@ -25,7 +25,7 @@ Friend.init(
         key: 'id'
       }
     },
-    friend_id: {
+    friendId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '친구 사용자 식별ID',
@@ -43,6 +43,30 @@ Friend.init(
     timestamps: true // createAt, updateAt 추가 및 자동관리
   }
 );
+
+// 사용자와 친구는 1:N 관계(사용자)
+User.hasMany(Friend, {
+  as: 'friend',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+Friend.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+
+// 사용자와 친구는 1:N 관계(친구 사용자)
+User.hasMany(Friend, {
+  as: 'friend',
+  foreignKey: 'friendId',
+  sourceKey: 'id'
+});
+Friend.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'friendId',
+  sourceKey: 'id'
+});
 
 syncModel(Friend);
 

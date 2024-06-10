@@ -32,9 +32,18 @@ const config = {
   jwt: {
     secret: 'SLEPe87w7eEue337ehndn3hHDjjKKDK',
     option: {
-      expiresIn: '1h'
+      access: { expiresIn: '1m' },
+      refresh: { expiresIn: '7d' }
     },
-    algorithm: ['HS256']
+    algorithm: ['HS256'],
+    cookie: {
+      name: 'accessToken',
+      option: {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+      }
+    }
   },
   kakao: {
     restApiKey: '6b42072c0ab619483e4fe33d615880fe',
