@@ -4,6 +4,11 @@
  */
 const logger = require('@/config/logger');
 
+/**
+ *
+ * @param {*} _enum
+ * @returns
+ */
 function convertToEnumMap(_enum) {
   const enumMap = new Map();
   Object.values(_enum).forEach((element) => {
@@ -12,6 +17,11 @@ function convertToEnumMap(_enum) {
   return enumMap;
 }
 
+/**
+ *
+ * @param {*} _enum
+ * @returns
+ */
 function convertToEnumCodeList(_enum) {
   const enumCodeList = new Map();
   Object.values(_enum).forEach((element) => {
