@@ -30,9 +30,20 @@ async function createUser(createUserDTO) {
 }
 
 /**
+ * 사용자 목록 조회
+ * @returns {User[]} 사용자 목록 
+ */
+async function getUserList() {
+  const userList = await User.findAll();
+  logger.debug(userList);
+
+  return userList;
+}
+
+/**
  * 사용자 조회
  * @param {string} userId
- * @returns
+ * @returns {User} 사용자 정보
  */
 async function getUser(userId) {
   const user = await User.findByPk(userId);

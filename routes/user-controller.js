@@ -105,4 +105,8 @@ async function createUser(req, res) {
   response(res, StatusCodes.CREATED, 'Created', newUser);
 }
 
+// TODO: 사용자 수정
+//  JWT 토큰으로 사용자 정보를 저장하고 있으므로
+//  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
+
 module.exports = router;
