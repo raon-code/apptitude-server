@@ -58,4 +58,18 @@ async function getUser(userId) {
 
 // TODO: 사용자 탈퇴(삭제)
 
+// 친구
+// TODO: 친구 등록
+// TODO: 친구 목록 조회
+
+// 로그인 플랫폼
+// TODO: 로그인 플랫폼 등록
+// TODO: 로그인 플랫폼 현황 조회
+// TODO: 로그인 플랫폼 수정
+
+// 사용자 기기정보
+// TODO: 사용자 기기정보 등록
+// TODO: 사용자 기기정보 조회
+// TODO: 사용자 기기정보 수정
+
 module.exports = { createUser };
