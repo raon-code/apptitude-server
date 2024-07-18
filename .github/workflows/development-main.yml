@@ -44,12 +44,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: apptitide-server
-        path: apptitude-server.zip
-
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
