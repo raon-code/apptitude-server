@@ -24,6 +24,7 @@ jobs:
     # - name: Build project
     #   run: npm run start:dev
 
+    # .git 폴더 제외
     - name: Zip files
       run: zip -r apptitude-server.zip .
 
