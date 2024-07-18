@@ -1,0 +1,63 @@
+name: Deploy Express.js to AWS EC2
+
+on:
+  push:
+    branches:
+      - development-main
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    # - name: Install dependencies
+    #   run: npm install
+
+    # - name: Build project
+    #   run: npm run start:dev
+
+    - name: Zip files
+      run: zip -r apptitude.zip
+
+    - name: Upload to S3
+      uses: actions/upload-artifact@v2
+      with:
+        name: deploy
+        path: apptitide-server.zip
+
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: deploy
+        path: apptitude-server.zip
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: Copy files to EC2 and restart
+      run: |
+        aws ssm send-command \
+          --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+          --document-name "AWS-RunShellScript" \
+          --comment "Deploy Express.js application" \
+          --parameters commands="aws s3 cp ${{ secrets.S3_DEPLOY_PATH }} ${{ secrets.EC2_DEPLOY_PATH }}, rm -rf ${{ secrets.EC2_APP_PATH }}, unzip ${{ secrets.EC2_DEPLOY_PATH }} -d ${{ secrets.EC2_APP_PATH }}, cd ${{ secrets.EC2_APP_PATH }}, npm install, pm2 restart all" \
+          --timeout-seconds 600 \
+          --output text
