@@ -30,7 +30,7 @@ jobs:
     - name: Upload to S3
       uses: actions/upload-artifact@v2
       with:
-        name: deploy
+        name: apptitide-server
         path: apptitide-server.zip
 
 
@@ -42,7 +42,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: deploy
+        name: apptitide-server
         path: apptitude-server.zip
 
     - name: Configure AWS credentials
