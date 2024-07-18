@@ -116,17 +116,27 @@ async function createUser(req, res) {
 }
 
 // TODO: 사용자 조회
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ */ 
 router.get('/:id(\\d+)', verifyUser, getUser);
 async function getUser(req, res) {
   const userId = req.params.id;
 
   const user = await userService.getUser(userId);
-  response(res, StatusCodes.OK, 'OK', user);
+  response(res, StatusCodes.OK, 'Ok', user);
 }
 
 // TODO: 사용자 수정
 //  JWT 토큰으로 사용자 정보를 저장하고 있으므로
 //  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   patch:
+ */ 
 router.patch('/:id(\\d+)', verifyUser, updateUser);
 async function updateUser(req, res) {
   const userId = req.params.id;
@@ -136,15 +146,25 @@ async function updateUser(req, res) {
 }
 
 // TODO: 사용자 친구 등록
+/**
+ * @swagger
+ * /api/users/{id}/friends:
+ *   post:
+ */ 
 router.post('/:id(\\d+)/friends', verifyUser, createFriend);
 async function createFriend(req, res) {
   const userId = req.params.id;
 
   // TODO: CreateFriendDTO 추가
-  // TODO: getFriendList 서비스 추가
+  // TODO: createFriend 서비스 추가
 }
 
 // TODO: 사용자 친구 목록 조회
+/**
+ * @swagger
+ * /api/users/{id}/friends:
+ *   get:
+ */ 
 router.get('/:id(\\d+)/friends', verifyUser, getFriendList);
 async function getFriendList(req, res) {
   const userId = req.params.id;
@@ -160,14 +180,24 @@ async function getFriendList(req, res) {
 }
 
 // TODO: 사용자 친구 전체, 선택 삭제
+/**
+ * @swagger
+ * /api/users/{id}/friends:
+ *   delete:
+ */ 
 router.delete('/:id(\\d+)/friends', verifyUser, deleteFriendList);
 async function deleteFriendList(req, res) {
   const userId = req.params.id;
 
-  // TODO: deleteFriendByList 서비스 추가: List 형태로 받는 friend id를 이용하여 여러명의 친구 삭제
+  // TODO: deleteFriendList 서비스 추가: List 형태로 받는 friend id를 이용하여 여러명의 친구 삭제
 }
 
 // TODO: 사용자 친구 조회
+/**
+ * @swagger
+ * /api/users/{id}/friends/{friendId}:
+ *   get:
+ */ 
 router.get('/:id(\\d+)/friends/:friendId(\\d+)', verifyUser, getFriend);
 async function getFriend(req, res) {
   const userId = req.params.id;
@@ -178,6 +208,11 @@ async function getFriend(req, res) {
 }
 
 // TODO: 사용자 친구 삭제
+/**
+ * @swagger
+ * /api/users/{id}/friends/{friendId}:
+ *   delete:
+ */ 
 router.delete('/:id(\\d+)/friends/:friendId(\\d+)', verifyUser, deleteFriend);
 async function deleteFriend(req, res) {
   const userId = req.params.id;
@@ -187,6 +222,11 @@ async function deleteFriend(req, res) {
 }
 
 // TODO: 사용자 기기 등록
+/**
+ * @swagger
+ * /api/users/{id}/devices:
+ *   post:
+ */
 router.post('/:id(\\d+)/devices', verifyUser, createDevice);
 async function createDevice(req, res) {
   const userId = req.params.id;
@@ -196,6 +236,11 @@ async function createDevice(req, res) {
 }
 
 // TODO: 사용자 기기 조회
+/**
+ * @swagger
+ * /api/users/{id}/devices/{deviceId}:
+ *   get:
+ */
 router.get('/:id(\\d+)/devices/:deviceId(\\d+)', verifyUser, getDevice);
 async function getDevice(req, res) {
   const userId = req.params.id;
@@ -205,6 +250,11 @@ async function getDevice(req, res) {
 }
 
 // TODO: 로그인 플랫폼 등록
+/**
+ * @swagger
+ * /api/users/{id}/login-platforms:
+ *   post:
+ */
 router.post('/:id(\\d+)/login-platforms', verifyUser, createLoginPlatform);
 async function createLoginPlatform(req, res) {
   const userId = req.params.id;
@@ -214,11 +264,16 @@ async function createLoginPlatform(req, res) {
 }
 
 // TODO: 사용자 배틀 목록 조회
+/**
+ * @swagger
+ * /api/users/{id}/battles:
+ *   get:
+ */
 router.get('/:id(\\d+)/battles', verifyUser, getBattleList);
 async function getBattleList(req, res) {
   const userId = req.params.id;
 
-  //
+  // TODO: getBattleList 서비스 추가
 }
 
 module.exports = router;

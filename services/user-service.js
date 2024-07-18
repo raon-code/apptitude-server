@@ -31,7 +31,7 @@ async function createUser(createUserDTO) {
 
 /**
  * 사용자 목록 조회
- * @returns {User[]} 사용자 목록 
+ * @returns {User[]} 사용자 목록
  */
 async function getUserList() {
   const userList = await User.findAll();
@@ -51,25 +51,5 @@ async function getUser(userId) {
 
   return user;
 }
-
-// TODO: 사용자 수정
-//  JWT 토큰으로 사용자 정보를 저장하고 있으므로
-//  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
-
-// TODO: 사용자 탈퇴(삭제)
-
-// 친구
-// TODO: 친구 등록
-// TODO: 친구 목록 조회
-
-// 로그인 플랫폼
-// TODO: 로그인 플랫폼 등록
-// TODO: 로그인 플랫폼 현황 조회
-// TODO: 로그인 플랫폼 수정
-
-// 사용자 기기정보
-// TODO: 사용자 기기정보 등록
-// TODO: 사용자 기기정보 조회
-// TODO: 사용자 기기정보 수정
 
 module.exports = { createUser };

@@ -1,6 +1,8 @@
 /**
  * index.js
  *  실행 환경변수 관리
+ *
+ * 실행환경에 영향을 받지 않는 공통적으로 사용되는 환경설정값을 관리합니다.
  */
 const dotenv = require('dotenv');
 
@@ -32,7 +34,7 @@ const config = {
   jwt: {
     secret: 'SLEPe87w7eEue337ehndn3hHDjjKKDK',
     option: {
-      access: { expiresIn: '1m' },
+      access: { expiresIn: '1h' },
       refresh: { expiresIn: '7d' }
     },
     algorithm: ['HS256'],

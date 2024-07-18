@@ -7,6 +7,8 @@ const { Sequelize } = require('sequelize');
 
 const config = require('@/config');
 const isForce = require('@/config').models.forceSync;
+const dbUser = require('@/config/database/user.json')[config.nodeEnv];
+
 const logger = require('@/config/logger');
 
 // 데이터베이스 연결 인스턴스 생성
@@ -17,17 +19,29 @@ function getInitParam() {
   switch (config.nodeEnv) {
     case 'dev': // 개발환경
       return {
-        dialect: 'mysql',
-        logging: (query, time) => {
-          logger.debug('[' + time + 'ms] ' + query);
-        },
-        benchmark: true
+        username: dbUser.username,
+        password: dbUser.password,
+        database: dbUser.database,
+        options: {
+          host: dbUser.host,
+          dialect: 'mysql',
+          logging: (query, time) => {
+            logger.debug('[' + time + 'ms] ' + query);
+          },
+          benchmark: true
+        }
       };
     case 'prod': // 운영환경
       return {
-        dialect: 'mysql',
-        logging: false,
-        benchmark: false
+        username: dbUser.username,
+        password: dbUser.password,
+        database: dbUser.database,
+        options: {
+          host: dbUser.host,
+          dialect: 'mysql',
+          logging: false,
+          benchmark: false
+        }
       };
     default: // 로컬환경
       return {
