@@ -25,7 +25,7 @@ jobs:
     #   run: npm run start:dev
 
     - name: Zip files
-      run: zip -r apptitude.zip
+      run: zip -r apptitude.zip .
 
     - name: Upload to S3
       uses: actions/upload-artifact@v2
@@ -58,6 +58,12 @@ jobs:
           --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
           --document-name "AWS-RunShellScript" \
           --comment "Deploy Express.js application" \
-          --parameters commands="aws s3 cp ${{ secrets.SERVER_S3_PATH }}/apptitude-server.zip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip, rm -rf ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, unzip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip -d ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, cd ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, npm install, pm2 restart all" \
+          --parameters commands="
+            aws s3 cp ${{ secrets.SERVER_S3_PATH }}/apptitude-server.zip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip, 
+            rm -rf ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
+            unzip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip -d ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
+            cd ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
+            npm install, pm2 restart all
+          " \
           --timeout-seconds 600 \
           --output text
