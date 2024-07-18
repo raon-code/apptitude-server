@@ -55,7 +55,7 @@ jobs:
     - name: Copy files to EC2 and restart
       run: |
         aws ssm send-command \
-          --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+          --instance-ids "${{ secrets.SERVER_EC2_INSTANCE_ID }}" \
           --document-name "AWS-RunShellScript" \
           --comment "Deploy Express.js application" \
           --parameters commands="
