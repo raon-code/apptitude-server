@@ -25,24 +25,27 @@ const ddosDefender = require('@/middleware/ddos-defender');
 const corsHandler = require('@/middleware/cors-handler');
 
 // MVC
-const sequelize = require('@/models');
+const { sequelize } = require('@/models');
 const routes = require('@/routes');
 
-const testService = require('@/services/test-service');
-const { swaggerUi, specs } = require('./config/docs/swagger');
+const testService = require('@/services/test/test-service');
+const { swaggerUi, specs } = require('@/config/docs/swagger');
+const { ENUM_MAP_LIST, ENUM_CODE_LIST } = require('@/enum');
+const cookieParser = require('cookie-parser');
 
 const server = express();
 
 // 서버 기본 설정
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json()); // Body JSON 파싱 활성화
+server.use(cookieParser()); // 쿠키 파싱, 손쉬운 쿠키 데이터 조회를 위함
 
 // 미들웨어 설정(Before Biz Process)
 server.use(ddosDefender);
 server.use(corsHandler);
 server.use(authHandler.initialize());
 
-// Routes 초기화
+// Routes 초기화(Biz Process)
 routes.initialize(server);
 
 // 미들웨어 설정(After Biz Process)
@@ -53,6 +56,9 @@ async function initialize() {
   // DB 초기화
   await sequelize.sync();
   logger.info('모든 모델이 동기화되었습니다.');
+
+  // 테스트 초기화
+  // await initializeForTest();
   logger.info('서버 초기화 성공');
 }
 initialize();
@@ -71,7 +77,6 @@ async function initializeForTest() {
     }
   }
 }
-initializeForTest();
 
 // Index Page
 server.get('/', (req, res) => {

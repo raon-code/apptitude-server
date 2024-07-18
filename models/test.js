@@ -3,10 +3,7 @@
  *  작동 테스트용 스키마
  */
 const { Model, DataTypes } = require('sequelize');
-
-const sequelize = require('@/models');
-const isForce = require('@/config').models.forceSync;
-const logger = require('@/config/logger');
+const { sequelize, syncModel } = require('@/models');
 
 class Test extends Model {}
 
@@ -39,19 +36,12 @@ Test.init(
     sequelize, // 인스턴스 전달
     modelName: 'test', // 모델 이름 지정
     comment: '테스트', // 테이블에 대한 설명
+    underscored: false, // 스네이크케이스 자동변환
     timestamps: false // createdAt, updatedAt 컬럼을 자동으로 추가하지 않음
   }
 );
 
-// 테이블 명세 sequelize와 동기화
-async function syncModel() {
-  try {
-    await Test.sync({ force: isForce });
-    logger.info('Test 테이블 동기화 성공');
-  } catch (error) {
-    logger.error('Test 테이블 동기화 실패: ', error);
-  }
-}
-syncModel();
+// sequelize와 동기화
+syncModel(Test);
 
 module.exports = Test;

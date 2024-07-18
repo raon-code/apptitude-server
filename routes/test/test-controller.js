@@ -1,12 +1,13 @@
 /**
- * test.controller.js
+ * test-controller.js
  *  테스트 컨트롤러
  */
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 
-const testService = require('@/services/test-service');
+const testService = require('@/services/test/test-service');
 const response = require('@/common/response');
+const logger = require('@/config/logger');
 
 /**
  * @swagger
@@ -180,7 +181,7 @@ async function getTestList(req, res) {
  *                 - message
  *                 - data
  */
-router.get('/:id', getTest);
+router.get('/:id(\\d+)', getTest);
 async function getTest(req, res) {
   const id = req.params.id;
   const test = await testService.getTest(id);
@@ -284,7 +285,7 @@ async function getTestError(req, res) {
  *                 - message
  *                 - data
  */
-router.patch('/:id', updateTest);
+router.patch('/:id(\\d+)', updateTest);
 async function updateTest(req, res) {
   const id = req.params.id;
   const updateParams = req.body.updateParams;
@@ -328,7 +329,7 @@ async function updateTest(req, res) {
  *                 - message
  *                 - data
  */
-router.delete('/:id', deleteTest);
+router.delete('/:id(\\d+)', deleteTest);
 async function deleteTest(req, res) {
   const id = req.params.id;
   await testService.deleteTest(id);
