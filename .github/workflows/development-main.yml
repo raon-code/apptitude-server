@@ -54,7 +54,6 @@ jobs:
 
     - name: Copy files to EC2 and restart
       run: |
-        # AWS SSM을 통해 EC2 인스턴스에서 스크립트 명령을 실행
         aws ssm send-command \
           --instance-ids "${{ secrets.SERVER_EC2_INSTANCE_ID }}" \
           --document-name "AWS-RunShellScript" \
@@ -68,16 +67,13 @@ jobs:
           " \
           --timeout-seconds 600 \
           --output text
-        
-        # 실행된 명령의 Command ID를 가져오기
-        command_id=$(aws ssm list-commands \
-          --instance-id "${{ secrets.SERVER_EC2_INSTANCE_ID }}" \
-          --filters key=DocumentName,value=AWS-RunShellScript \
-          --query "Commands[0].CommandId" \
-          --output text)
+        # command_id=$(aws ssm list-commands \
+        #   --instance-id "${{ secrets.SERVER_EC2_INSTANCE_ID }}" \
+        #   --filters key=DocumentName,value=AWS-RunShellScript \
+        #   --query "Commands[0].CommandId" \
+        #   --output text)
 
-        # 해당 Command ID의 명령이 완료될 때까지 대기
-        aws ssm wait command-executed \
-          --command-id $command_id \
-          --instance-id "${{ secrets.SERVER_EC2_INSTANCE_ID }}"
+        # aws ssm wait command-executed \
+        #   --command-id $command_id \
+        #   --instance-id "${{ secrets.SERVER_EC2_INSTANCE_ID }}"
          
