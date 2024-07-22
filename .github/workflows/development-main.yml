@@ -25,9 +25,8 @@ jobs:
     #   run: npm run start:dev
 
     # 압축시 .git 폴더 제외
-    # -x "*.git*"
     - name: Zip files
-      run: zip -r apptitude-server.zip . 
+      run: zip -r apptitude-server.zip . -x "*.git*"
   
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
