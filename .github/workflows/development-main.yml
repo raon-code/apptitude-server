@@ -59,15 +59,17 @@ jobs:
           --document-name "AWS-RunShellScript" \
           --comment "Deploy Express.js application" \
           --parameters commands="
-            aws s3 cp ${{ secrets.SERVER_S3_PATH }}/apptitude-server.zip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip, 
-            rm -rf ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
-            unzip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip -d ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
-            cd ${{ secrets.SERVER_EC2_PATH }}/apptitude-server,
-            export NVM_DIR=/home/ssm-user/.nvm,
-            source $NVM_DIR/nvm.sh,
-            nvm use default,
-            npm install,
-            systemctl restart apptitude
+            sudo -u ssm-user bash -c '
+              aws s3 cp ${{ secrets.SERVER_S3_PATH }}/apptitude-server.zip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip;
+              rm -rf ${{ secrets.SERVER_EC2_PATH }}/apptitude-server;
+              unzip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip -d ${{ secrets.SERVER_EC2_PATH }}/apptitude-server;
+              cd ${{ secrets.SERVER_EC2_PATH }}/apptitude-server;
+              export NVM_DIR=/home/ssm-user/.nvm;
+              source \$NVM_DIR/nvm.sh;
+              nvm use default;
+              npm install;
+            ';
+            sudo systemctl restart apptitude
           " \
           --timeout-seconds 600 \
           --output text
