@@ -11,9 +11,6 @@ const dbUser = require('@/config/database/user.json')[config.nodeEnv];
 
 const logger = require('@/config/logger');
 
-// 데이터베이스 연결 인스턴스 생성
-const sequelize = new Sequelize(getInitParam());
-
 // 환경에 따른 초기 파라미터 설정
 function getInitParam() {
   switch (config.nodeEnv) {
@@ -54,6 +51,17 @@ function getInitParam() {
       };
   }
 }
+
+// 초기 파라미터 가져오기
+const initParams = getInitParam();
+
+// 데이터베이스 연결 인스턴스 생성
+const sequelize = new Sequelize(
+  initParams.database || null,
+  initParams.username || null,
+  initParams.password || null,
+  initParams.options
+);
 
 // 데이터베이스 연결 검증
 async function authenticate() {
