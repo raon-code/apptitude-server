@@ -1,7 +1,7 @@
 {
   "dev": {
-    "username": "apptitudeUser",
-    "password": "Apptitudeuser90to00!@",
+    "username": "admin",
+    "password": "Apptitude90to00!@",
     "database": "apptitude",
     "host": "10.0.1.207"
   },
