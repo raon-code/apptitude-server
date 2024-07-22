@@ -5,6 +5,7 @@ const { PLATFORM_TYPE_CODE } = require('@/enum/platform-type');
 const { BizError } = require('@/error');
 const Joi = require('joi');
 
+/* 파라미터 검증 설정 */
 const validateSchema = Joi.object({
   platformType: Joi.string()
     .valid(...Object.values(PLATFORM_TYPE_CODE))

@@ -30,9 +30,20 @@ async function createUser(createUserDTO) {
 }
 
 /**
+ * 사용자 목록 조회
+ * @returns {User[]} 사용자 목록
+ */
+async function getUserList() {
+  const userList = await User.findAll();
+  logger.debug(userList);
+
+  return userList;
+}
+
+/**
  * 사용자 조회
  * @param {string} userId
- * @returns
+ * @returns {User} 사용자 정보
  */
 async function getUser(userId) {
   const user = await User.findByPk(userId);
@@ -40,11 +51,5 @@ async function getUser(userId) {
 
   return user;
 }
-
-// TODO: 사용자 수정
-//  JWT 토큰으로 사용자 정보를 저장하고 있으므로
-//  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
-
-// TODO: 사용자 탈퇴(삭제)
 
 module.exports = { createUser };

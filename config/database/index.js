@@ -8,8 +8,6 @@ let db; // db 인스턴스
 
 switch (config.nodeEnv) {
   case 'dev': // 개발환경
-    break;
-
   case 'prod': // 운영환경
     break;
 
