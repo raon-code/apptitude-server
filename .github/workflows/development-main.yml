@@ -63,7 +63,7 @@ jobs:
             rm -rf ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
             unzip ${{ secrets.SERVER_EC2_PATH }}/apptitude-server.zip -d ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
             cd ${{ secrets.SERVER_EC2_PATH }}/apptitude-server, 
-            npm install, pm2 restart all
+            npm install
           " \
           --timeout-seconds 600 \
           --output text
