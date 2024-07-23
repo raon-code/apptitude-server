@@ -104,6 +104,8 @@ async function createSession(req, res) {
  */
 router.delete('/', authMiddleware, deleteSession);
 async function deleteSession(req, res) {
+  sessionService.logout();
+
   // 액세스 토큰을 쿠키에서 삭제
   clearJwtTokenCookie(res);
   response(res, StatusCodes.NO_CONTENT, '세션삭제 성공');

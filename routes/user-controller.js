@@ -7,16 +7,26 @@ const { StatusCodes } = require('http-status-codes');
 
 const userService = require('@/services/user-service');
 const response = require('@/common/response');
+const { authMiddleware } = require('@/middleware/auth-handler');
 
 const CreateUserDTO = require('@/types/dto/create-user-dto');
 
-// 미들웨어: 사용자 확인
-async function verifyUser(req, res) {
+// 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
+router.use((req, res, next) => {
+  if (req.method === 'POST' && req.path === '/user') {
+    return next();
+  }
+  // 토큰확인
+  authMiddleware(req, res, next);
+  // 사용자 확인
+  verifyUser(req, res, next);
+});
 
+// 미들웨어: 요청에 대한 사용자 확인
+async function verifyUser(req, res, next) {
   const userId = req.params.id;
-  
-  // TODO: verifyUser 서비스 추가: 해당 유저인지 확인
 
+  isOwnUserId(userId, req.user);
   next();
 }
 
@@ -120,8 +130,8 @@ async function createUser(req, res) {
  * @swagger
  * /api/users/{id}:
  *   get:
- */ 
-router.get('/:id(\\d+)', verifyUser, getUser);
+ */
+router.get('/:id(\\d+)', getUser);
 async function getUser(req, res) {
   const userId = req.params.id;
 
@@ -136,8 +146,8 @@ async function getUser(req, res) {
  * @swagger
  * /api/users/{id}:
  *   patch:
- */ 
-router.patch('/:id(\\d+)', verifyUser, updateUser);
+ */
+router.patch('/:id(\\d+)', updateUser);
 async function updateUser(req, res) {
   const userId = req.params.id;
 
@@ -150,8 +160,8 @@ async function updateUser(req, res) {
  * @swagger
  * /api/users/{id}/friends:
  *   post:
- */ 
-router.post('/:id(\\d+)/friends', verifyUser, createFriend);
+ */
+router.post('/:id(\\d+)/friends', createFriend);
 async function createFriend(req, res) {
   const userId = req.params.id;
 
@@ -164,11 +174,11 @@ async function createFriend(req, res) {
  * @swagger
  * /api/users/{id}/friends:
  *   get:
- */ 
-router.get('/:id(\\d+)/friends', verifyUser, getFriendList);
+ */
+router.get('/:id(\\d+)/friends', getFriendList);
 async function getFriendList(req, res) {
   const userId = req.params.id;
-  
+
   // TODO: 쿼리스트링
   req.query.filterType;
   req.query.orderType;
@@ -184,8 +194,13 @@ async function getFriendList(req, res) {
  * @swagger
  * /api/users/{id}/friends:
  *   delete:
- */ 
-router.delete('/:id(\\d+)/friends', verifyUser, deleteFriendList);
+ */
+router.delete(
+  '/:id(\\d+)/friends',
+  authMiddleware,
+  verifyUser,
+  deleteFriendList
+);
 async function deleteFriendList(req, res) {
   const userId = req.params.id;
 
@@ -197,14 +212,18 @@ async function deleteFriendList(req, res) {
  * @swagger
  * /api/users/{id}/friends/{friendId}:
  *   get:
- */ 
-router.get('/:id(\\d+)/friends/:friendId(\\d+)', verifyUser, getFriend);
+ */
+router.get(
+  '/:id(\\d+)/friends/:friendId(\\d+)',
+  authMiddleware,
+  verifyUser,
+  getFriend
+);
 async function getFriend(req, res) {
   const userId = req.params.id;
   const friendId = req.params.friendId;
 
   // TODO: getFriend 서비스 추가: 해당 친구 정보 조회(User Join)
-
 }
 
 // TODO: 사용자 친구 삭제
@@ -212,8 +231,13 @@ async function getFriend(req, res) {
  * @swagger
  * /api/users/{id}/friends/{friendId}:
  *   delete:
- */ 
-router.delete('/:id(\\d+)/friends/:friendId(\\d+)', verifyUser, deleteFriend);
+ */
+router.delete(
+  '/:id(\\d+)/friends/:friendId(\\d+)',
+  authMiddleware,
+  verifyUser,
+  deleteFriend
+);
 async function deleteFriend(req, res) {
   const userId = req.params.id;
   const friendId = req.params.friendId;
@@ -227,7 +251,7 @@ async function deleteFriend(req, res) {
  * /api/users/{id}/devices:
  *   post:
  */
-router.post('/:id(\\d+)/devices', verifyUser, createDevice);
+router.post('/:id(\\d+)/devices', createDevice);
 async function createDevice(req, res) {
   const userId = req.params.id;
 
@@ -241,7 +265,7 @@ async function createDevice(req, res) {
  * /api/users/{id}/devices/{deviceId}:
  *   get:
  */
-router.get('/:id(\\d+)/devices/:deviceId(\\d+)', verifyUser, getDevice);
+router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getDevice);
 async function getDevice(req, res) {
   const userId = req.params.id;
   const deviceId = req.params.deviceId;
@@ -255,7 +279,7 @@ async function getDevice(req, res) {
  * /api/users/{id}/login-platforms:
  *   post:
  */
-router.post('/:id(\\d+)/login-platforms', verifyUser, createLoginPlatform);
+router.post('/:id(\\d+)/login-platforms', createLoginPlatform);
 async function createLoginPlatform(req, res) {
   const userId = req.params.id;
 
@@ -269,7 +293,7 @@ async function createLoginPlatform(req, res) {
  * /api/users/{id}/battles:
  *   get:
  */
-router.get('/:id(\\d+)/battles', verifyUser, getBattleList);
+router.get('/:id(\\d+)/battles', getBattleList);
 async function getBattleList(req, res) {
   const userId = req.params.id;
 

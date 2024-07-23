@@ -106,6 +106,7 @@ async function reissue(refreshToken) {
 }
 
 // TODO: 로그아웃 --> 클라이언트에서 처리
+// 당장은 처리할 필요가 없음
 async function logout() {
   // 토큰 비활성화
 }
