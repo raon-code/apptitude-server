@@ -23,14 +23,8 @@ const { updateProperties } = require('@/common/object-util');
  */
 async function createUser(createUserDTO) {
   // 로그인 플랫폼은 사용자와 1:1 관계이므로, 생성된 사용자 정보에 로그인 플랫폼 정보를 추가해준다.
-  const newUser = await User.create(createUserDTO, {
-    include: [{ model: LoginPlatform, as: 'loginPlatform' }]
-  });
+  const newUser = await User.create(createUserDTO);
   logger.debug(newUser);
-
-  // TODO: 사용자 기기 정보를 추가해준다.
-  const testList = await LoginPlatform.findAll();
-  logger.debug(testList);
 
   return newUser;
 }

@@ -10,6 +10,7 @@ const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
 const CreateUserDTO = require('@/types/dto/create-user-dto');
+const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
 
 // 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
 router.use((req, res, next) => {
@@ -122,7 +123,21 @@ async function createUser(req, res) {
   createUserDTO.validate();
 
   const newUser = await userService.createUser(createUserDTO);
-  response(res, StatusCodes.CREATED, 'Created', newUser);
+  newUser.loginPlatform.userId = newUser.id;
+
+  const createLoginPlatformDTO = CreateLoginPlatformDTO.fromPlainObject(
+    newUser.loginPlatform
+  );
+  createLoginPlatformDTO.validate();
+
+  const newLoginPlatform = await userService.createLoginPlatform(
+    createLoginPlatformDTO
+  );
+
+  response(res, StatusCodes.CREATED, 'Created', {
+    newUser,
+    newLoginPlatform
+  });
 }
 
 // TODO: 사용자 조회

@@ -10,7 +10,13 @@ const logger = require('@/config/logger');
 const { BizError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 
-async function createFriend() {}
+/**
+ * 친구 생성
+ * @param {string} userId 사용자 ID
+ * @param {string} friendId 친구 ID(추가할 사용자 ID)
+ * @returns {Friend} 새로 추가된 친구 정보
+ */
+async function createFriend(userId, friendId) {}
 
 async function getFriendList() {}
 
