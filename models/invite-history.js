@@ -31,11 +31,6 @@ InviteHistory.init(
       allowNull: true,
       comment: '초대링크'
     },
-    inviteDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      comment: '초대일자'
-    },
     battleId: {
       type: DataTypes.INTEGER,
       allowNull: true,

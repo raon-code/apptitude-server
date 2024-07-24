@@ -2,18 +2,60 @@
  * device-service.js
  *  기기관련 서비스
  */
-const Device = require('@/models/device');
+const UserDevice = require('@/models/user-device');
 
 const logger = require('@/config/logger');
 
 const { BizError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 
-async function createDevice() {}
+const CreateUserDeviceDTO = require('@/types/dto/create-user-device-dto');
 
-async function getDevice() {}
+/**
+ * 사용자 기기 생성
+ *
+ * @param {CreateUserDeviceDTO} createUserDeviceDTO
+ * @returns {UserDevice} 새로 추가된 사용자 기기 정보
+ */
+async function createUserDevice(createUserDeviceDTO) {
+  const newUserDevice = await UserDevice.create(createUserDeviceDTO);
+  logger.debug(newUserDevice);
+
+  return newUserDevice;
+}
+
+/**
+ * 사용자 기기 목록 조회
+ *
+ * @param {*} userId
+ * @returns
+ */
+async function getUserDeviceList(userId) {
+  const userDeviceList = await UserDevice.findAll({
+    where: {
+      userId
+    }
+  });
+  logger.debug(userDeviceList);
+
+  return userDeviceList;
+}
+
+/**
+ * 사용자 기기 조회
+ *
+ * @param {*} deviceId
+ * @returns
+ */
+async function getUserDevice(userDeviceId) {
+  const userDevice = await UserDevice.findByPk(userDeviceId);
+  logger.debug(userDevice);
+
+  return userDevice;
+}
 
 module.exports = {
-  createDevice,
-  getDevice
+  createUserDevice,
+  getUserDeviceList,
+  getUserDevice
 };

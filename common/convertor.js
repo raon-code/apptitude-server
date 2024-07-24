@@ -5,6 +5,8 @@
 const logger = require('@/config/logger');
 
 /**
+ * Enum -> Map(code, element)
+ * (code값을 통해 enum을 찾기 위한 map)
  *
  * @param {*} _enum
  * @returns
@@ -18,6 +20,8 @@ function convertToEnumMap(_enum) {
 }
 
 /**
+ * Enum -> EnumCodeList
+ * (EnumCodeList: validation을 위한 enum code list)
  *
  * @param {*} _enum
  * @returns

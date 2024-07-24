@@ -11,6 +11,8 @@ const { authMiddleware } = require('@/middleware/auth-handler');
 
 const CreateUserDTO = require('@/types/dto/create-user-dto');
 const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
+const { sequelize } = require('@/models');
+const transactionHandler = require('@/middleware/transaction-handler');
 
 // 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
 router.use((req, res, next) => {
@@ -117,7 +119,7 @@ async function verifyUser(req, res, next) {
  *                 - message
  *                 - data
  */
-router.post('/', createUser);
+router.post('/', transactionHandler(createUser)); // *트랜잭션 처리*
 async function createUser(req, res) {
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
   createUserDTO.validate();

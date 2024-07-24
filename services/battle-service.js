@@ -8,23 +8,72 @@ const logger = require('@/config/logger');
 
 const { BizError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
-const e = require('express');
+const { STATUS_TYPE } = require('@/enum/status-type');
 
-async function createBattle() {}
+async function createBattle(createBattleDTO) {
+  const newBattle = await Battle.create(createBattleDTO);
+  logger.debug(battle);
 
-async function getBattleList() {}
+  return newBattle;
+}
 
-async function getBattle() {}
+async function getBattleList(userId) {
+  const battleList = await Battle.findAll({
+    where: {
+      userId
+    }
+  });
+  logger.debug(battleList);
+
+  return battleList;
+}
+
+async function getBattle(battleId) {
+  const battle = await Battle.findByPk(battleId);
+  logger.debug(battle);
+
+  return battle;
+}
 
 function isOwnUserBattle() {}
 
 function checkBattleFinished() {}
 
-async function updateBattle() {}
+async function updateBattle(battleId, updateBattleDTO) {
+  const battle = await Battle.findByPk(battleId);
+  if (!battle) {
+    throw new BizError('대결이 존재하지 않습니다');
+  }
 
-async function finishBattle() {}
+  updateProperties(battle, updateBattleDTO);
+  await battle.save();
 
-async function cancelBattle() {}
+  return battle;
+}
+
+async function finishBattle(battleId) {
+  const battle = await Battle.findByPk(battleId);
+  if (!battle) {
+    throw new BizError('대결이 존재하지 않습니다');
+  }
+
+  battle.statusType = STATUS_TYPE.END.code;
+  await battle.save();
+
+  return battle;
+}
+
+async function cancelBattle(battleId) {
+  const battle = await Battle.findByPk(battleId);
+  if (!battle) {
+    throw new BizError('대결이 존재하지 않습니다');
+  }
+
+  battle.statusType = STATUS_TYPE.CANCEL.code;
+  await battle.save();
+
+  return battle;
+}
 
 async function createInvitationURL() {}
 

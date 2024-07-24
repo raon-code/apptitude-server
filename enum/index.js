@@ -44,6 +44,7 @@ const ENUM_LIST = [
   QUOTE // 명언
 ];
 
+// code값을 통해 enum을 찾기 위한 enum map list
 const ENUM_MAP_LIST = [
   GENDER_MAP, // 성별
   AGE_RANGE_MAP, // 연령대
@@ -56,6 +57,7 @@ const ENUM_MAP_LIST = [
   QUOTE_MAP // 명언
 ];
 
+// ENUM Validation을 위한 enum code list
 const ENUM_CODE_LIST = [
   GENDER_CODE, // 성별
   AGE_RANGE_CODE, // 연령대
