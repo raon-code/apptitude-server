@@ -1,5 +1,9 @@
 const { sequelize } = require('@/models');
 
+const transaction = (callback) => {
+  return async (req, res) => await transactionHandler(req, res, callback);
+};
+
 async function transactionHandler(req, res, callback) {
   try {
     await sequelize.transaction(async (t) => {
@@ -11,4 +15,4 @@ async function transactionHandler(req, res, callback) {
   }
 }
 
-module.exports = transactionHandler;
+module.exports = transaction;

@@ -14,6 +14,7 @@ const {
   setJwtTokenCookie,
   clearJwtTokenCookie
 } = require('@/config/security/jwt');
+const transaction = require('@/middleware/transaction-handler');
 
 /**
  * @swagger
@@ -65,7 +66,7 @@ const {
  *                 - message
  *                 - data
  */
-router.post('/', createSession);
+router.post('/', transaction(createSession));
 async function createSession(req, res) {
   const loginUserDTO = LoginUserDTO.fromPlainObject(req.body);
   loginUserDTO.validate();

@@ -11,14 +11,20 @@ const { authMiddleware } = require('@/middleware/auth-handler');
 
 const CreateUserDTO = require('@/types/dto/create-user-dto');
 const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
+
 const { sequelize } = require('@/models');
-const transactionHandler = require('@/middleware/transaction-handler');
+const transaction = require('@/middleware/transaction-handler');
+const UpdateUserDTO = require('@/types/dto/update-user-dto');
+const { reissue } = require('@/services/session-service');
+const { setJwtTokenCookie } = require('@/config/security/jwt');
 
 // 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
 router.use((req, res, next) => {
+  // POST /user 요청(유저생성)은 미들웨어를 적용하지 않음
   if (req.method === 'POST' && req.path === '/user') {
     return next();
   }
+
   // 토큰확인
   authMiddleware(req, res, next);
   // 사용자 확인
@@ -26,10 +32,10 @@ router.use((req, res, next) => {
 });
 
 // 미들웨어: 요청에 대한 사용자 확인
-async function verifyUser(req, res, next) {
+function verifyUser(req, res, next) {
   const userId = req.params.id;
 
-  isOwnUserId(userId, req.user);
+  userService.isOwnUserId(userId, req.user);
   next();
 }
 
@@ -119,26 +125,22 @@ async function verifyUser(req, res, next) {
  *                 - message
  *                 - data
  */
-router.post(
-  '/',
-  async (req, res) => await transactionHandler(req, res, createUser)
-); // *트랜잭션 처리*
+router.post('/', transaction(createUser)); // *트랜잭션 처리*
 async function createUser(req, res) {
+  // 유저 생성
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
   createUserDTO.validate();
-
   const newUser = await userService.createUser(createUserDTO);
   newUser.loginPlatform.userId = newUser.id;
 
+  // 로그인 플랫폼 생성
   const createLoginPlatformDTO = CreateLoginPlatformDTO.fromPlainObject(
     newUser.loginPlatform
   );
   createLoginPlatformDTO.validate();
-
   const newLoginPlatform = await userService.createLoginPlatform(
     createLoginPlatformDTO
   );
-  ``;
 
   response(res, StatusCodes.CREATED, 'Created', {
     newUser,
@@ -146,11 +148,45 @@ async function createUser(req, res) {
   });
 }
 
-// TODO: 사용자 조회
 /**
  * @swagger
  * /api/users/{id}:
  *   get:
+ *     summary: "사용자 조회"
+ *     description: "특정 사용자를 조회"
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: 사용자 ID
+ *         schema:
+ *           type: string
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Test retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: '조회성공'
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: object
+ *                       description: 유저정보
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.get('/:id(\\d+)', getUser);
 async function getUser(req, res) {
@@ -160,20 +196,69 @@ async function getUser(req, res) {
   response(res, StatusCodes.OK, 'Ok', user);
 }
 
-// TODO: 사용자 수정
 //  JWT 토큰으로 사용자 정보를 저장하고 있으므로
 //  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
 /**
  * @swagger
  * /api/users/{id}:
  *   patch:
+ *     summary: 사용자 정보 수정
+ *     description: 사용자 정보를 수정
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: 사용자 ID
+ *         schema:
+ *           type: string
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               none:
+ *                 type: string
+ *                 description: empty
+ *                 example: ''
+ *     responses:
+ *       200:
+ *         description: 업데이트 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "업데이트 성공"
+ *                 data:
+ *                   type: object
+ *                   example: {}
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.patch('/:id(\\d+)', updateUser);
 async function updateUser(req, res) {
   const userId = req.params.id;
+  const updateUserDTO = UpdateUserDTO.fromPlainObject(req.body);
+  updateUserDTO.validate();
 
-  // TODO: UpdateUserDTO 추가
-  // TODO: updateUser 서비스 추가
+  const user = userService.updateUser(userId, updateUserDTO);
+
+  // TODO: 토큰 재발급
+  const newAccessToken = await reissue(user.refreshJwt);
+  setJwtTokenCookie(res, newAccessToken);
+
+  response(res, StatusCodes.OK, 'Ok', user);
 }
 
 // TODO: 사용자 친구 등록

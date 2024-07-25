@@ -27,54 +27,45 @@ const { sequelize } = require('@/models');
  * @returns {String} 액세스 토큰
  */
 async function login(loginUserDTO) {
-  const transaction = await sequelize.transaction();
-
-  try {
-    // 사용자 정보 조회, 로그인 플랫폼으로부터
-    // 로그인 플랫폼 타입, uuid값으로 사용자를 찾음
-    const loginPlatformWithUser = await LoginPlatform.findOne({
-      where: {
-        platformType: loginUserDTO.platformType,
-        uuid: loginUserDTO.uuid
-      },
-      include: [{ model: User, as: 'user', required: true }],
-      transaction
-    });
-    if (isEmpty(loginPlatformWithUser)) {
-      logger.error(
-        '존재하지 않는 사용자 입니다.\n' +
-          `플랫폼: ${loginUserDTO.platformType}, 식별 UUID: ${loginUserDTO.uuid}`
-      );
-      throw new BizError('로그인할 수 없습니다. 다시 확인해주세요.');
-    }
-
-    const user = loginPlatformWithUser.user;
-    if (isEmpty(user)) {
-      logger.error('사용자 정보가 존재하지 않습니다.');
-      throw new BizError('로그인할 수 없습니다. 다시 확인해주세요.');
-    }
-
-    // 로그인하면 재발급 토큰 또한 갱신
-    const newRefreshJwt = generateJwtRefreshToken(
-      // 데이터베이스 조회를 위한 정보
-      { id: user.id }
+  // 사용자 정보 조회, 로그인 플랫폼으로부터
+  // 로그인 플랫폼 타입, uuid값으로 사용자를 찾음
+  const loginPlatformWithUser = await LoginPlatform.findOne({
+    where: {
+      platformType: loginUserDTO.platformType,
+      uuid: loginUserDTO.uuid
+    },
+    include: [{ model: User, as: 'user', required: true }]
+  });
+  if (isEmpty(loginPlatformWithUser)) {
+    logger.error(
+      '존재하지 않는 사용자 입니다.\n' +
+        `플랫폼: ${loginUserDTO.platformType}, 식별 UUID: ${loginUserDTO.uuid}`
     );
-    user.refreshJwt = newRefreshJwt; // 엑세스 토큰 재발급을 위한 토큰
-    user.lastLogin = new Date();
-
-    // 로그인에 따른 사용자 업데이트
-    await user.save({ transaction });
-
-    // 엑세스 토큰: API에 접근 가능
-    // Sequelize 객체, dataValues: 현재 값
-    const accessToken = generateJwtAccessToken({ ...user.dataValues });
-
-    await transaction.commit();
-    return accessToken;
-  } catch (error) {
-    await transaction.rollback();
-    throw error;
+    throw new BizError('로그인할 수 없습니다. 다시 확인해주세요.');
   }
+
+  const user = loginPlatformWithUser.user;
+  if (isEmpty(user)) {
+    logger.error('사용자 정보가 존재하지 않습니다.');
+    throw new BizError('로그인할 수 없습니다. 다시 확인해주세요.');
+  }
+
+  // 로그인하면 재발급 토큰 또한 갱신
+  const newRefreshJwt = generateJwtRefreshToken(
+    // 데이터베이스 조회를 위한 정보
+    { id: user.id }
+  );
+  user.refreshJwt = newRefreshJwt; // 엑세스 토큰 재발급을 위한 토큰
+  user.lastLogin = new Date();
+
+  // 로그인에 따른 사용자 업데이트
+  await user.save();
+
+  // 엑세스 토큰: API에 접근 가능
+  // Sequelize 객체, dataValues: 현재 값
+  const accessToken = generateJwtAccessToken({ ...user.dataValues });
+
+  return accessToken;
 }
 
 // TODO: 재발급
