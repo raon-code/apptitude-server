@@ -4,7 +4,7 @@
  *    데이터베이스 스키마 설정 메인
  */
 const { Sequelize, Transaction } = require('sequelize');
-const { cls } = require('cls-hooked');
+const cls = require('cls-hooked');
 
 const config = require('@/config');
 const isForce = require('@/config').models.forceSync;
@@ -50,12 +50,14 @@ function getInitParam() {
       };
     default: // 로컬환경
       return {
-        dialect: 'sqlite',
-        storage: config.database.sqlite.storagePath,
-        logging: (query, time) => {
-          logger.debug('[' + time + 'ms] ' + query);
-        },
-        benchmark: true
+        options: {
+          dialect: 'sqlite',
+          storage: config.database.sqlite.storagePath,
+          logging: (query, time) => {
+            logger.debug('[' + time + 'ms] ' + query);
+          },
+          benchmark: true
+        }
       };
   }
 }

@@ -4,7 +4,6 @@
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');
-const initCommonData = require('@/models/common.init');
 
 class Common extends Model {}
 
@@ -31,6 +30,8 @@ Common.init(
 );
 
 syncModel(Common);
+
+const initCommonData = require('@/models/common.init');
 initCommonData(Common);
 
 module.exports = Common;

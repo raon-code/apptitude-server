@@ -119,7 +119,10 @@ async function verifyUser(req, res, next) {
  *                 - message
  *                 - data
  */
-router.post('/', transactionHandler(createUser)); // *트랜잭션 처리*
+router.post(
+  '/',
+  async (req, res) => await transactionHandler(req, res, createUser)
+); // *트랜잭션 처리*
 async function createUser(req, res) {
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
   createUserDTO.validate();
@@ -135,6 +138,7 @@ async function createUser(req, res) {
   const newLoginPlatform = await userService.createLoginPlatform(
     createLoginPlatformDTO
   );
+  ``;
 
   response(res, StatusCodes.CREATED, 'Created', {
     newUser,
