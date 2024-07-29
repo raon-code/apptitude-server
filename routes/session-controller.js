@@ -18,7 +18,7 @@ const transaction = require('@/middleware/transaction-handler');
 
 /**
  * @swagger
- * /api/sessions:
+ * /sessions:
  *   post:
  *     summary: 세션을 생성(로그인)
  *     description: 로그인 정보를 바탕으로 세션을 생성
@@ -80,7 +80,7 @@ async function createSession(req, res) {
 
 /**
  * @swagger
- * /api/sessions:
+ * /sessions:
  *   delete:
  *     summary: 세션을 삭제(로그아웃)
  *     description: 세션을 삭제

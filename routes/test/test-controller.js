@@ -11,7 +11,7 @@ const logger = require('@/config/logger');
 
 /**
  * @swagger
- * /api/tests:
+ * /tests:
  *   post:
  *     summary: Create a new test
  *     description: Creates a new test with the given title and contents.
@@ -83,7 +83,7 @@ async function createTest(req, res) {
 
 /**
  * @swagger
- * /api/tests:
+ * /tests:
  *   get:
  *     summary: "테스트 데이터 전체조회"
  *     description: "테스트 데이터 전체를 Get방식으로 요청"
@@ -134,7 +134,7 @@ async function getTestList(req, res) {
 
 /**
  * @swagger
- * /api/tests/{id}:
+ * /tests/{id}:
  *   get:
  *     summary: Retrieve a test by its ID
  *     description: Fetch a single test by its ID from the database and return the test details.
@@ -191,7 +191,7 @@ async function getTest(req, res) {
 /**
  * @swagger
  * paths:
- *   /api/tests/error:
+ *   /tests/error:
  *     get:
  *       summary: "에러 핸들링 테스트"
  *       description: "의도적으로 비즈니스 에러를 발생, 에러에 대한 핸들링이 정상적으로 작동하는지 확인"
@@ -230,7 +230,7 @@ async function getTestError(req, res) {
 
 /**
  * @swagger
- * /api/tests/{id}:
+ * /tests/{id}:
  *   patch:
  *     summary: Update a test
  *     description: Updates a test's title and content based on the given ID.
@@ -295,7 +295,7 @@ async function updateTest(req, res) {
 
 /**
  * @swagger
- * /api/tests/{id}:
+ * /tests/{id}:
  *   delete:
  *     summary: Delete a test
  *     description: Deletes a test based on the given ID.
