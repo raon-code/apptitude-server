@@ -3,14 +3,14 @@ const swaggerUi = require('swagger-ui-express');
 
 const config = require('@/config'); // config/index
 
-let _url = 'http://localhost';
+let _url = 'http://localhost:3000';
 switch (config.nodeEnv) {
   case 'dev': // 개발환경
-    _url = 'http://apptitude-elb-1043931769.ap-northeast-2.elb.amazonaws.com';
+    _url = 'http://api.buddybattle.net';
     break;
 
   case 'prod': // 운영환경
-    _url = 'https://buddy-battle.com';
+    _url = 'http://api.buddybattle.net';
     break;
 
   default: // 로컬환경
@@ -31,13 +31,13 @@ const swaggerOption = {
       },
       contact: {
         name: 'admin',
-        url: 'https://buddy-battle.com',
+        url: 'https://www.buddybattle.net',
         email: 'aptitude0616@gmail.com'
       }
     },
     servers: [
       {
-        url: 'http://localhost:3000' // 요청 URL
+        url: _url // 요청 URL
       }
     ],
     components: {

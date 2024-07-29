@@ -17,5 +17,5 @@ module.exports = {
   DEBUG_MODE: !process.env.NODE_ENV,
   // 시간
   SEC_TO_MS: 1000,
-  API_BASE_PATH: '/api'
+  API_BASE_PATH: ''
 };
