@@ -30,18 +30,50 @@ async function createFriend(createFriendDTO) {
  * @param {number} userId
  * @returns {object[]} 친구 목록
  */
-async function getFriendList(userId) {
+async function getFriendList(
+  userId,
+  filterType,
+  orderType,
+  orderBy,
+  page,
+  size
+) {
+  // 기본값
+  const defaultPage = 1;
+  const defaultSize = 10;
+
+  // 페이지, 사이즈 값 설정
+  const currentPage = page || defaultPage;
+  const pageSize = size || defaultSize;
+  const offset = (currentPage - 1) * pageSize;
+
+  // 정렬 옵션 설정
+  const order = [];
+  if (orderBy) {
+    const direction = orderType === 'DESC' ? 'DESC' : 'ASC';
+    order.push([orderBy, direction]);
+  }
+
+  // 필터 옵션 설정
+  const where = { userId };
+  if (filterType) {
+    // 여기에 추가적인 필터 조건을 설정할 수 있습니다.
+    // 예를 들어, 친구 상태에 따른 필터링 등.
+    //where.status = filterType; // 예: 'active', 'pending' 등
+  }
+
   const friendList = await Friend.findAll({
-    where: {
-      userId
-    },
+    where,
     include: [
       {
         model: User
         // 필요한 User 속성을 명시적으로 지정합니다.
         // attributes: ['username']
       }
-    ]
+    ],
+    order,
+    limit: pageSize,
+    offset
   });
   logger.debug(friendList);
 
@@ -51,12 +83,20 @@ async function getFriendList(userId) {
 /**
  * 특정 친구 조회
  *
- * @param {number} friendId
+ * @param {number} friendPkId
  * @returns {Friend} 친구 정보
  */
-async function getFriend(friendId) {
-  const friend = await Friend.findByPk(friendId);
+async function getFriend(userId, friendPkId) {
+  const friend = await Friend.findByPk(friendPkId, {
+    include: [
+      {
+        model: User
+      }
+    ]
+  });
   logger.debug(friend);
+
+  verifyUserFriend(friend, userId);
 
   return friend;
 }
@@ -64,13 +104,24 @@ async function getFriend(friendId) {
 /**
  * 선택한 or 전체 친구 삭제
  *
- * @param {number[]} friendIdList 친구 ID 목록
+ * @param {number[]} friendPkIdList 친구 ID 목록
  * @returns {number} 삭제된 친구 수
  */
-async function deleteFriendList(friendIdList) {
+async function deleteFriendList(userId, friendPkIdList) {
+  const friendList = await Friend.findAll({
+    where: {
+      id: friendPkIdList
+    }
+  });
+  logger.debug(friendList);
+
+  friendList.forEach((friend) => {
+    verifyUserFriend(friend, userId);
+  });
+
   const result = await Friend.destroy({
     where: {
-      id: friendIdList
+      id: friendPkIdList
     }
   });
   logger.debug(result);
@@ -81,18 +132,35 @@ async function deleteFriendList(friendIdList) {
 /**
  * 특정 친구 삭제
  *
- * @param {number} friendId
+ * @param {number} friendPkId
  * @returns {number} 삭제된 친구 수
  */
-async function deleteFriend(friendId) {
+async function deleteFriend(userId, friendPkId) {
+  const friend = await Friend.findByPk(friendPkId);
+  logger.debug(friend);
+
+  verifyUserFriend(friend, userId);
+
   const result = await Friend.destroy({
     where: {
-      id: friendId
+      id: friendPkId
     }
   });
   logger.debug(result);
 
   return result;
+}
+
+/**
+ * 사용자 친구인지 검증
+ */
+function verifyUserFriend(friend, userId) {
+  if (!friend) {
+    throw new BizError('친구 정보를 찾을 수 없습니다.');
+  }
+  if (friend.userId !== userId) {
+    throw new UnauthorizeError('친구 정보에 접근할 수 없습니다.');
+  }
 }
 
 module.exports = {

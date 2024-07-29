@@ -6,6 +6,7 @@ const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 
 const userService = require('@/services/user-service');
+const friendService = require('@/services/friend-service');
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
@@ -161,7 +162,7 @@ async function createUser(req, res) {
  *         required: true
  *         description: 사용자 ID
  *         schema:
- *           type: string
+ *           type: number
  *           example: 1
  *     responses:
  *       200:
@@ -211,7 +212,7 @@ async function getUser(req, res) {
  *         required: true
  *         description: 사용자 ID
  *         schema:
- *           type: string
+ *           type: number
  *           example: 1
  *     requestBody:
  *       required: true
@@ -223,7 +224,7 @@ async function getUser(req, res) {
  *               none:
  *                 type: string
  *                 description: empty
- *                 example: ''
+ *                 example: 'updateDTO 정해지면 채워넣을 예정'
  *     responses:
  *       200:
  *         description: 업데이트 성공
@@ -254,25 +255,73 @@ async function updateUser(req, res) {
 
   const user = userService.updateUser(userId, updateUserDTO);
 
-  // TODO: 토큰 재발급
+  // 토큰 재발급
   const newAccessToken = await reissue(user.refreshJwt);
   setJwtTokenCookie(res, newAccessToken);
 
   response(res, StatusCodes.OK, 'Ok', user);
 }
 
-// TODO: 사용자 친구 등록
 /**
  * @swagger
  * /api/users/{id}/friends:
- *   post:
+ *  post:
+ *    summary: 친구 추가
+ *    description: 사용자의 친구를 추가
+ *    tags: [Users]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: 사용자 ID
+ *        schema:
+ *          type: number
+ *          example: 1
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - friendId
+ *            properties:
+ *              friendId:
+ *                type: string
+ *                description: 등록할 친구 ID
+ *                example: 1
+ *     responses:
+ *       201:
+ *         description: 친구를 성공적으로 생성
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: 'Created'
+ *                 data:
+ *                   type: object
+ *                   description: 생성한 친구 정보
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.post('/:id(\\d+)/friends', createFriend);
 async function createFriend(req, res) {
   const userId = req.params.id;
+  const friendId = req.body.friendId;
 
-  // TODO: CreateFriendDTO 추가
-  // TODO: createFriend 서비스 추가
+  const createFriendDTO = CreateFriendDTO.fromPlainObject({ userId, friendId });
+  createFriendDTO.validate();
+
+  const newFriend = friendService.createFriend(createFriendDTO);
+  response(res, StatusCodes.CREATED, 'Created', newFriend);
 }
 
 // TODO: 사용자 친구 목록 조회
@@ -281,21 +330,28 @@ async function createFriend(req, res) {
  * /api/users/{id}/friends:
  *   get:
  */
-router.get('/:id(\\d+)/friends', getFriendList);
+router.get('/:id(\\d+)/friends', authMiddleware, verifyUser, getFriendList);
 async function getFriendList(req, res) {
   const userId = req.params.id;
 
-  // TODO: 쿼리스트링
-  req.query.filterType;
-  req.query.orderType;
-  req.query.orderBy;
-  req.query.page;
-  req.query.size;
+  const filterType = req.query.filterType;
+  const orderType = req.query.orderType;
+  const orderBy = req.query.orderBy;
+  const page = req.query.page;
+  const size = req.query.size;
 
-  // TODO: getFriendList 서비스 추가
+  const friendList = friendService.getFriendList(
+    userId,
+    filterType,
+    orderType,
+    orderBy,
+    page,
+    size
+  );
+
+  response(res, StatusCodes.OK, 'Ok', friendList);
 }
 
-// TODO: 사용자 친구 전체, 선택 삭제
 /**
  * @swagger
  * /api/users/{id}/friends:
@@ -309,46 +365,49 @@ router.delete(
 );
 async function deleteFriendList(req, res) {
   const userId = req.params.id;
+  const friendPkIdList = req.body.friendPkIdList;
 
-  // TODO: deleteFriendList 서비스 추가: List 형태로 받는 friend id를 이용하여 여러명의 친구 삭제
+  const result = friendService.deleteFriendList(userId, friendPkIdList);
+  response(res, StatusCodes.OK, 'Ok', { result });
 }
 
 // TODO: 사용자 친구 조회
 /**
  * @swagger
- * /api/users/{id}/friends/{friendId}:
+ * /api/users/{id}/friends/{friendPkId}:
  *   get:
  */
 router.get(
-  '/:id(\\d+)/friends/:friendId(\\d+)',
+  '/:id(\\d+)/friends/:friendPkId(\\d+)',
   authMiddleware,
   verifyUser,
   getFriend
 );
 async function getFriend(req, res) {
   const userId = req.params.id;
-  const friendId = req.params.friendId;
+  const friendPkId = req.params.friendPkId;
 
-  // TODO: getFriend 서비스 추가: 해당 친구 정보 조회(User Join)
+  const friend = friendService.getFriend(userId, friendPkId);
+  response(res, StatusCodes.OK, 'Ok', friend);
 }
 
-// TODO: 사용자 친구 삭제
 /**
  * @swagger
- * /api/users/{id}/friends/{friendId}:
+ * /api/users/{id}/friends/{friendPkId}:
  *   delete:
  */
 router.delete(
-  '/:id(\\d+)/friends/:friendId(\\d+)',
+  '/:id(\\d+)/friends/:friendPkId(\\d+)',
   authMiddleware,
   verifyUser,
   deleteFriend
 );
 async function deleteFriend(req, res) {
   const userId = req.params.id;
-  const friendId = req.params.friendId;
+  const friendPkId = req.params.friendPkId;
 
-  // TODO: deleteFriend 서비스 추가: 해당 친구 삭제
+  const result = friendService.deleteFriend(userId, friendPkId);
+  response(res, StatusCodes.OK, 'Ok', { result });
 }
 
 // TODO: 사용자 기기 등록
