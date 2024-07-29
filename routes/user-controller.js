@@ -42,7 +42,7 @@ function verifyUser(req, res, next) {
 
 /**
  * @swagger
- * /api/users:
+ * /users:
  *   post:
  *     summary: 사용자를 생성
  *     description: 회원입력 정보를 바탕으로 사용자를 생성
@@ -151,7 +151,7 @@ async function createUser(req, res) {
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   get:
  *     summary: "사용자 조회"
  *     description: "특정 사용자를 조회"
@@ -201,7 +201,7 @@ async function getUser(req, res) {
 //  갱신을 위해 수정시 엑세스토큰을 재발급 받아야함
 /**
  * @swagger
- * /api/users/{id}:
+ * /users/{id}:
  *   patch:
  *     summary: 사용자 정보 수정
  *     description: 사용자 정보를 수정
@@ -264,7 +264,7 @@ async function updateUser(req, res) {
 
 /**
  * @swagger
- * /api/users/{id}/friends:
+ * /users/{id}/friends:
  *  post:
  *    summary: 친구 추가
  *    description: 사용자의 친구를 추가
@@ -337,8 +337,11 @@ async function createFriend(req, res) {
 // TODO: 사용자 친구 목록 조회
 /**
  * @swagger
- * /api/users/{id}/friends:
+ * /users/{id}/friends:
  *   get:
+ *     summary: 친구 목록 조회
+ *     description: 사용자의 친구 목록을 조회
+ *     tags: [Users]
  */
 router.get('/:id(\\d+)/friends', authMiddleware, verifyUser, getFriendList);
 async function getFriendList(req, res) {
@@ -364,8 +367,11 @@ async function getFriendList(req, res) {
 
 /**
  * @swagger
- * /api/users/{id}/friends:
+ * /users/{id}/friends:
  *   delete:
+ *     summary: 친구 삭제
+ *     description: 친구 선택 및 전체 삭제
+ *     tags: [Users]
  */
 router.delete(
   '/:id(\\d+)/friends',
@@ -384,8 +390,11 @@ async function deleteFriendList(req, res) {
 // TODO: 사용자 친구 조회
 /**
  * @swagger
- * /api/users/{id}/friends/{friendPkId}:
+ * /users/{id}/friends/{friendPkId}:
  *   get:
+ *     summary: 친구 조회
+ *     description: 특정 사용자의 친구를 조회
+ *     tags: [Users]
  */
 router.get(
   '/:id(\\d+)/friends/:friendPkId(\\d+)',
@@ -403,8 +412,11 @@ async function getFriend(req, res) {
 
 /**
  * @swagger
- * /api/users/{id}/friends/{friendPkId}:
+ * /users/{id}/friends/{friendPkId}:
  *   delete:
+ *     summary: 친구 삭제
+ *     description: 특정 사용자의 친구를 삭제
+ *     tags: [Users]
  */
 router.delete(
   '/:id(\\d+)/friends/:friendPkId(\\d+)',
@@ -423,7 +435,7 @@ async function deleteFriend(req, res) {
 // TODO: 사용자 기기 등록
 /**
  * @swagger
- * /api/users/{id}/devices:
+ * /users/{id}/devices:
  *   post:
  */
 router.post('/:id(\\d+)/devices', createDevice);
@@ -437,7 +449,7 @@ async function createDevice(req, res) {
 // TODO: 사용자 기기 조회
 /**
  * @swagger
- * /api/users/{id}/devices/{deviceId}:
+ * /users/{id}/devices/{deviceId}:
  *   get:
  */
 router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getDevice);
@@ -451,7 +463,7 @@ async function getDevice(req, res) {
 // TODO: 로그인 플랫폼 등록
 /**
  * @swagger
- * /api/users/{id}/login-platforms:
+ * /users/{id}/login-platforms:
  *   post:
  */
 router.post('/:id(\\d+)/login-platforms', createLoginPlatform);
@@ -465,7 +477,7 @@ async function createLoginPlatform(req, res) {
 // TODO: 사용자 배틀 목록 조회
 /**
  * @swagger
- * /api/users/{id}/battles:
+ * /users/{id}/battles:
  *   get:
  */
 router.get('/:id(\\d+)/battles', getBattleList);

@@ -13,7 +13,7 @@ router.use(authMiddleware);
 
 /**
  * @swagger
- * /api/auth/tests/protected:
+ * /auth/tests/protected:
  *   get:
  *     summary: auth 테스트
  *     description: 인증 테스트
