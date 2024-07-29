@@ -46,7 +46,7 @@ Friend.init(
 
 // 사용자와 친구는 1:N 관계(사용자)
 User.hasMany(Friend, {
-  as: 'friend',
+  as: 'userFriends',
   foreignKey: 'userId',
   sourceKey: 'id'
 });
@@ -58,12 +58,12 @@ Friend.belongsTo(User, {
 
 // 사용자와 친구는 1:N 관계(친구 사용자)
 User.hasMany(Friend, {
-  as: 'friend',
+  as: 'userFriendOf',
   foreignKey: 'friendId',
   sourceKey: 'id'
 });
 Friend.belongsTo(User, {
-  as: 'user',
+  as: 'friend',
   foreignKey: 'friendId',
   sourceKey: 'id'
 });

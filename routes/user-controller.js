@@ -287,30 +287,40 @@ async function updateUser(req, res) {
  *              - friendId
  *            properties:
  *              friendId:
- *                type: string
+ *                type: number
  *                description: 등록할 친구 ID
  *                example: 1
- *     responses:
- *       201:
- *         description: 친구를 성공적으로 생성
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 statusCode:
- *                   type: number
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: 'Created'
- *                 data:
- *                   type: object
- *                   description: 생성한 친구 정보
- *               required:
- *                 - statusCode
- *                 - message
- *                 - data
+ *    responses:
+ *      201:
+ *        description: 친구를 성공적으로 생성
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                statusCode:
+ *                  type: number
+ *                  example: 201
+ *                message:
+ *                  type: string
+ *                  example: 'Created'
+ *                data:
+ *                  type: object
+ *                  description: 생성한 친구 정보
+ *                  properties:
+ *                    id:
+ *                      type: number
+ *                      example: 1
+ *                    userId:
+ *                      type: number
+ *                      example: 1
+ *                    friendId:
+ *                      type: number
+ *                      example: 2
+ *              required:
+ *                - statusCode
+ *                - message
+ *                - data
  */
 router.post('/:id(\\d+)/friends', createFriend);
 async function createFriend(req, res) {
