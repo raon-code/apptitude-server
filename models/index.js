@@ -3,13 +3,21 @@
  *    Sequelize ORM
  *    데이터베이스 스키마 설정 메인
  */
-const { Sequelize } = require('sequelize');
+const { Sequelize, Transaction } = require('sequelize');
+const cls = require('cls-hooked');
 
 const config = require('@/config');
 const isForce = require('@/config').models.forceSync;
 const dbUser = require('@/config/database/user.json')[config.nodeEnv];
 
 const logger = require('@/config/logger');
+
+// 트랜잭션 설정
+// cls-hooked 네임스페이스 생성
+const namespace = cls.createNamespace('transaction-namespace');
+
+// Sequelize에 cls-hooked 네임스페이스 설정
+Sequelize.useCLS(namespace);
 
 // 환경에 따른 초기 파라미터 설정
 function getInitParam() {
@@ -42,12 +50,14 @@ function getInitParam() {
       };
     default: // 로컬환경
       return {
-        dialect: 'sqlite',
-        storage: config.database.sqlite.storagePath,
-        logging: (query, time) => {
-          logger.debug('[' + time + 'ms] ' + query);
-        },
-        benchmark: true
+        options: {
+          dialect: 'sqlite',
+          storage: config.database.sqlite.storagePath,
+          logging: (query, time) => {
+            logger.debug('[' + time + 'ms] ' + query);
+          },
+          benchmark: true
+        }
       };
   }
 }

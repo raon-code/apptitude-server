@@ -16,11 +16,6 @@ AccessHistory.init(
       autoIncrement: true,
       comment: '접속내역 식별ID'
     },
-    accessDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      comment: '접속 날짜'
-    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: true,

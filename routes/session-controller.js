@@ -14,6 +14,7 @@ const {
   setJwtTokenCookie,
   clearJwtTokenCookie
 } = require('@/config/security/jwt');
+const transaction = require('@/middleware/transaction-handler');
 
 /**
  * @swagger
@@ -65,7 +66,7 @@ const {
  *                 - message
  *                 - data
  */
-router.post('/', createSession);
+router.post('/', transaction(createSession));
 async function createSession(req, res) {
   const loginUserDTO = LoginUserDTO.fromPlainObject(req.body);
   loginUserDTO.validate();
@@ -104,6 +105,8 @@ async function createSession(req, res) {
  */
 router.delete('/', authMiddleware, deleteSession);
 async function deleteSession(req, res) {
+  sessionService.logout();
+
   // 액세스 토큰을 쿠키에서 삭제
   clearJwtTokenCookie(res);
   response(res, StatusCodes.NO_CONTENT, '세션삭제 성공');

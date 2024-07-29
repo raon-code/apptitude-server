@@ -1,4 +1,5 @@
 const { isEmpty } = require('@/common/validate');
+const { PLATFORM_TYPE_MAP } = require('@/enum/platform-type');
 
 /**
  *

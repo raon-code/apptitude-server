@@ -49,7 +49,7 @@ const config = {
   },
   kakao: {
     restApiKey: '6b42072c0ab619483e4fe33d615880fe',
-    redirectUrl: 'https://'
+    redirectUrl: 'https://api.buddybattle.com'
   }
   // Other..
 };

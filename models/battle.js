@@ -33,12 +33,12 @@ Battle.init(
     },
     inviteLink: {
       type: DataTypes.STRING(200),
-      allowNull: false,
+      allowNull: true,
       comment: '초대링크'
     },
     validWaitTime: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       comment: '대기유효시간(분)'
     },
     reward: {
@@ -55,11 +55,6 @@ Battle.init(
       type: DataTypes.STRING(10),
       allowNull: false,
       comment: '상태타입'
-    },
-    createAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      comment: '생성날짜'
     },
     userId: {
       type: DataTypes.INTEGER,
