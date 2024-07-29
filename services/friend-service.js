@@ -66,7 +66,8 @@ async function getFriendList(
     where,
     include: [
       {
-        model: User
+        model: User,
+        as: 'friend'
         // 필요한 User 속성을 명시적으로 지정합니다.
         // attributes: ['username']
       }
@@ -90,7 +91,8 @@ async function getFriend(userId, friendPkId) {
   const friend = await Friend.findByPk(friendPkId, {
     include: [
       {
-        model: User
+        model: User,
+        as: 'friend'
       }
     ]
   });
