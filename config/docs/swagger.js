@@ -6,11 +6,11 @@ const config = require('@/config'); // config/index
 let _url = 'http://localhost:3000';
 switch (config.nodeEnv) {
   case 'dev': // 개발환경
-    _url = 'http://api.buddybattle.net';
+    _url = 'https://api.buddybattle.net';
     break;
 
   case 'prod': // 운영환경
-    _url = 'http://api.buddybattle.net';
+    _url = 'https://api.buddybattle.net';
     break;
 
   default: // 로컬환경
