@@ -67,12 +67,6 @@ function decrypt(input) {
   return decrypted;
 }
 
-// 테스트
-// logger.warn('앱티튜드');
-// const encrypted = encrypt('앱티튜드');
-// logger.error(encrypted);
-// logger.warn(decrypt(encrypted));
-
 module.exports = {
   hashEncrypt,
   encrypt,

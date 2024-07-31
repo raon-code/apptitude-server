@@ -3,43 +3,75 @@
  *    Sequelize ORM
  *    데이터베이스 스키마 설정 메인
  */
-const { Sequelize } = require('sequelize');
+const { Sequelize, Transaction } = require('sequelize');
+const cls = require('cls-hooked');
 
 const config = require('@/config');
 const isForce = require('@/config').models.forceSync;
+const dbUser = require('@/config/database/user.json')[config.nodeEnv];
+
 const logger = require('@/config/logger');
 
-// 데이터베이스 연결 인스턴스 생성
-const sequelize = new Sequelize(getInitParam());
+// 트랜잭션 설정
+// cls-hooked 네임스페이스 생성
+const namespace = cls.createNamespace('transaction-namespace');
+
+// Sequelize에 cls-hooked 네임스페이스 설정
+Sequelize.useCLS(namespace);
 
 // 환경에 따른 초기 파라미터 설정
 function getInitParam() {
   switch (config.nodeEnv) {
     case 'dev': // 개발환경
       return {
-        dialect: 'mysql',
-        logging: (query, time) => {
-          logger.debug('[' + time + 'ms] ' + query);
-        },
-        benchmark: true
+        username: dbUser.username,
+        password: dbUser.password,
+        database: dbUser.database,
+        options: {
+          host: dbUser.host,
+          dialect: 'mysql',
+          logging: (query, time) => {
+            logger.debug('[' + time + 'ms] ' + query);
+          },
+          benchmark: true
+        }
       };
     case 'prod': // 운영환경
       return {
-        dialect: 'mysql',
-        logging: false,
-        benchmark: false
+        username: dbUser.username,
+        password: dbUser.password,
+        database: dbUser.database,
+        options: {
+          host: dbUser.host,
+          dialect: 'mysql',
+          logging: false,
+          benchmark: false
+        }
       };
     default: // 로컬환경
       return {
-        dialect: 'sqlite',
-        storage: config.database.sqlite.storagePath,
-        logging: (query, time) => {
-          logger.debug('[' + time + 'ms] ' + query);
-        },
-        benchmark: true
+        options: {
+          dialect: 'sqlite',
+          storage: config.database.sqlite.storagePath,
+          logging: (query, time) => {
+            logger.debug('[' + time + 'ms] ' + query);
+          },
+          benchmark: true
+        }
       };
   }
 }
+
+// 초기 파라미터 가져오기
+const initParams = getInitParam();
+
+// 데이터베이스 연결 인스턴스 생성
+const sequelize = new Sequelize(
+  initParams.database || null,
+  initParams.username || null,
+  initParams.password || null,
+  initParams.options
+);
 
 // 데이터베이스 연결 검증
 async function authenticate() {

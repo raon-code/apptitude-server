@@ -16,27 +16,22 @@ InviteHistory.init(
       autoIncrement: true,
       comment: '초대내역 식별ID'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별ID'
     },
-    target_id: {
+    targetId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '초대대상 식별ID'
     },
-    invite_link: {
+    inviteLink: {
       type: DataTypes.STRING(200),
       allowNull: true,
       comment: '초대링크'
     },
-    invite_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      comment: '초대일자'
-    },
-    battle_id: {
+    battleId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: '대결 식별ID',

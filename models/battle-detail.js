@@ -17,22 +17,22 @@ BattleDetail.init(
       primaryKey: true, // default: not null
       comment: '대결상세 식별 id'
     },
-    detox_total_time: {
+    detoxTotalTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '디톡스 총 시간(분)'
     },
-    detox_time: {
+    detoxTime: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '디톡스 수행시간(분)'
     },
-    result_type: {
+    resultType: {
       type: DataTypes.STRING(10),
       allowNull: false,
       comment: '결과타입'
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '사용자 식별id',
@@ -41,7 +41,7 @@ BattleDetail.init(
         key: 'id'
       }
     },
-    battle_id: {
+    battleId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       comment: '대결 식별id',
@@ -60,6 +60,29 @@ BattleDetail.init(
   }
 );
 
+// 사용자와 대결상세는 1:N 관계
+User.hasMany(BattleDetail, {
+  as: 'battleDetails',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+BattleDetail.belongsTo(User, {
+  as: 'user',
+  foreignKey: 'userId',
+  sourceKey: 'id'
+});
+
+// 대결과 대결상세는 1:M 관계
+Battle.hasMany(BattleDetail, {
+  as: 'battleDetails',
+  foreignKey: 'battleId',
+  sourceKey: 'id'
+});
+BattleDetail.belongsTo(Battle, {
+  as: 'user',
+  foreignKey: 'battleId',
+  sourceKey: 'id'
+});
 syncModel(BattleDetail);
 
 module.exports = BattleDetail;
