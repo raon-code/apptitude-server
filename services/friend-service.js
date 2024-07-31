@@ -14,6 +14,7 @@ const CreateFriendDTO = require('@/types/dto/create-friend-dto');
 
 /**
  * 친구 생성
+ *
  * @param {CreateFriendDTO} createFriendDTO 친구 생성 DTO
  * @returns {Friend} 새로 추가된 친구 정보
  */
