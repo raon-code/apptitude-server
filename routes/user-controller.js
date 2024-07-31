@@ -5,19 +5,25 @@
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 
-const userService = require('@/services/user-service');
-const friendService = require('@/services/friend-service');
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
-const CreateUserDTO = require('@/types/dto/create-user-dto');
-const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
-
 const { sequelize } = require('@/models');
 const transaction = require('@/middleware/transaction-handler');
-const UpdateUserDTO = require('@/types/dto/update-user-dto');
+
 const { reissue } = require('@/services/session-service');
 const { setJwtTokenCookie } = require('@/config/security/jwt');
+
+const userService = require('@/services/user-service');
+const friendService = require('@/services/friend-service');
+const deviceService = require('@/services/device-service');
+const loginPlatformService = require('@/services/login-platform-service');
+const battleService = require('@/services/battle-service');
+
+const CreateUserDTO = require('@/types/dto/create-user-dto');
+const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
+const CreateUserDeviceDTO = require('@/types/dto/create-user-device-dto');
+const UpdateUserDTO = require('@/types/dto/update-user-dto');
 
 // 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
 router.use((req, res, next) => {
@@ -93,8 +99,8 @@ function verifyUser(req, res, next) {
  *               loginPlatform:
  *                 type: object
  *                 required:
- *                 - platformType
- *                 - uuid
+ *                   - platformType
+ *                   - uuid
  *                 properties:
  *                   platformType:
  *                     type: string(enum)
@@ -334,23 +340,87 @@ async function createFriend(req, res) {
   response(res, StatusCodes.CREATED, 'Created', newFriend);
 }
 
-// TODO: 사용자 친구 목록 조회
 /**
- * @swagger
- * /users/{id}/friends:
- *   get:
- *     summary: 친구 목록 조회
- *     description: 사용자의 친구 목록을 조회
- *     tags: [Users]
+ *  @swagger
+ *  /users/{id}/friends:
+ *    get:
+ *      summary: 친구 목록 조회
+ *      description: 사용자의 친구 목록을 조회
+ *      tags: [Users]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: 사용자 ID
+ *          schema:
+ *            type: number
+ *        - in: query
+ *          name: filterType
+ *          required: false
+ *          description: 필터 타입
+ *          schema:
+ *            type: string
+ *        - in: query
+ *          name: orderType
+ *          required: false
+ *          description: 정렬 타입 (asc/desc)
+ *          schema:
+ *            type: string
+ *        - in: query
+ *          name: orderBy
+ *          required: false
+ *          description: 정렬 기준 필드
+ *          schema:
+ *            type: string
+ *        - in: query
+ *          name: page
+ *          required: false
+ *          description: 페이지 번호
+ *          schema:
+ *            type: integer
+ *        - in: query
+ *          name: size
+ *          required: false
+ *          description: 페이지 당 항목 수
+ *          schema:
+ *            type: integer
+ *      responses:
+ *        200:
+ *          description: 사용자의 전체 친구 목록
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: 조회성공
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *              required:
+ *                - statusCode
+ *                - message
+ *                - data
  */
 router.get('/:id(\\d+)/friends', authMiddleware, verifyUser, getFriendList);
 async function getFriendList(req, res) {
   const userId = req.params.id;
 
+  // TODO: 필터 타입 추가
   const filterType = req.query.filterType;
+  // TODO: 정렬 기준 추가
   const orderType = req.query.orderType;
+
+  // 정렬기준
   const orderBy = req.query.orderBy;
+  // 인덱싱용 페이지 - 어디서부터 보여줄지
   const page = req.query.page;
+  // 보여줄 친구 수
   const size = req.query.size;
 
   const friendList = friendService.getFriendList(
@@ -367,34 +437,47 @@ async function getFriendList(req, res) {
 
 /**
  * @swagger
- * /users/{id}/friends:
- *   delete:
- *     summary: 친구 삭제
- *     description: 친구 선택 및 전체 삭제
- *     tags: [Users]
- */
-router.delete(
-  '/:id(\\d+)/friends',
-  authMiddleware,
-  verifyUser,
-  deleteFriendList
-);
-async function deleteFriendList(req, res) {
-  const userId = req.params.id;
-  const friendPkIdList = req.body.friendPkIdList;
-
-  const result = friendService.deleteFriendList(userId, friendPkIdList);
-  response(res, StatusCodes.OK, 'Ok', { result });
-}
-
-// TODO: 사용자 친구 조회
-/**
- * @swagger
- * /users/{id}/friends/{friendPkId}:
+ * /{id}/friends/{friendPkId}:
  *   get:
- *     summary: 친구 조회
- *     description: 특정 사용자의 친구를 조회
- *     tags: [Users]
+ *     summary: 특정 친구 조회
+ *     tags:
+ *       - Friends
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 사용자 ID
+ *       - in: path
+ *         name: friendPkId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 친구 PK ID
+ *     responses:
+ *       200:
+ *          description: 친구 조회 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: 삭제성공
+ *                 data:
+ *                   type: object
+ *                   description: 친구 정보
+ *                   example: {}
+ *              required:
+ *                - statusCode
+ *                - message
+ *                - data
+
  */
 router.get(
   '/:id(\\d+)/friends/:friendPkId(\\d+)',
@@ -412,11 +495,107 @@ async function getFriend(req, res) {
 
 /**
  * @swagger
- * /users/{id}/friends/{friendPkId}:
+ * /{id}/friends:
  *   delete:
  *     summary: 친구 삭제
- *     description: 특정 사용자의 친구를 삭제
- *     tags: [Users]
+ *     tags:
+ *       - Friends
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 사용자 ID
+ *       - in: body
+ *         name: friendPkIdList
+ *         description: 삭제할 친구의 PK ID 목록
+ *         schema:
+ *           type: object
+ *           properties:
+ *             friendPkIdList:
+ *               type: array
+ *               items:
+ *                 type: integer
+ *     responses:
+ *        200:
+ *          description: 친구 삭제 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: 삭제성공
+ *                 data:
+ *                   type: object
+ *                   description: 삭제 결과
+ *                   example: {}
+ *              required:
+ *                - statusCode
+ *                - message
+ *                - data
+ */
+router.delete(
+  '/:id(\\d+)/friends',
+  authMiddleware,
+  verifyUser,
+  deleteFriendList
+);
+async function deleteFriendList(req, res) {
+  const userId = req.params.id;
+  const friendPkIdList = req.body.friendPkIdList;
+
+  const result = friendService.deleteFriendList(userId, friendPkIdList);
+  response(res, StatusCodes.OK, 'Ok', { result });
+}
+
+/**
+ * @swagger
+ * /{id}/friends/{friendPkId}:
+ *   delete:
+ *     summary: 특정 친구 삭제
+ *     tags:
+ *       - Friends
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 사용자 ID
+ *       - in: path
+ *         name: friendPkId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: 친구 PK ID
+ *     responses:
+ *       200:
+ *          description: 친구 삭제 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: 삭제성공
+ *                 data:
+ *                   type: object
+ *                   description: 삭제 결과
+ *                   example: {}
+ *              required:
+ *                - statusCode
+ *                - message
+ *                - data
  */
 router.delete(
   '/:id(\\d+)/friends/:friendPkId(\\d+)',
@@ -432,59 +611,292 @@ async function deleteFriend(req, res) {
   response(res, StatusCodes.OK, 'Ok', { result });
 }
 
-// TODO: 사용자 기기 등록
 /**
  * @swagger
- * /users/{id}/devices:
+ * /{id}/devices:
  *   post:
+ *     summary: Create a user device
+ *     tags:
+ *       - Devices
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: User ID
+ *     requestBody:
+ *       description: New device information
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               deviceName:
+ *                 type: string
+ *                 description: Device name
+ *               deviceType:
+ *                 type: string
+ *                 description: Device type
+ *             required:
+ *               - deviceName
+ *               - deviceType
+ *     responses:
+ *       201:
+ *         description: Successfully created device
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: Created
+ *                 data:
+ *                   type: object
+ *                   description: Newly created device information
+ *                   properties:
+ *                     deviceId:
+ *                       type: integer
+ *                       description: Device ID
+ *                     deviceName:
+ *                       type: string
+ *                       description: Device name
+ *                     deviceType:
+ *                       type: string
+ *                       description: Device type
+ *                   example:
+ *                     deviceId: 1
+ *                     deviceName: "My New Device"
+ *                     deviceType: "Smartphone"
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
-router.post('/:id(\\d+)/devices', createDevice);
-async function createDevice(req, res) {
+router.post('/:id(\\d+)/devices', createUserDevice);
+async function createUserDevice(req, res) {
   const userId = req.params.id;
 
-  // TODO: CreateDeviceDTO 추가
-  // TODO: createDevice 서비스 추가
+  const createUserDeviceDTO = CreateUserDeviceDTO.fromPlainObject(req.body);
+  createUserDeviceDTO.userId = userId;
+  createUserDeviceDTO.validate();
+
+  const newUserDevice = await deviceService.createUserDevice(
+    createUserDeviceDTO
+  );
+  response(res, StatusCodes.CREATED, 'Created', newUserDevice);
 }
 
-// TODO: 사용자 기기 조회
 /**
  * @swagger
- * /users/{id}/devices/{deviceId}:
+ * /{id}/devices/{deviceId}:
  *   get:
+ *     summary: Retrieve a specific user device
+ *     tags:
+ *       - Devices
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: User ID
+ *       - in: path
+ *         name: deviceId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Device ID
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the device
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Ok
+ *                 data:
+ *                   type: object
+ *                   description: Device information
+ *                   properties:
+ *                     deviceId:
+ *                       type: integer
+ *                       description: Device ID
+ *                     name:
+ *                       type: string
+ *                       description: Device name
+ *                     status:
+ *                       type: string
+ *                       description: Device status
+ *                   example:
+ *                     deviceId: 1
+ *                     name: "My Device"
+ *                     status: "active"
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
-router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getDevice);
-async function getDevice(req, res) {
-  const userId = req.params.id;
+router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getUserDevice);
+async function getUserDevice(req, res) {
   const deviceId = req.params.deviceId;
 
-  // TODO: getDevice 서비스 추가
+  const userDevice = await deviceService.getUserDevice(deviceId);
+
+  response(res, StatusCodes.OK, 'Ok', userDevice);
 }
 
-// TODO: 로그인 플랫폼 등록
 /**
  * @swagger
- * /users/{id}/login-platforms:
+ * /{id}/login-platforms:
  *   post:
+ *     summary: Create a user login platform
+ *     tags:
+ *       - Login Platforms
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: User ID
+ *     requestBody:
+ *       description: New login platform information
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               platformName:
+ *                 type: string
+ *                 description: Platform name
+ *               platformDetails:
+ *                 type: object
+ *                 description: Platform details
+ *             required:
+ *               - platformName
+ *               - platformDetails
+ *     responses:
+ *       201:
+ *         description: Successfully created login platform
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: Created
+ *                 data:
+ *                   type: object
+ *                   description: Newly created login platform information
+ *                   properties:
+ *                     platformId:
+ *                       type: integer
+ *                       description: Platform ID
+ *                     platformName:
+ *                       type: string
+ *                       description: Platform name
+ *                   example:
+ *                     platformId: 1
+ *                     platformName: "Google"
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.post('/:id(\\d+)/login-platforms', createLoginPlatform);
 async function createLoginPlatform(req, res) {
   const userId = req.params.id;
 
-  // TODO: CreateLoginPlatformDTO 추가
-  // TODO: createLoginPlatform 서비스 추가
+  const createLoginPlatformDTO = CreateLoginPlatformDTO.fromPlainObject(
+    req.body
+  );
+  createLoginPlatformDTO.userId = userId;
+  createLoginPlatformDTO.validate();
+
+  const newLoginPlatform = await loginPlatformService.createLoginPlatform(
+    createLoginPlatformDTO
+  );
+  response(res, StatusCodes.CREATED, 'Created', newLoginPlatform);
 }
 
-// TODO: 사용자 배틀 목록 조회
 /**
  * @swagger
- * /users/{id}/battles:
+ * /{id}/battles:
  *   get:
+ *     summary: Retrieve user's battle list
+ *     tags:
+ *       - Battles
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the battle list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Ok
+ *                 data:
+ *                   type: array
+ *                   description: List of battles
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       battleId:
+ *                         type: integer
+ *                         description: Battle ID
+ *                       battleName:
+ *                         type: string
+ *                         description: Battle name
+ *                       battleStatus:
+ *                         type: string
+ *                         description: Battle status
+ *                   example:
+ *                     - battleId: 1
+ *                       battleName: "Battle 1"
+ *                       battleStatus: "active"
+ *                     - battleId: 2
+ *                       battleName: "Battle 2"
+ *                       battleStatus: "completed"
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.get('/:id(\\d+)/battles', getBattleList);
 async function getBattleList(req, res) {
   const userId = req.params.id;
+  const battleList = await battleService.getBattleList(userId);
 
-  // TODO: getBattleList 서비스 추가
+  response(res, StatusCodes.OK, 'Ok', battleList);
 }
 
 module.exports = router;
