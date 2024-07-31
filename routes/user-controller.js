@@ -16,7 +16,7 @@ const { setJwtTokenCookie } = require('@/config/security/jwt');
 
 const userService = require('@/services/user-service');
 const friendService = require('@/services/friend-service');
-const userDeviceService = require('@/services/user-device-service');
+const deviceService = require('@/services/device-service');
 const loginPlatformService = require('@/services/login-platform-service');
 const battleService = require('@/services/battle-service');
 
@@ -99,8 +99,8 @@ function verifyUser(req, res, next) {
  *               loginPlatform:
  *                 type: object
  *                 required:
- *                 - platformType
- *                 - uuid
+ *                   - platformType
+ *                   - uuid
  *                 properties:
  *                   platformType:
  *                     type: string(enum)
@@ -615,7 +615,7 @@ async function deleteFriend(req, res) {
  * @swagger
  * /{id}/devices:
  *   post:
- *     summary: 유저 장치 생성
+ *     summary: Create a user device
  *     tags:
  *       - Devices
  *     parameters:
@@ -624,47 +624,61 @@ async function deleteFriend(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: 사용자 ID
+ *         description: User ID
  *     requestBody:
- *       description: 새 장치 정보
+ *       description: New device information
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               // Define the properties of the CreateUserDeviceDTO object here
- *               exampleProperty:
+ *               deviceName:
  *                 type: string
- *                 description: 예제 속성
+ *                 description: Device name
+ *               deviceType:
+ *                 type: string
+ *                 description: Device type
  *             required:
- *               - exampleProperty
+ *               - deviceName
+ *               - deviceType
  *     responses:
  *       201:
- *         description: 장치 생성 완료
+ *         description: Successfully created device
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 statusCode:
- *                   type: number
+ *                   type: integer
  *                   example: 201
  *                 message:
  *                   type: string
  *                   example: Created
  *                 data:
  *                   type: object
- *                   description: 새로 생성된 장치 정보
+ *                   description: Newly created device information
  *                   properties:
- *                     // Define the properties of the newUserDevice object here
- *                   example: {}
- *              required:
- *                - statusCode
- *                - message
- *                - data
+ *                     deviceId:
+ *                       type: integer
+ *                       description: Device ID
+ *                     deviceName:
+ *                       type: string
+ *                       description: Device name
+ *                     deviceType:
+ *                       type: string
+ *                       description: Device type
+ *                   example:
+ *                     deviceId: 1
+ *                     deviceName: "My New Device"
+ *                     deviceType: "Smartphone"
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
-router.post('/:id(\\d+)/devices', createDevice);
+router.post('/:id(\\d+)/devices', createUserDevice);
 async function createUserDevice(req, res) {
   const userId = req.params.id;
 
@@ -672,7 +686,7 @@ async function createUserDevice(req, res) {
   createUserDeviceDTO.userId = userId;
   createUserDeviceDTO.validate();
 
-  const newUserDevice = await userDeviceService.createUserDevice(
+  const newUserDevice = await deviceService.createUserDevice(
     createUserDeviceDTO
   );
   response(res, StatusCodes.CREATED, 'Created', newUserDevice);
@@ -682,7 +696,7 @@ async function createUserDevice(req, res) {
  * @swagger
  * /{id}/devices/{deviceId}:
  *   get:
- *     summary: 특정 유저 장치 조회
+ *     summary: Retrieve a specific user device
  *     tags:
  *       - Devices
  *     parameters:
@@ -691,55 +705,54 @@ async function createUserDevice(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: 사용자 ID
+ *         description: User ID
  *       - in: path
  *         name: deviceId
  *         schema:
  *           type: integer
  *         required: true
- *         description: 장치 ID
+ *         description: Device ID
  *     responses:
  *       200:
- *         description: 장치 조회 완료
+ *         description: Successfully retrieved the device
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 statusCode:
- *                   type: number
+ *                   type: integer
  *                   example: 200
  *                 message:
  *                   type: string
  *                   example: Ok
  *                 data:
  *                   type: object
- *                   description: 장치 정보
+ *                   description: Device information
  *                   properties:
  *                     deviceId:
  *                       type: integer
- *                       description: 장치 ID
+ *                       description: Device ID
  *                     name:
  *                       type: string
- *                       description: 장치 이름
+ *                       description: Device name
  *                     status:
  *                       type: string
- *                       description: 장치 상태
+ *                       description: Device status
  *                   example:
  *                     deviceId: 1
  *                     name: "My Device"
  *                     status: "active"
- *              required:
- *                - statusCode
- *                - message
- *                - data
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getUserDevice);
-router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getDevice);
 async function getUserDevice(req, res) {
   const deviceId = req.params.deviceId;
 
-  const userDevice = await userDeviceService.getUserDevice(deviceId);
+  const userDevice = await deviceService.getUserDevice(deviceId);
 
   response(res, StatusCodes.OK, 'Ok', userDevice);
 }
@@ -748,7 +761,7 @@ async function getUserDevice(req, res) {
  * @swagger
  * /{id}/login-platforms:
  *   post:
- *     summary: 유저 로그인 플랫폼 생성
+ *     summary: Create a user login platform
  *     tags:
  *       - Login Platforms
  *     parameters:
@@ -757,53 +770,56 @@ async function getUserDevice(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: 사용자 ID
+ *         description: User ID
  *     requestBody:
- *       description: 새 로그인 플랫폼 정보
+ *       description: New login platform information
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               // Define the properties of the CreateLoginPlatformDTO object here
  *               platformName:
  *                 type: string
- *                 description: 플랫폼 이름
+ *                 description: Platform name
  *               platformDetails:
  *                 type: object
- *                 description: 플랫폼 세부 정보
+ *                 description: Platform details
  *             required:
  *               - platformName
  *               - platformDetails
  *     responses:
  *       201:
- *         description: 로그인 플랫폼 생성 완료
+ *         description: Successfully created login platform
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 statusCode:
- *                   type: number
+ *                   type: integer
  *                   example: 201
  *                 message:
  *                   type: string
  *                   example: Created
  *                 data:
  *                   type: object
- *                   description: 새로 생성된 로그인 플랫폼 정보
+ *                   description: Newly created login platform information
  *                   properties:
- *                     // Define the properties of the newLoginPlatform object here
+ *                     platformId:
+ *                       type: integer
+ *                       description: Platform ID
+ *                     platformName:
+ *                       type: string
+ *                       description: Platform name
  *                   example:
  *                     platformId: 1
  *                     platformName: "Google"
- *              required:
- *                - statusCode
- *                - message
- *                - data
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
-router.post('/:id(\\d+)/login-platforms', createLoginPlatform);
 router.post('/:id(\\d+)/login-platforms', createLoginPlatform);
 async function createLoginPlatform(req, res) {
   const userId = req.params.id;
@@ -824,7 +840,7 @@ async function createLoginPlatform(req, res) {
  * @swagger
  * /{id}/battles:
  *   get:
- *     summary: 유저 배틀 목록 조회
+ *     summary: Retrieve user's battle list
  *     tags:
  *       - Battles
  *     parameters:
@@ -833,36 +849,36 @@ async function createLoginPlatform(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: 사용자 ID
+ *         description: User ID
  *     responses:
  *       200:
- *         description: 배틀 목록 조회 완료
+ *         description: Successfully retrieved the battle list
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 statusCode:
- *                   type: number
+ *                   type: integer
  *                   example: 200
  *                 message:
  *                   type: string
  *                   example: Ok
  *                 data:
  *                   type: array
- *                   description: 배틀 목록
+ *                   description: List of battles
  *                   items:
  *                     type: object
  *                     properties:
  *                       battleId:
  *                         type: integer
- *                         description: 배틀 ID
+ *                         description: Battle ID
  *                       battleName:
  *                         type: string
- *                         description: 배틀 이름
+ *                         description: Battle name
  *                       battleStatus:
  *                         type: string
- *                         description: 배틀 상태
+ *                         description: Battle status
  *                   example:
  *                     - battleId: 1
  *                       battleName: "Battle 1"
@@ -870,12 +886,11 @@ async function createLoginPlatform(req, res) {
  *                     - battleId: 2
  *                       battleName: "Battle 2"
  *                       battleStatus: "completed"
- *              required:
- *                - statusCode
- *                - message
- *                - data
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
-router.get('/:id(\\d+)/battles', getBattleList);
 router.get('/:id(\\d+)/battles', getBattleList);
 async function getBattleList(req, res) {
   const userId = req.params.id;
