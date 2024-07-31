@@ -739,7 +739,6 @@ router.get('/:id(\\d+)/devices/:deviceId(\\d+)', getDevice);
 async function getUserDevice(req, res) {
   const deviceId = req.params.deviceId;
 
-  // TODO: getDevice 서비스 추가
   const userDevice = await userDeviceService.getUserDevice(deviceId);
 
   response(res, StatusCodes.OK, 'Ok', userDevice);
