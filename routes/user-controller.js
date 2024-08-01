@@ -24,6 +24,7 @@ const CreateUserDTO = require('@/types/dto/create-user-dto');
 const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
 const CreateUserDeviceDTO = require('@/types/dto/create-user-device-dto');
 const UpdateUserDTO = require('@/types/dto/update-user-dto');
+const { create } = require('@/models/user');
 
 // 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
 router.use((req, res, next) => {
@@ -612,71 +613,64 @@ async function deleteFriend(req, res) {
 }
 
 /**
- * @swagger
- * /{id}/devices:
- *   post:
- *     summary: Create a user device
- *     tags:
- *       - Devices
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
+ *  @swagger
+ *  /{id}/devices:
+ *    post:
+ *      summary: 유저 디바이스 생성
+ *      tags:
+ *        - Devices
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
  *           type: integer
- *         required: true
- *         description: User ID
- *     requestBody:
- *       description: New device information
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               deviceName:
- *                 type: string
- *                 description: Device name
- *               deviceType:
- *                 type: string
- *                 description: Device type
- *             required:
- *               - deviceName
- *               - deviceType
- *     responses:
- *       201:
- *         description: Successfully created device
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 statusCode:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Created
- *                 data:
- *                   type: object
- *                   description: Newly created device information
- *                   properties:
- *                     deviceId:
- *                       type: integer
- *                       description: Device ID
- *                     deviceName:
- *                       type: string
- *                       description: Device name
- *                     deviceType:
- *                       type: string
- *                       description: Device type
- *                   example:
- *                     deviceId: 1
- *                     deviceName: "My New Device"
- *                     deviceType: "Smartphone"
- *               required:
- *                 - statusCode
- *                 - message
- *                 - data
+ *          required: true
+ *          description: 사용자 ID
+ *      requestBody:
+ *        description: New device information
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - uuid
+ *                - osType
+ *                - osVersion
+ *              properties:
+ *                uuid:
+ *                  type: string
+ *                  description: 디바이스 식별 코드
+ *                  example: 00000000-0000-0000-0000-000000000000
+ *                osType:
+ *                  type: string(enum)
+ *                  description: 운영체제 타입(공통코드)
+ *                  example: OT0
+ *                osVersion:
+ *                  type: string
+ *                  description: 운영체제 버전
+ *                  example: 14.0.1
+ *      responses:
+ *        201:
+ *          description: Successfully created device
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  statusCode:
+ *                    type: integer
+ *                    example: 201
+ *                  message:
+ *                    type: string
+ *                    example: Created
+ *                  data:
+ *                    type: object
+ *                    description: 생성한 디바이스 정보
+ *                required:
+ *                  - statusCode
+ *                  - message
+ *                  - data
  */
 router.post('/:id(\\d+)/devices', createUserDevice);
 async function createUserDevice(req, res) {
@@ -684,6 +678,7 @@ async function createUserDevice(req, res) {
 
   const createUserDeviceDTO = CreateUserDeviceDTO.fromPlainObject(req.body);
   createUserDeviceDTO.userId = userId;
+  createUserDeviceDTO.isUsing = true;
   createUserDeviceDTO.validate();
 
   const newUserDevice = await deviceService.createUserDevice(
@@ -696,7 +691,7 @@ async function createUserDevice(req, res) {
  * @swagger
  * /{id}/devices/{deviceId}:
  *   get:
- *     summary: Retrieve a specific user device
+ *     summary: 특정 사용자 디바이스 조회
  *     tags:
  *       - Devices
  *     parameters:
@@ -705,16 +700,16 @@ async function createUserDevice(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: User ID
+ *         description: 사용자 아이디
  *       - in: path
  *         name: deviceId
  *         schema:
  *           type: integer
  *         required: true
- *         description: Device ID
+ *         description: 디바이스 아이디
  *     responses:
  *       200:
- *         description: Successfully retrieved the device
+ *         description: 디바이스 조회 성공
  *         content:
  *           application/json:
  *             schema:
@@ -729,20 +724,7 @@ async function createUserDevice(req, res) {
  *                 data:
  *                   type: object
  *                   description: Device information
- *                   properties:
- *                     deviceId:
- *                       type: integer
- *                       description: Device ID
- *                     name:
- *                       type: string
- *                       description: Device name
- *                     status:
- *                       type: string
- *                       description: Device status
- *                   example:
- *                     deviceId: 1
- *                     name: "My Device"
- *                     status: "active"
+ *                   example: {}
  *               required:
  *                 - statusCode
  *                 - message
@@ -761,7 +743,7 @@ async function getUserDevice(req, res) {
  * @swagger
  * /{id}/login-platforms:
  *   post:
- *     summary: Create a user login platform
+ *     summary: 유저 로그인 플랫폼 생성
  *     tags:
  *       - Login Platforms
  *     parameters:
@@ -770,27 +752,29 @@ async function getUserDevice(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: User ID
+ *         description: 사용자 ID
  *     requestBody:
- *       description: New login platform information
+ *       description: 생성한 로그인 플랫폼 정보
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               platformName:
- *                 type: string
- *                 description: Platform name
- *               platformDetails:
- *                 type: object
- *                 description: Platform details
  *             required:
- *               - platformName
- *               - platformDetails
+ *               - platformType
+ *               - uuid
+ *             properties:
+ *               platformType:
+ *                 type: string(enum)
+ *                 description: 플랫폼 타입(공통코드)
+ *                 example: PT0
+ *               uuid:
+ *                 type: string
+ *                 description: UUID
+ *                 example: 1234567890
  *     responses:
  *       201:
- *         description: Successfully created login platform
+ *         description: 로그인 플랫폼 생성 성공
  *         content:
  *           application/json:
  *             schema:
@@ -804,17 +788,8 @@ async function getUserDevice(req, res) {
  *                   example: Created
  *                 data:
  *                   type: object
- *                   description: Newly created login platform information
- *                   properties:
- *                     platformId:
- *                       type: integer
- *                       description: Platform ID
- *                     platformName:
- *                       type: string
- *                       description: Platform name
- *                   example:
- *                     platformId: 1
- *                     platformName: "Google"
+ *                   description: 생성한 로그인 플랫폼 정보
+ *                   example: {}
  *               required:
  *                 - statusCode
  *                 - message
@@ -840,7 +815,7 @@ async function createLoginPlatform(req, res) {
  * @swagger
  * /{id}/battles:
  *   get:
- *     summary: Retrieve user's battle list
+ *     summary: 대결 목록 조회
  *     tags:
  *       - Battles
  *     parameters:
@@ -849,10 +824,10 @@ async function createLoginPlatform(req, res) {
  *         schema:
  *           type: integer
  *         required: true
- *         description: User ID
+ *         description: 사용자 ID
  *     responses:
  *       200:
- *         description: Successfully retrieved the battle list
+ *         description: 대결 목록 조회 성공
  *         content:
  *           application/json:
  *             schema:
@@ -866,26 +841,10 @@ async function createLoginPlatform(req, res) {
  *                   example: Ok
  *                 data:
  *                   type: array
- *                   description: List of battles
+ *                   description: 대결 목록
  *                   items:
  *                     type: object
- *                     properties:
- *                       battleId:
- *                         type: integer
- *                         description: Battle ID
- *                       battleName:
- *                         type: string
- *                         description: Battle name
- *                       battleStatus:
- *                         type: string
- *                         description: Battle status
- *                   example:
- *                     - battleId: 1
- *                       battleName: "Battle 1"
- *                       battleStatus: "active"
- *                     - battleId: 2
- *                       battleName: "Battle 2"
- *                       battleStatus: "completed"
+ *                     example: [{}]
  *               required:
  *                 - statusCode
  *                 - message
