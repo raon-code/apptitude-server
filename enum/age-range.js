@@ -1,13 +1,13 @@
+/**
+ * age-range.js
+ *  연령대 공통코드
+ */
 const CommonTemplate = require('@/enum/common-template');
 const {
   convertToEnumMap,
   convertToEnumCodeList
 } = require('@/common/convertor');
 
-/**
- * age-range.js
- *  연령대 도메인
- */
 const AGE_RANGE = {
   AGE_UNDER_10: new CommonTemplate('AR0', '10대 이하'),
   AGE_20: new CommonTemplate('AR1', '20대'),
@@ -19,6 +19,7 @@ const AGE_RANGE = {
   AGE_80: new CommonTemplate('AR7', '80대'),
   AGE_OVER_90: new CommonTemplate('AR8', '90대 이상')
 };
+
 const AGE_RANGE_MAP = convertToEnumMap(AGE_RANGE);
 const AGE_RANGE_CODE = convertToEnumCodeList(AGE_RANGE);
 

@@ -1,5 +1,6 @@
 /**
  * create-battle-dto.js
+ *  대결 생성에 필요한 값들을 담은 DTO
  */
 const { STATUS_TYPE } = require('@/enum/status-type');
 const { BizError } = require('@/error');

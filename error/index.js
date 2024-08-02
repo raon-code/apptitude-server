@@ -13,6 +13,7 @@ class BizError extends Error {
   }
 }
 
+// UnauthorizeError(401) 권한 에러
 class UnauthorizeError extends Error {
   status = StatusCodes.UNAUTHORIZED;
   constructor(message = '권한이 없습니다.') {

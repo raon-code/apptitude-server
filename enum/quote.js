@@ -1,13 +1,13 @@
+/**
+ * quote.js
+ *  명언 공통코드
+ */
 const CommonTemplate = require('@/enum/common-template');
 const {
   convertToEnumMap,
   convertToEnumCodeList
 } = require('@/common/convertor');
 
-/**
- * quote.js
- *  명언 모은
- */
 const QUOTE = {
   QT000: new CommonTemplate(
     'QT000',

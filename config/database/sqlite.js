@@ -8,12 +8,13 @@ const sqlite3 = require('sqlite3').verbose();
 const sqliteConfig = require('@/config').database.sqlite;
 const logger = require('@/config/logger');
 
-// 데이터베이스 파일 삭제
+
+// // 데이터베이스 파일 삭제
 // if (fs.existsSync(sqliteConfig.storagePath)) {
 //     fs.unlinkSync(sqliteConfig.storagePath);
 // }
 
-// 새 데이터베이스 파일 생성
+// 데이터베이스 객체 생성
 const db = new sqlite3.Database(sqliteConfig.storagePath, (err) => {
   if (err) {
     return logger.error(err.message);
@@ -23,8 +24,11 @@ const db = new sqlite3.Database(sqliteConfig.storagePath, (err) => {
 
 // 초기 테이블 생성 및 기본 데이터 삽입
 db.serialize(() => {
-  // db.run('CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY, name TEXT, email TEXT)');
-  // db.run('INSERT INTO contacts (name, email) VALUES (?, ?)', ['Alice', 'alice@example.com']);
+  /* 
+    example)
+      db.run('CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY, name TEXT, email TEXT)');
+      db.run('INSERT INTO contacts (name, email) VALUES (?, ?)', ['Alice', 'alice@example.com']);
+  */
 });
 
 // 앱 종료시 데이터베이스 닫기

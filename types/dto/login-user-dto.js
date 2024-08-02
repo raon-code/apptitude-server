@@ -1,5 +1,6 @@
 /**
  * login-user-dto.js
+ *    사용자 로그인에 필요한 값들을 담은 DTO
  */
 const { PLATFORM_TYPE_CODE } = require('@/enum/platform-type');
 const { BizError } = require('@/error');

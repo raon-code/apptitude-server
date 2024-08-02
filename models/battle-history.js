@@ -1,5 +1,6 @@
 /**
  * battle_history.js
+ *   대결 내역 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');

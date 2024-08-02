@@ -1,13 +1,13 @@
+/**
+ * message-type.js
+ *  푸시 메시지 타입 공통코드(?)
+ */
 const CommonTemplate = require('@/enum/common-template');
 const {
   convertToEnumMap,
   convertToEnumCodeList
 } = require('@/common/convertor');
 
-/**
- * message-type.js
- *  메시지 타입 도메인
- */
 const MESSAGE_TYPE = {
   UNKNOWN: new CommonTemplate('MT0', '?')
 };

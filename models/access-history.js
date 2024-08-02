@@ -1,5 +1,6 @@
 /**
  * access_history.js
+ *   사용자 접속내역 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');
