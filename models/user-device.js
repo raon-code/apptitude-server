@@ -1,5 +1,6 @@
 /**
  * user-device.js
+ *  사용자 디바이스 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');

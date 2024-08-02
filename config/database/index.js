@@ -12,6 +12,7 @@ switch (config.nodeEnv) {
     break;
 
   default: // 로컬환경
+    // sqlite 사용
     db = require('./sqlite');
     break;
 }

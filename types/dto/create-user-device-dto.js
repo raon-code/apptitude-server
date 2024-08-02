@@ -1,5 +1,6 @@
 /**
  * create-user-device-dto.js
+ *   사용자 기기 생성에 필요한 값들을 담은 DTO
  */
 
 const { BizError } = require('@/error');

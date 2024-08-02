@@ -1,8 +1,14 @@
+/**
+ * swagger.js
+ *  swagger 설정 및 초기화
+ */
+
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
 const config = require('@/config'); // config/index
 
+// swagger 요청 base URL 설정
 let _url = 'http://localhost:3000';
 switch (config.nodeEnv) {
   case 'dev': // 개발환경

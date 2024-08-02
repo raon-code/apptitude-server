@@ -1,3 +1,7 @@
+/**
+ * push-controller.js
+ *  푸쉬 관련 컨트롤러
+ */
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 

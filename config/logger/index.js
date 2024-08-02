@@ -14,15 +14,18 @@ function getInitParam() {
   let level, filename;
 
   switch (config.nodeEnv) {
-    case 'dev': // 개발환경
+    // 개발환경
+    case 'dev': 
       level = 'info';
       filename = 'log-dev.log';
       break;
-    case 'prod': // 운영환경
+    // 운영환경
+    case 'prod': 
       level = 'warn';
       filename = 'log-prod.log';
       break;
-    default: // 로컬환경
+    // 로컬환경
+    default: 
       level = 'debug';
       filename = 'log-local.log';
       break;
@@ -39,11 +42,11 @@ function getInitParam() {
         info.level = info.level.toUpperCase();
         // 공백 칸 수 고정
         info.level = info.level.padEnd(5, ' ');
-        // [LEVEL] 변환
+        // '[LEVEL]'로 변환
         info.level = `[${info.level}]`;
         return info;
       })(),
-      // 색깔 출력 활성화
+      // 색깔 출력
       winston.format.colorize({
         all: true
       }),
@@ -61,10 +64,12 @@ function getInitParam() {
   };
 }
 
-// 테스트
-// logger.error('This is an error message');
-// logger.warn('This is a warning message');
-// logger.info('This is an info message');
-// logger.debug('This is a debug message');
+/* 
+  example)
+    logger.error('This is an error message');
+    logger.warn('This is a warning message');
+    logger.info('This is an info message');
+    logger.debug('This is a debug message');
+*/
 
 module.exports = logger;

@@ -1,6 +1,6 @@
 /**
  * user-service.js
- *  사용자 서비스
+ *  사용자 관련 서비스
  */
 const User = require('@/models/user');
 

@@ -1,6 +1,6 @@
 /**
  * user-controller.js
- *  사용자 컨트롤러
+ *  사용자 관련 컨트롤러
  */
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');

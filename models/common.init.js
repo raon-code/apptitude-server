@@ -5,7 +5,7 @@
 const { ENUM_LIST } = require('@/enum');
 
 /**
- * common 테이블에 명세한 데이터리스트를 추가합니다.
+ * enum으로 정의한 공통코드 데이터를 테이블에 추가합니다.
  * 값이 이미 존재하는 경우 값을 갱신시켜줍니다.
  *
  * @param {Model} Common Common 테이블 클래스

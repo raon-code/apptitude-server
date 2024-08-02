@@ -1,13 +1,13 @@
+/**
+ * platform-type.js
+ *  로그인 플랫폼 타입 공통코드
+ */
 const CommonTemplate = require('@/enum/common-template');
 const {
   convertToEnumMap,
   convertToEnumCodeList
 } = require('@/common/convertor');
 
-/**
- * platform-type.js
- *  로그인 플랫폼 타입 도메인
- */
 const PLATFORM_TYPE = {
   KAKAO: new CommonTemplate('PT0', '카카오')
 };

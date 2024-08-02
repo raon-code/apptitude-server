@@ -1,5 +1,6 @@
 /**
- * 공통코드 리스트
+ * enum/index.js
+ *  공통코드 리스트
  */
 const logger = require('@/config/logger');
 const {

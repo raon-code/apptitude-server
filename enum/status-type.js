@@ -1,13 +1,13 @@
+/**
+ * status-type.js
+ *  대결 상태타입 공통코드
+ */
 const CommonTemplate = require('@/enum/common-template');
 const {
   convertToEnumMap,
   convertToEnumCodeList
 } = require('@/common/convertor');
 
-/**
- * status-type.js
- *  대결 상태 타입
- */
 const STATUS_TYPE = {
   WAIT: new CommonTemplate('ST0', '대기'),
   REJECT: new CommonTemplate('ST1', '반려'),

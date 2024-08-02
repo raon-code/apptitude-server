@@ -1,6 +1,6 @@
 /**
  * session-service.js
- *  세션 서비스
+ *  세션 관련 서비스
  */
 const User = require('@/models/user');
 const LoginPlatform = require('@/models/login-platform');

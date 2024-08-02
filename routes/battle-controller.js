@@ -1,3 +1,7 @@
+/**
+ * battle-controller.js
+ *  대결 관련 컨트롤러
+ */
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 

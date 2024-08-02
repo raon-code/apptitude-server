@@ -1,6 +1,6 @@
 /**
  * crypto.js
- *  암호화 복호화 함수
+ *  암호화 복호화 공통함수
  */
 const crypto = require('crypto');
 
