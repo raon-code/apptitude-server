@@ -52,9 +52,9 @@ const config = {
   // 카카오 API 설정
   kakao: {
     restApiKey: '6b42072c0ab619483e4fe33d615880fe',
-    redirectUrl: 'https://api.buddybattle.net'
+    redirectUrl: 'http://localhost:3000/auth/kakao/user/test'
   }
-  
+
   // Others..
 };
 

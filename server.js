@@ -83,6 +83,7 @@ async function initializeForTest() {
     }
   }
 }
+initializeForTest();
 
 // 인덱스 페이지 설정
 server.get('/', (req, res) => {

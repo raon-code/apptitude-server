@@ -10,12 +10,12 @@ module.exports = {
   ROOT_DIR: process.cwd(),
   // 서버 디폴트 값
   SERVER_DEFAULT: {
-    PORT: 3000,       // 포트
+    PORT: 3001, // 포트
     NODE_ENV: 'local' // 실행환경
   },
   // 디버그 모드(local)
-  DEBUG_MODE: !process.env.NODE_ENV, 
+  DEBUG_MODE: !process.env.NODE_ENV,
   // 시간 설정
-  SEC_TO_MS: 1000,    // 1초 -> 1000밀리초
-  API_BASE_PATH: ''   // API 기본 경로
+  SEC_TO_MS: 1000, // 1초 -> 1000밀리초
+  API_BASE_PATH: '' // API 기본 경로
 };

@@ -45,6 +45,14 @@ function initialize(app) {
    *  description: 사용자 세션 관련 API
    */
   app.use(`${API_BASE_PATH}/sessions`, require('@/routes/session-controller'));
+
+  /**
+   * @swagger
+   * tags:
+   *  name: Auth
+   *  description: 인증 관련 API(로그인, 로그아웃 등)
+   */
+  app.use(`${API_BASE_PATH}/auth`, require('@/routes/auth-controller'));
 }
 
 module.exports = { initialize };

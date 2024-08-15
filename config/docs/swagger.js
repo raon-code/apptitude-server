@@ -9,7 +9,8 @@ const swaggerUi = require('swagger-ui-express');
 const config = require('@/config'); // config/index
 
 // swagger 요청 base URL 설정
-let _url = 'http://localhost:3000';
+// TODO: const.js 변수 사용하기
+let _url = 'http://localhost:3001';
 switch (config.nodeEnv) {
   case 'dev': // 개발환경
     _url = 'https://api.buddybattle.net';
@@ -20,7 +21,6 @@ switch (config.nodeEnv) {
     break;
 
   default: // 로컬환경
-    _url = 'http://localhost:3000';
     break;
 }
 
