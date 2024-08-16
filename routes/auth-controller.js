@@ -123,7 +123,6 @@ async function getKakaoResult(req, res) {
 
   const accessToken = token.access_token;
   const data = await kakao.getUserInfo(accessToken);
-
   logger.debug(data);
 
   response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
