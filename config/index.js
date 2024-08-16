@@ -4,7 +4,13 @@
  *
  *  실행환경에 영향을 받지 않는 공통적으로 사용되는 환경설정 값 관리
  */
-const { ROOT_DIR, SERVER_DEFAULT, API_BASE_PATH } = require('./const');
+const {
+  ROOT_DIR,
+  SERVER_DEFAULT,
+  API_BASE_PATH,
+  DEV,
+  PROD
+} = require('./const');
 
 const _nodeEnv = process.env.NODE_ENV || SERVER_DEFAULT.NODE_ENV;
 const serverConfig = getServerConfig(_nodeEnv);
@@ -66,14 +72,14 @@ function getServerConfig(nodeEnv) {
 
   switch (nodeEnv) {
     // 개발환경
-    case 'dev':
+    case DEV:
       _scheme = 'https';
       _host = 'api.buddybattle.net';
       _port = 3000;
       _baseUrl = `${_scheme}://${_host}${API_BASE_PATH}`;
       break;
     // 운영환경
-    case 'prod':
+    case PROD:
       _scheme = 'https';
       _host = 'api.buddybattle.net';
       _port = 3000;
