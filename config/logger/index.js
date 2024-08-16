@@ -15,17 +15,17 @@ function getInitParam() {
 
   switch (config.nodeEnv) {
     // 개발환경
-    case 'dev': 
+    case 'dev':
       level = 'info';
       filename = 'log-dev.log';
       break;
     // 운영환경
-    case 'prod': 
+    case 'prod':
       level = 'warn';
       filename = 'log-prod.log';
       break;
     // 로컬환경
-    default: 
+    default:
       level = 'debug';
       filename = 'log-local.log';
       break;

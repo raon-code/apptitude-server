@@ -93,7 +93,7 @@ server.get('/', (req, res) => {
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // 서버 포트 설정
-server.listen(config.port, () => {
+server.listen(config.server.port, () => {
   logger.info(`Server is running`);
 });
 

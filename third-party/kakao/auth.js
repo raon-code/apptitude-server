@@ -15,15 +15,15 @@ function getAuthUrl() {
 
 /**
  * 토큰발급
- * @param {*} auth
+ * @param {string} code 인가코드
  * @returns
  */
-async function getToken(auth) {
+async function getToken(code) {
   const params = new URLSearchParams();
   params.append('grant_type', 'authorization_code');
   params.append('client_id', kakaoConfig.restApiKey);
   params.append('redirect_uri', kakaoConfig.redirectUrl);
-  params.append('code', auth);
+  params.append('code', code);
 
   const response = await axios.post(
     'https://kauth.kakao.com/oauth/token',
@@ -35,7 +35,7 @@ async function getToken(auth) {
     }
   );
 
-  return response;
+  return response.data;
 }
 
 /**
@@ -53,22 +53,22 @@ async function getTokenInfo(accessToken) {
     }
   );
 
-  return response;
+  return response.data;
 }
 
 /**
  * 유저정보 조회
- * @param {*} token
+ * @param {*} accessToken
  * @returns
  */
-async function getUserInfo(token) {
+async function getUserInfo(accessToken) {
   const response = await axios.get('https://kapi.kakao.com/v2/user/me', {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
   });
 
-  return response;
+  return response.data;
 }
 
 module.exports = {
