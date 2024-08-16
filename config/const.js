@@ -10,8 +10,9 @@ module.exports = {
   ROOT_DIR: process.cwd(),
   // 서버 디폴트 값
   SERVER_DEFAULT: {
-    PORT: 3001, // 포트
-    NODE_ENV: 'local' // 실행환경
+    NODE_ENV: 'local', // 실행환경
+    HOST: 'localhost', // 호스트
+    PORT: 3001 // 포트
   },
   // 디버그 모드(local)
   DEBUG_MODE: !process.env.NODE_ENV,

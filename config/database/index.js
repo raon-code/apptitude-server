@@ -10,7 +10,6 @@ switch (config.nodeEnv) {
   case 'dev': // 개발환경
   case 'prod': // 운영환경
     break;
-
   default: // 로컬환경
     // sqlite 사용
     db = require('./sqlite');
