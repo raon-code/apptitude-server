@@ -35,7 +35,7 @@ async function getToken(code) {
     }
   );
 
-  return response;
+  return response.data;
 }
 
 /**
@@ -53,7 +53,7 @@ async function getTokenInfo(accessToken) {
     }
   );
 
-  return response;
+  return response.data;
 }
 
 /**
@@ -68,7 +68,7 @@ async function getUserInfo(accessToken) {
     }
   });
 
-  return response;
+  return response.data;
 }
 
 module.exports = {

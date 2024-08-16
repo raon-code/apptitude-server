@@ -65,7 +65,7 @@ router.get('/kakao/token', getKakaoToken);
 async function getKakaoToken(req, res) {
   const { code } = req.query;
 
-  const { data } = await kakao.getToken(code);
+  const data = await kakao.getToken(code);
   response(res, StatusCodes.OK, '카카오 토큰 발급 성공', data);
 }
 
@@ -109,16 +109,24 @@ router.get('/kakao/user', getKakaoUser);
 async function getKakaoUser(req, res) {
   const { accessToken } = req.query;
 
-  const { data } = await kakao.getUserInfo(accessToken);
+  const data = await kakao.getUserInfo(accessToken);
   response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
 }
 
 // 카카오 서버가 요청하는 URL
-router.get('/kakao/user/test', getKakaoUserTest);
-async function getKakaoUserTest(req, res) {
+router.get('/kakao/result', getKakaoResult);
+async function getKakaoResult(req, res) {
   const { code } = req.query;
-  // TODO: getKakaoAuth
-  // TODO: getKakaoUser
+
+  const token = await kakao.getToken(code);
+  logger.debug(token);
+
+  const accessToken = token.access_token;
+  const data = await kakao.getUserInfo(accessToken);
+
+  logger.debug(data);
+
+  response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
 }
 
 module.exports = router;

@@ -50,7 +50,7 @@ const config = {
   // 카카오 API 설정
   kakao: {
     restApiKey: '6b42072c0ab619483e4fe33d615880fe',
-    redirectUrl: serverConfig.baseUrl + '/auth/kakao/user/test'
+    redirectUrl: serverConfig.baseUrl + '/auth/kakao/result'
   }
 
   // Others..

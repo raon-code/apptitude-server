@@ -57,7 +57,7 @@ function cleanStackTrace(stack) {
   let cleanedStack = stack.replace(ansiEscapeRegex, '');
 
   // 불필요한 공백 및 줄바꿈 조정을 위해 줄별로 분리 후 다시 결합
-  cleanedStack = cleanStack
+  cleanedStack = cleanedStack
     .split('\n')
     .map((line) => line.trim())
     .join('\n');
