@@ -31,7 +31,7 @@ async function createUser(createUserDTO) {
 
 /**
  * 사용자 목록 조회
- * 
+ *
  * @returns {User[]} 사용자 목록
  */
 async function getUserList() {
@@ -43,7 +43,7 @@ async function getUserList() {
 
 /**
  * 사용자 조회
- * 
+ *
  * @param {string} userId 사용자 ID
  * @returns {User} 사용자 정보
  */
@@ -61,7 +61,6 @@ async function getUser(userId) {
  *
  * @param {number}  userId  사용자 ID
  * @param {User}    user    사용자 정보
- * @returns {boolean} 자신의 정보가 맞는지 여부
  */
 function isOwnUserId(userId, user) {
   if (!user) {

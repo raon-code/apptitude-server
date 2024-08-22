@@ -66,8 +66,7 @@ const authMiddleware = (req, res, next) => {
             const newAccessToken = await reissue(payload.refreshJwt);
             setJwtTokenCookie(res, newAccessToken);
             req.user = getJwtPayload(newAccessToken);
-            next();
-            return;
+            return next();
           }
         }
 
@@ -77,8 +76,7 @@ const authMiddleware = (req, res, next) => {
       } catch (error) {
         // 인증 실패
         logger.error(error);
-        response(res, StatusCodes.UNAUTHORIZED, '권한없음');
-        return;
+        return response(res, StatusCodes.UNAUTHORIZED, '권한없음');
       }
 
       // 인증 성공

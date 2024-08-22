@@ -11,23 +11,37 @@ const { updateProperties } = require('@/common/object-util');
 
 async function createBattleDetail() {}
 
-async function getBattleDetailList() {}
+async function getBattleDetailList(battleId) {
+  const battleDetailList = await BattleDetail.findAll({
+    where: {
+      battleId
+    }
+  });
+  logger.debug(battleDetailList);
 
-async function getBattleDetail() {}
+  return battleDetailList;
+}
 
-async function isOwnUserBattle(userId, battleId) {
-  // const battle = await getBattle(battleId);
-  // if (!battle) {
-  //   throw new BizError('대결이 존재하지 않습니다');
-  // }
-  // if (battle.userId !== userId) {
-  //   throw new UnauthorizeError('해당 대결에 대한 권한이 없습니다');
-  // }
+async function getBattleDetail(battleDetailId) {
+  const battleDetail = await BattleDetail.findByPk(battleDetailId);
+  logger.debug(battleDetail);
+
+  return battleDetail;
+}
+
+async function isEngagedInBattle(userId, battleId) {
+  // battleId 에 해당하는 대결상세 조회
+  const battleDetailList = await getBattleDetailList(battleId);
+  // 배틀 중 userId 요소가 같은지 확인
+  //   같으면 해당유저는 대결에 포함된 상태, 아니면 포함되지 않은 상태
+  return battleDetailList.some(
+    (battleDetail) => battleDetail.userId === userId
+  );
 }
 
 module.exports = {
   createBattleDetail,
   getBattleDetailList,
   getBattleDetail,
-  isOwnUserBattle
+  isEngagedInBattle
 };

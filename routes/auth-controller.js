@@ -66,7 +66,7 @@ async function getKakaoToken(req, res) {
   const { code } = req.query;
 
   const data = await kakao.getToken(code);
-  response(res, StatusCodes.OK, '카카오 토큰 발급 성공', data);
+  response(res, StatusCodes.OK, '조회성공', data);
 }
 
 /**
@@ -110,10 +110,45 @@ async function getKakaoUser(req, res) {
   const { accessToken } = req.query;
 
   const data = await kakao.getUserInfo(accessToken);
-  response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
+  response(res, StatusCodes.OK, '조회성공', data);
 }
 
-// 카카오 서버가 요청하는 URL
+/**
+ * @swagger
+ * /auth/kakao/user:
+ *   get:
+ *     summary: 카카오 서버가 요청하는 URL
+ *     description:
+ *     tags: [Auth]
+ *     parameters:
+ *      - in: query
+ *        name: code
+ *        required: true
+ *        description: 기관코드
+ *        schema:
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: 카카오 유저 정보 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "카카오 유저 정보 조회 성공"
+ *                 data:
+ *                   type: object
+ *                   example: {}
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.get('/kakao/result', getKakaoResult);
 async function getKakaoResult(req, res) {
   const { code } = req.query;
@@ -125,7 +160,7 @@ async function getKakaoResult(req, res) {
   const data = await kakao.getUserInfo(accessToken);
   logger.debug(data);
 
-  response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
+  response(res, StatusCodes.OK, '조회성공', data);
 }
 
 module.exports = router;
