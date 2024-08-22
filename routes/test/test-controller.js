@@ -181,7 +181,7 @@ async function getTestList(req, res) {
  *                 - message
  *                 - data
  */
-router.get('/:id(\\d+)', getTest);
+router.get('/:id', getTest);
 async function getTest(req, res) {
   const id = req.params.id;
   const test = await testService.getTest(id);
@@ -285,7 +285,7 @@ async function getTestError(req, res) {
  *                 - message
  *                 - data
  */
-router.patch('/:id(\\d+)', updateTest);
+router.patch('/:id', updateTest);
 async function updateTest(req, res) {
   const id = req.params.id;
   const updateParams = req.body.updateParams;
@@ -329,7 +329,7 @@ async function updateTest(req, res) {
  *                 - message
  *                 - data
  */
-router.delete('/:id(\\d+)', deleteTest);
+router.delete('/:id', deleteTest);
 async function deleteTest(req, res) {
   const id = req.params.id;
   await testService.deleteTest(id);

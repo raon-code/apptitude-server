@@ -16,6 +16,7 @@ const {
 } = require('@/config/security/jwt');
 const transaction = require('@/middleware/transaction-handler');
 
+const { ConflictError, NotFoundError, BizError } = require('@/error');
 /**
  * @swagger
  * /sessions:

@@ -66,7 +66,7 @@ async function getKakaoToken(req, res) {
   const { code } = req.query;
 
   const data = await kakao.getToken(code);
-  response(res, StatusCodes.OK, '카카오 토큰 발급 성공', data);
+  response(res, StatusCodes.OK, '조회성공', data);
 }
 
 /**
@@ -110,7 +110,7 @@ async function getKakaoUser(req, res) {
   const { accessToken } = req.query;
 
   const data = await kakao.getUserInfo(accessToken);
-  response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
+  response(res, StatusCodes.OK, '조회성공', data);
 }
 
 /**
@@ -160,7 +160,7 @@ async function getKakaoResult(req, res) {
   const data = await kakao.getUserInfo(accessToken);
   logger.debug(data);
 
-  response(res, StatusCodes.OK, '카카오 유저 정보 조회 성공', data);
+  response(res, StatusCodes.OK, '조회성공', data);
 }
 
 module.exports = router;

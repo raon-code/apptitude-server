@@ -5,7 +5,12 @@
 const response = require('@/common/response');
 const { DEBUG_MODE } = require('@/config/const');
 const logger = require('@/config/logger');
-const { BizError, UnauthorizeError } = require('@/error');
+const {
+  BizError,
+  UnauthorizeError,
+  NotFoundError,
+  ConflictError
+} = require('@/error');
 
 /**
  * 에러에 대한 응답 처리
@@ -74,6 +79,8 @@ function cleanStackTrace(stack) {
 function checkDefinedError(err) {
   if (err instanceof BizError) return true;
   else if (err instanceof UnauthorizeError) return true;
+  else if (err instanceof NotFoundError) return true;
+  else if (err instanceof ConflictError) return true;
 
   return false;
 }

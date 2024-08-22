@@ -22,7 +22,27 @@ class UnauthorizeError extends Error {
   }
 }
 
+// NotFoundError(404) 찾을 수 없음 에러
+class NotFoundError extends Error {
+  status = StatusCodes.NOT_FOUND;
+  constructor(message = '해당 데이터를 찾을 수 없습니다.') {
+    super(message);
+    this.name = `Not Found`;
+  }
+}
+
+// ConflictError(409) 충돌 에러
+class ConflictError extends Error {
+  status = StatusCodes.CONFLICT;
+  constructor(message = '이미 존재하는 데이터입니다.') {
+    super(message);
+    this.name = `Conflict`;
+  }
+}
+
 module.exports = {
   BizError,
-  UnauthorizeError
+  UnauthorizeError,
+  NotFoundError,
+  ConflictError
 };
