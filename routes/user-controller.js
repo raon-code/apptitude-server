@@ -25,25 +25,30 @@ const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
 const UpdateUserDTO = require('@/types/dto/update-user-dto');
 
 const { ConflictError, NotFoundError, BizError } = require('@/error');
+const logger = require('@/config/logger');
 
-// 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
+// TODO: 해당 메서드를 따로 뺄 수는 없을까?
 router.use((req, res, next) => {
-  // [POST] /users 요청(유저생성)은 미들웨어를 적용하지 않음
-  if (req.method === 'POST' && req.path === '/') {
+  if (shouldSkipAuth(req)) {
     return next();
   }
+  return authMiddleware(req, res, next);
+}, verifyUser);
 
-  // 토큰확인
-  authMiddleware(req, res, next);
+// Auth 미들웨어를 제외할 경로를 확인하는 함수
+function shouldSkipAuth(req) {
+  return req.method === 'POST' && req.path === '/';
+}
 
-  // 사용자확인
-  const userId = req.params.id;
+// 사용자 확인 미들웨어
+function verifyUser(req, res, next) {
+  const userId = Number(req.params.id);
+  logger.debug(typeof userId);
   if (userId) {
     userService.isOwnUserId(userId, req.user);
   }
-
   next();
-});
+}
 
 /**
  * @swagger
