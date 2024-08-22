@@ -23,8 +23,10 @@ async function createLoginPlatform(createLoginPlatformDTO) {
   return newLoginPlatform;
 }
 
-async function getLoginPlatformByUuid(uuid) {
-  const loginPlatform = await LoginPlatform.findOne({ where: { uuid } });
+async function getLoginPlatformByColumn(uuid, platformType) {
+  const loginPlatform = await LoginPlatform.findOne({
+    where: { uuid, platformType }
+  });
   logger.debug(loginPlatform);
 
   return loginPlatform;
@@ -32,5 +34,5 @@ async function getLoginPlatformByUuid(uuid) {
 
 module.exports = {
   createLoginPlatform,
-  getLoginPlatformByUuid
+  getLoginPlatformByColumn
 };

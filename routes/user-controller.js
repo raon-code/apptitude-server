@@ -138,8 +138,9 @@ async function createUser(req, res) {
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
 
   // 회원가입 여부 체크
-  const loginPlatform = await loginPlatformService.getLoginPlatformByUuid(
-    createUserDTO.loginPlatform.uuid
+  const loginPlatform = await loginPlatformService.getLoginPlatformByColumn(
+    createUserDTO.loginPlatform.uuid,
+    createUserDTO.loginPlatform.platformType
   );
   if (loginPlatform) {
     response(res, StatusCodes.CONFLICT, 'Conflict', {
