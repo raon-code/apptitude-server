@@ -39,13 +39,13 @@ async function getBattleDetailList(req, res) {
 }
 
 // TODO: 배틀 상세 조회
-router.get('/:detailId(+d\\)', getBattleDetail);
+router.get('/:detailId(\\d+)', getBattleDetail);
 async function getBattleDetail(req, res) {
   // TODO: getBattleDetail 서비스 추가: 배틀 상세 조회
 }
 
 // TODO: 배틀 상세 수정
-router.patch('/detailId(+d\\)', updateBattleDetail);
+router.patch('/detailId(\\d+)', updateBattleDetail);
 async function updateBattleDetail(req, res) {
   // TODO: updateBattleDetail 서비스 추가: 배틀 상세 수정
 }

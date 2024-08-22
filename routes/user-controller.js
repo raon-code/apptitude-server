@@ -204,7 +204,7 @@ async function createUser(req, res) {
  *                 - message
  *                 - data
  */
-router.get('/:id(+d\\)', getUser);
+router.get('/:id(\\d+)', getUser);
 async function getUser(req, res) {
   const userId = req.params.id;
 
@@ -266,7 +266,7 @@ async function getUser(req, res) {
  *                 - message
  *                 - data
  */
-router.patch('/:id(+d\\)', updateUser);
+router.patch('/:id(\\d+)', updateUser);
 async function updateUser(req, res) {
   const userId = req.params.id;
   const updateUserDTO = UpdateUserDTO.fromPlainObject(req.body);

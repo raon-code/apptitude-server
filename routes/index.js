@@ -47,7 +47,7 @@ function initialize(app) {
    *  description: 대결상세 관련 API
    */
   app.use(
-    `${API_BASE_PATH}/battles/:battleId(+d\\)/details`,
+    `${API_BASE_PATH}/battles/:battleId(\\d+)/details`,
     require('@/routes/battle-detail-controller')
   );
 
@@ -58,7 +58,7 @@ function initialize(app) {
    *  description: 대결내역 관련 API
    */
   app.use(
-    `${API_BASE_PATH}/battles/:battleId(+d\\)/histories`,
+    `${API_BASE_PATH}/battles/:battleId(\\d+)/histories`,
     require('@/routes/battle-history-controller')
   );
 
@@ -69,7 +69,7 @@ function initialize(app) {
    *  description: 대결초대 관련 API
    */
   app.use(
-    `${API_BASE_PATH}/battles/:battleId(+d\\)/invitations`,
+    `${API_BASE_PATH}/battles/:battleId(\\d+)/invitations`,
     require('@/routes/battle-invitation-controller')
   );
 

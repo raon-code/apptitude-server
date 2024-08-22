@@ -131,7 +131,7 @@ async function createUserDevice(req, res) {
  *                 - message
  *                 - data
  */
-router.get('/:deviceId(+d\\)', getUserDevice);
+router.get('/:deviceId(\\d+)', getUserDevice);
 async function getUserDevice(req, res) {
   const deviceId = req.params.deviceId;
 

@@ -220,7 +220,7 @@ async function getFriendList(req, res) {
  *                - data
 
  */
-router.get('/:friendPkId(+d\\)', getFriend);
+router.get('/:friendPkId(\\d+)', getFriend);
 async function getFriend(req, res) {
   const userId = req.user.id;
   const friendPkId = req.params.friendPkId;
@@ -320,7 +320,7 @@ async function deleteFriendList(req, res) {
  *                - message
  *                - data
  */
-router.delete('/:friendPkId(+d\\)', deleteFriend);
+router.delete('/:friendPkId(\\d+)', deleteFriend);
 async function deleteFriend(req, res) {
   const userId = req.user.id;
   const friendPkId = req.params.friendPkId;
