@@ -11,6 +11,7 @@ const isForce = require('@/config').models.forceSync;
 const dbUser = require('@/config/database/user.json')[config.nodeEnv];
 
 const logger = require('@/config/logger');
+const { DEV, PROD } = require('@/config/const');
 
 // 트랜잭션 설정
 // cls-hooked 네임스페이스 생성
@@ -23,7 +24,7 @@ const initParams = getInitParam();
 function getInitParam() {
   switch (config.nodeEnv) {
     // 개발환경(MYSQL)
-    case 'dev':
+    case DEV:
       return {
         username: dbUser.username,
         password: dbUser.password,
@@ -40,7 +41,7 @@ function getInitParam() {
         }
       };
     // 운영환경(MySQL)
-    case 'prod':
+    case PROD:
       return {
         username: dbUser.username,
         password: dbUser.password,

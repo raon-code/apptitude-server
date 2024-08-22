@@ -6,6 +6,7 @@
 const winston = require('winston');
 
 const config = require('@/config');
+const { DEV, PROD } = require('../const');
 
 const logger = winston.createLogger(getInitParam());
 
@@ -15,12 +16,12 @@ function getInitParam() {
 
   switch (config.nodeEnv) {
     // 개발환경
-    case 'dev':
+    case DEV:
       level = 'info';
       filename = 'log-dev.log';
       break;
     // 운영환경
-    case 'prod':
+    case PROD:
       level = 'warn';
       filename = 'log-prod.log';
       break;
