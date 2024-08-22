@@ -49,9 +49,18 @@ async function getBattleList(userId) {
  */
 async function getBattle(battleId) {
   const battle = await Battle.findByPk(battleId);
-  if (!battle) {
-    throw new BizError('대결이 존재하지 않습니다');
-  }
+  logger.debug(battle);
+
+  return battle;
+}
+
+async function getUserLastBattle(userId) {
+  const battle = await Battle.findOne({
+    where: {
+      userId
+    },
+    order: [['createdAt', 'DESC']]
+  });
   logger.debug(battle);
 
   return battle;
@@ -80,7 +89,7 @@ async function updateBattle(battleId, updateBattleDTO) {
  * @returns {Battle} 종료된 대결 정보
  */
 async function finishBattle(battleId) {
-  const battle = await Battle.findByPk(battleId);
+  const battle = await getBattle(battleId);
   if (!battle) {
     throw new BizError('대결이 존재하지 않습니다');
   }
@@ -98,7 +107,7 @@ async function finishBattle(battleId) {
  * @returns {Battle} 취소된 대결 정보
  */
 async function cancelBattle(battleId) {
-  const battle = await Battle.findByPk(battleId);
+  const battle = await getBattle(battleId);
   if (!battle) {
     throw new BizError('대결이 존재하지 않습니다');
   }

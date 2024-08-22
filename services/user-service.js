@@ -31,7 +31,7 @@ async function createUser(createUserDTO) {
 
 /**
  * 사용자 목록 조회
- * 
+ *
  * @returns {User[]} 사용자 목록
  */
 async function getUserList() {
@@ -43,7 +43,7 @@ async function getUserList() {
 
 /**
  * 사용자 조회
- * 
+ *
  * @param {string} userId 사용자 ID
  * @returns {User} 사용자 정보
  */

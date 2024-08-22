@@ -11,6 +11,10 @@ const response = require('@/common/response');
 router.post('/battles', createBattle);
 async function createBattle(req, res) {
   // TODO: createBattleDTO 추가
+
+  // 진행중인 대결이 있는지 체크
+  // 없으면 생성
+
   // TODO: createBattle 서비스 추가: 배틀 생성
 
   response.success(res, StatusCodes.CREATED, result);

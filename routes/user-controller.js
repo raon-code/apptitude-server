@@ -143,10 +143,9 @@ async function createUser(req, res) {
     createUserDTO.loginPlatform.platformType
   );
   if (loginPlatform) {
-    response(res, StatusCodes.CONFLICT, 'Conflict', {
+    return response(res, StatusCodes.CONFLICT, 'Conflict', {
       message: '이미 가입된 회원입니다.'
     });
-    return;
   }
 
   // 유저 생성

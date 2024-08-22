@@ -139,10 +139,10 @@ async function deleteFriendList(userId, friendPkIdList) {
  * @returns {number} 삭제된 친구 수
  */
 async function deleteFriend(userId, friendPkId) {
-  const friend = await Friend.findByPk(friendPkId);
-  logger.debug(friend);
-
-  verifyUserFriend(friend, userId);
+  const friend = await getFriend(userId, friendPkId);
+  if (!friend) {
+    throw new BizError('친구 정보를 찾을 수 없습니다.');
+  }
 
   const result = await Friend.destroy({
     where: {
