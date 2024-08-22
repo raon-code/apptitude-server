@@ -23,17 +23,18 @@ router.use((req, res, next) => {
   next();
 });
 
-// TODO: 배틀 내역 생성
-router.post('/', createBattleHistory);
-async function createBattleHistory(req, res) {
-  // TODO: createBattleHistoryDTO 추가
-  // TODO: createBattleHistory 서비스 추가: 배틀 내역 생성
+// TODO: 초대링크 생성
+router.post('/', createInvitationURL);
+async function createInvitationURL(req, res) {
+  // TODO: createInvitationURL 서비스 추가: 초대링크 생성
+  // updaoeBB
 }
 
-// TODO: 배틀 내역 목록 조회
-router.get('/', getBattleHistoryList);
-async function getBattleHistoryList(req, res) {
-  // TODO: getBattleHistoryList 서비스 추가: 배틀 내역 목록 조회
+// TODO: 초대내역 조회
+// TODO: createInvitationHistory 서비스 추가: 초대내역 생성
+router.get('/', getInvitationList);
+async function getInvitationList(req, res) {
+  // TODO: getInvitationList 서비스 추가: 초대내역 목록 조회
 }
 
 module.exports = router;

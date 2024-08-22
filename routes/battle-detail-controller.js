@@ -24,14 +24,14 @@ router.use((req, res, next) => {
 });
 
 // TODO: 배틀 상세 생성
-router.post('/battles/:battleId/details', createBattleDetail);
+router.post('/', createBattleDetail);
 async function createBattleDetail(req, res) {
   // TODO: createBattleDetailDTO 추가
   // TODO: createBattleDetail 서비스 추가: 배틀 상세 생성
 }
 
 // TODO: 배틀 상세 목록 조회
-router.get('/battles/:battleId/details', getBattleDetailList);
+router.get('/', getBattleDetailList);
 async function getBattleDetailList(req, res) {
   // TODO: filter 필요
   //       상세를 어떻게 가져올 것인지?
@@ -39,13 +39,13 @@ async function getBattleDetailList(req, res) {
 }
 
 // TODO: 배틀 상세 조회
-router.get('/battles/:battleId/details/:detailId', getBattleDetail);
+router.get('/:detailId(+d\\)', getBattleDetail);
 async function getBattleDetail(req, res) {
   // TODO: getBattleDetail 서비스 추가: 배틀 상세 조회
 }
 
 // TODO: 배틀 상세 수정
-router.patch('/battles/:battleId/details/:detailId', updateBattleDetail);
+router.patch('/detailId(+d\\)', updateBattleDetail);
 async function updateBattleDetail(req, res) {
   // TODO: updateBattleDetail 서비스 추가: 배틀 상세 수정
 }
