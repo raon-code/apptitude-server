@@ -95,7 +95,7 @@ async function getBattleList(req, res) {
 }
 
 // TODO: 상대방 유저 대결 목록을 출력할때는 어떻게 보여줄 것인가?
-router.get('/:battleId', getBattle);
+router.get('/:battleId(+d\\)', getBattle);
 async function getBattle(req, res) {
   const battleId = req.user.id;
 
@@ -107,13 +107,13 @@ async function getBattle(req, res) {
 }
 
 // TODO: 배틀 수정
-router.patch('/:battleId', updateBattle);
+router.patch('/:battleId(+d\\)', updateBattle);
 async function updateBattle(req, res) {
   // TODO: updateBattle 서비스 추가: 배틀 수정
 }
 
 // TODO: 배틀 취소 및 종료
-router.delete('/battles/:battleId', deleteBattle);
+router.delete('/battles/:battleId(+d\\)', deleteBattle);
 async function deleteBattle(req, res) {
   // TODO: checkBattleFinished 서비스 추가: 배틀 종료여부 체크
   // TODO: finishBattle 서비스 추가: 배틀 종료

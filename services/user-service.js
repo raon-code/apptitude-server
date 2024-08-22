@@ -69,7 +69,7 @@ function isOwnUserId(userId, user) {
   }
 
   if (userId !== user.id) {
-    logger.error(`유저 ID 다름. userID: ${userId}, user: ${user}`);
+    logger.error(`유저 ID 다름. userID: ${userId}, user: ${user.id}`);
     throw new UnauthorizeError('사용자 정보가 올바르지 않습니다.');
   }
 }
