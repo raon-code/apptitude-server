@@ -275,7 +275,7 @@ async function updateUser(req, res) {
 
   const user = userService.updateUser(userId, updateUserDTO);
 
-  // 토큰 재발급
+  // 정보가 바뀌었으므로 토큰 재발급
   const newAccessToken = await reissue(user.refreshJwt);
   setJwtTokenCookie(res, newAccessToken);
 
