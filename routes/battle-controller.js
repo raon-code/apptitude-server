@@ -7,17 +7,32 @@ const { StatusCodes } = require('http-status-codes');
 
 const response = require('@/common/response');
 
-// TODO: 배틀 만들기
+const battleService = require('@/services/battle-service');
+
+const CreateBattleDTO = require('@/types/dto/create-battle-dto');
+const { BizError } = require('@/error');
+
 router.post('/battles', createBattle);
 async function createBattle(req, res) {
-  // TODO: createBattleDTO 추가
+  const createBattleDTO = CreateBattleDTO.fromPlainObject(req.body);
+  createBattleDTO.validate();
 
-  // 진행중인 대결이 있는지 체크
-  // 없으면 생성
+  const lastBattle = await battleService.getUserLastBattle(req.user.id);
+  if (lastBattle) {
+    // 대결 상태에 따라 생성 불가능한 경우
+    const cannotCreateBattle =
+      battleService.checkWaitForBattle(lastBattle) ||
+      battleService.checkInBattle(lastBattle);
 
-  // TODO: createBattle 서비스 추가: 배틀 생성
+    if (cannotCreateBattle) {
+      throw new BizError(
+        '대결을 생성할 수 없습니다. 마지막 대결을 확인해주세요.'
+      );
+    }
+  }
 
-  response.success(res, StatusCodes.CREATED, result);
+  const newBattle = await battleService.createBattle(createBattleDTO);
+  response.success(res, StatusCodes.CREATED, newBattle);
 }
 
 // TODO: 배틀 조회

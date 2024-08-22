@@ -131,8 +131,19 @@ async function getInvitationHistoryList() {}
 /**
  *
  * @param {*} battle
+ * @returns
  */
-function checkInBattle(battle) {}
+function checkWaitForBattle(battle) {
+  return battle.statusType === STATUS_TYPE.WAIT.code;
+}
+
+/**
+ *
+ * @param {Battle} battle
+ */
+function checkInBattle(battle) {
+  return battle.statusType === STATUS_TYPE.PROCEED.code;
+}
 
 /**
  *
@@ -147,11 +158,13 @@ module.exports = {
   createBattle,
   getBattleList,
   getBattle,
+  getUserLastBattle,
   updateBattle,
   finishBattle,
   cancelBattle,
   createInvitationURL,
   getInvitationHistoryList,
+  checkWaitForBattle,
   checkInBattle,
   checkBattleFinished
 };

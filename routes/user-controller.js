@@ -136,6 +136,7 @@ function verifyUser(req, res, next) {
 router.post('/', transaction(createUser)); // *트랜잭션 처리*
 async function createUser(req, res) {
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
+  createUserDTO.validate();
 
   // 회원가입 여부 체크
   const loginPlatform = await loginPlatformService.getLoginPlatformByColumn(
@@ -149,7 +150,6 @@ async function createUser(req, res) {
   }
 
   // 유저 생성
-  createUserDTO.validate();
   const newUser = await userService.createUser(createUserDTO);
   createUserDTO.loginPlatform.userId = newUser.id;
 
