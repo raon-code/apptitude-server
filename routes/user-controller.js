@@ -28,8 +28,8 @@ const { create } = require('@/models/user');
 
 // 미들웨어를 모든 요청에 적용하되, POST /user 요청을 제외함
 router.use((req, res, next) => {
-  // POST /user 요청(유저생성)은 미들웨어를 적용하지 않음
-  if (req.method === 'POST' && req.path === '/user') {
+  // [POST] /users 요청(유저생성)은 미들웨어를 적용하지 않음
+  if (req.method === 'POST' && req.path === '/') {
     return next();
   }
 
@@ -135,18 +135,30 @@ function verifyUser(req, res, next) {
  */
 router.post('/', transaction(createUser)); // *트랜잭션 처리*
 async function createUser(req, res) {
-  // 유저 생성
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
+
+  // 회원가입 여부 체크
+  const loginPlatform = await loginPlatformService.getLoginPlatformByUuid(
+    createUserDTO.loginPlatform.uuid
+  );
+  if (loginPlatform) {
+    response(res, StatusCodes.CONFLICT, 'Conflict', {
+      message: '이미 가입된 회원입니다.'
+    });
+    return;
+  }
+
+  // 유저 생성
   createUserDTO.validate();
   const newUser = await userService.createUser(createUserDTO);
-  newUser.loginPlatform.userId = newUser.id;
+  createUserDTO.loginPlatform.userId = newUser.id;
 
   // 로그인 플랫폼 생성
   const createLoginPlatformDTO = CreateLoginPlatformDTO.fromPlainObject(
-    newUser.loginPlatform
+    createUserDTO.loginPlatform
   );
   createLoginPlatformDTO.validate();
-  const newLoginPlatform = await userService.createLoginPlatform(
+  const newLoginPlatform = await loginPlatformService.createLoginPlatform(
     createLoginPlatformDTO
   );
 

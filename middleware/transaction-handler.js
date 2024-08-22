@@ -3,6 +3,7 @@
  *   트랜잭션을 처리하는 미들웨어
  */
 const { sequelize } = require('@/models');
+const logger = require('@/config/logger');
 
 /**
  * 컨트롤러 콜백함수를 트랜잭션으로 감싸는 미들웨어
