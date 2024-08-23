@@ -17,12 +17,7 @@ const friendService = require('@/services/friend-service');
 const { ConflictError, NotFoundError, BizError } = require('@/error');
 
 // 인증 미들웨어를 모든 요청에 적용
-router.use((req, res, next) => {
-  // 토큰확인
-  authMiddleware(req, res, next);
-
-  next();
-});
+router.use(authMiddleware);
 
 /**
  * @swagger

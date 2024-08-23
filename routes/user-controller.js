@@ -27,7 +27,6 @@ const UpdateUserDTO = require('@/types/dto/update-user-dto');
 const { ConflictError, NotFoundError, BizError } = require('@/error');
 const logger = require('@/config/logger');
 
-// TODO: 해당 메서드를 따로 뺄 수는 없을까?
 router.use((req, res, next) => {
   if (shouldSkipAuth(req)) {
     return next();

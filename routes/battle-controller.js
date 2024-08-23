@@ -12,29 +12,84 @@ const { authMiddleware } = require('@/middleware/auth-handler');
 
 const userService = require('@/services/user-service');
 const battleService = require('@/services/battle-service');
+const battleDetailService = require('@/services/battle-detail-service');
 
 const { BizError, NotFoundError } = require('@/error');
 
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
+const { updateProperties } = require('@/common/object-util');
 
 // 인증 미들웨어를 모든 요청에 적용
-router.use((req, res, next) => {
-  // 토큰확인
-  authMiddleware(req, res, next);
-
-  next();
-});
-
+router.use(authMiddleware);
 /**
  * @swagger
  * /battles:
  *   post:
+ *     summary: 대결 생성
+ *     tags: [Battles]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - startDate
+ *               - endDate
+ *               - reward
+ *               - userId
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 대결 이름
+ *                 example: 대결이름
+ *               startDate:
+ *                 type: string
+ *                 format: date
+ *                 description: 대결 시작일자
+ *                 example: 2024-01-01
+ *               endDate:
+ *                 type: string
+ *                 format: date
+ *                 description: 대결 종료일자
+ *                 example: 2024-02-01
+ *               reward:
+ *                 type: string
+ *                 description: 보상
+ *                 example: 엽떡 사주기
+ *               userId:
+ *                 type: string
+ *                 description: 사용자 ID
+ *                 example: user123
+ *     responses:
+ *       201:
+ *         description: 대결 생성 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: '생성성공'
+ *                 data:
+ *                   type: object
+ *                   description: 생성한 대결 정보
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.post('/', createBattle);
 async function createBattle(req, res) {
   const userId = req.user.id;
 
   const createBattleDTO = CreateBattleDTO.fromPlainObject(req.body);
+  createBattleDTO.userId = userId;
   createBattleDTO.validate();
 
   const lastBattle = await battleService.getUserLastBattle(userId);
@@ -53,7 +108,6 @@ async function createBattle(req, res) {
   response(res, StatusCodes.CREATED, '생성성공', newBattle);
 }
 
-// TODO: 상대방 유저 대결 목록을 출력할때는 어떻게 보여줄 것인가?
 /**
  * @swagger
  * /battles:
@@ -88,16 +142,26 @@ async function createBattle(req, res) {
  */
 router.get('/', getBattleList);
 async function getBattleList(req, res) {
+  // TODO: 페이징 필요한가?
+
   const userId = req.user.id;
   const battleList = await battleService.getBattleList(userId);
 
   response(res, StatusCodes.OK, '조회성공', battleList);
 }
 
-// TODO: 상대방 유저 대결 목록을 출력할때는 어떻게 보여줄 것인가?
 router.get('/:battleId(\\d+)', getBattle);
 async function getBattle(req, res) {
-  const battleId = req.user.id;
+  const userId = req.user.id;
+  const battleId = req.param.battleId;
+
+  const isEngagedInBattle = battleDetailService.isEngagedInBattle(
+    userId,
+    battleId
+  );
+  if (!isEngagedInBattle) {
+    throw new BizError('대결에 참여하지 않은 사용자입니다.');
+  }
 
   const battle = await battleService.getBattle(battleId);
   if (!battle) {
@@ -109,7 +173,20 @@ async function getBattle(req, res) {
 // TODO: 배틀 수정
 router.patch('/:battleId(\\d+)', updateBattle);
 async function updateBattle(req, res) {
-  // TODO: updateBattle 서비스 추가: 배틀 수정
+  const userId = req.user.id;
+  const battleId = req.param.battleId;
+
+  const isBattleLeader = battleService.isBattleLeader(userId, battleId);
+  if (!isBattleLeader) {
+    throw new BizError('대결 수정 권한이 없습니다.');
+  }
+
+  const battle = await battleService.getBattle(battleId);
+
+  const updateBattleDTO = UpdateBattleDTO.fromPlainObject(req.body);
+  const result = await updateProperties(battle, updateBattleDTO);
+
+  response(res, StatusCodes.OK, '수정성공', result);
 }
 
 // TODO: 배틀 취소 및 종료

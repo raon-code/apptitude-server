@@ -9,7 +9,11 @@ const logger = require('@/config/logger');
 const { BizError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 const { STATUS_TYPE } = require('@/enum/status-type');
+
+const battleDetailService = require('@/services/battle-detail-service');
+
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
+const BattleDetail = require('@/models/battle-detail');
 
 /**
  * 대결 생성
@@ -32,9 +36,16 @@ async function createBattle(createBattleDTO) {
  */
 async function getBattleList(userId) {
   const battleList = await Battle.findAll({
-    where: {
-      userId
-    }
+    include: [
+      {
+        model: BattleDetail,
+        as: 'battleDetail',
+        where: {
+          userId
+        },
+        attributes: [] // BattleDetail의 필드를 제외
+      }
+    ]
   });
   logger.debug(battleList);
 
@@ -154,6 +165,22 @@ function checkBattleFinished(battle) {
   return battle.endDate < new Date();
 }
 
+/**
+ * 대결방장 여부 확인
+ *
+ * @param {number} userId 대결방장인지 확인할 사용자 ID
+ * @param {number} battleId 대결 ID
+ * @returns {boolean} 대결방장 여부
+ */
+async function isBattleLeader(userId, battleId) {
+  const battle = await getBattle(battleId);
+  if (!battle) {
+    throw new BizError('대결이 존재하지 않습니다');
+  }
+
+  return battle.userId === userId;
+}
+
 module.exports = {
   createBattle,
   getBattleList,
@@ -166,5 +193,6 @@ module.exports = {
   getInvitationHistoryList,
   checkWaitForBattle,
   checkInBattle,
-  checkBattleFinished
+  checkBattleFinished,
+  isBattleLeader
 };
