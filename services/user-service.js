@@ -1,6 +1,6 @@
 /**
  * user-service.js
- *  사용자 서비스
+ *  사용자 관련 서비스
  */
 const User = require('@/models/user');
 
@@ -31,6 +31,7 @@ async function createUser(createUserDTO) {
 
 /**
  * 사용자 목록 조회
+ *
  * @returns {User[]} 사용자 목록
  */
 async function getUserList() {
@@ -42,6 +43,7 @@ async function getUserList() {
 
 /**
  * 사용자 조회
+ *
  * @param {string} userId 사용자 ID
  * @returns {User} 사용자 정보
  */
@@ -54,11 +56,11 @@ async function getUser(userId) {
 
 /**
  * 유저는 자신이 가진 정보만 확인 가능
+ * 다른 유저가 다른 유저의 정보를 확인할 수 없어야 함
  * 이를 체크하기 위한 함수
  *
- * @param {*} userId  사용자 ID
- * @param {*} user    사용자 정보
- * @returns {boolean} 자신의 정보가 맞는지 여부
+ * @param {number}  userId  사용자 ID
+ * @param {User}    user    사용자 정보
  */
 function isOwnUserId(userId, user) {
   if (!user) {
@@ -67,7 +69,7 @@ function isOwnUserId(userId, user) {
   }
 
   if (userId !== user.id) {
-    logger.error(`유저 ID 다름. userID: ${userId}, user: ${user}`);
+    logger.error(`유저 ID 다름. userID: ${userId}, user: ${user.id}`);
     throw new UnauthorizeError('사용자 정보가 올바르지 않습니다.');
   }
 }
@@ -75,8 +77,8 @@ function isOwnUserId(userId, user) {
 /**
  * 사용자 정보 수정
  *
- * @param {*} userId    사용자 ID
- * @param {*} dtoUpdateUser  사용자 수정 DTO
+ * @param {number}        userId         사용자 ID
+ * @param {UpdateUserDTO} dtoUpdateUser  사용자 수정 DTO
  * @returns {User} 수정된 사용자 정보
  */
 async function updateUser(userId, dtoUpdateUser) {

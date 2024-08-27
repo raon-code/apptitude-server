@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "start:dev": "NODE_ENV=dev node server.js",
-    "start:prod": "NODE_ENV=prod node server.js",
+    "start": "NODE_ENV=local node server.js",
+    "start:dev": "NODE_ENV=development node server.js",
+    "start:prod": "NODE_ENV=production node server.js",
     "start:test": "jest"
   },
   "repository": {
@@ -26,7 +26,6 @@
     "cls-hooked": "^4.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "express-slow-down": "^2.0.1",

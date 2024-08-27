@@ -4,10 +4,10 @@
  */
 
 /**
- * null, undefined, 빈문자열, 빈배열, 빈객체인지 검사합니다.
+ * null, undefined, 빈문자열, 빈배열, 빈객체인지 검사
  *
  * @param {*} value
- * @returns
+ * @returns 비어있으면 true, 아니면 false
  */
 function isEmpty(value) {
   return (

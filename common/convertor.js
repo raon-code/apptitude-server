@@ -4,11 +4,11 @@
  */
 
 /**
- * Enum(key, element{code,value,other}) -> Enum(key(code), element{code,value,other})
- * (code값을 통해 enum을 찾기 위한 map)
+ * code 값을 통해 enum을 찾기 위한 map 생성
+ * 
  *
- * @param {*} _enum
- * @returns
+ * @param {enum} _enum Enum(key, element{code,value,other})
+ * @returns Enum(key(code), element{code,value,other})
  */
 function convertToEnumMap(_enum) {
   const result = {};
@@ -19,11 +19,11 @@ function convertToEnumMap(_enum) {
 }
 
 /**
- * Enum -> EnumCode
- * (EnumCodeList: validation을 위한 enum code list)
- *
- * @param {*} _enum
- * @returns
+ * validation을 위한 enum code list
+ * 
+ * 
+ * @param {enum} _enum Enum(key, element{code,value,other})
+ * @returns Enum(key(code), value(code))
  */
 function convertToEnumCodeList(_enum) {
   const enumCode = {};

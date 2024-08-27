@@ -1,5 +1,6 @@
 /**
  * login_platform.js
+ *   로그인플랫폼 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');

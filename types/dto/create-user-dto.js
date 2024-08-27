@@ -1,5 +1,6 @@
 /**
  * create-user-dto.js
+ *  사용자 생성에 필요한 값들을 담은 DTO
  */
 const { AGE_RANGE_CODE } = require('@/enum/age-range');
 const { GENDER_CODE } = require('@/enum/gender');

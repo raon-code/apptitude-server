@@ -1,5 +1,6 @@
 /**
  * friend.js
+ *   친구 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');

@@ -1,13 +1,13 @@
+/**
+ * job-type.js
+ *  직업종류 공통코드 
+ */
 const CommonTemplate = require('@/enum/common-template');
 const {
   convertToEnumMap,
   convertToEnumCodeList
 } = require('@/common/convertor');
 
-/**
- * job-type.js
- *  직업 종류 도메인
- */
 const JOB_TYPE = {
   STUDENT: new CommonTemplate('JT0', '학생'),
   EXAMINEE: new CommonTemplate('JT1', '고시생'),

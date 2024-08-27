@@ -1,5 +1,6 @@
 /**
  * create-friend-dto.js
+ *  친구 생성에 필요한 값들을 담은 DTO
  */
 const { BizError } = require('@/error');
 const Joi = require('joi');

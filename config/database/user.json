@@ -1,11 +1,11 @@
 {
-  "dev": {
+  "development": {
     "username": "admin",
     "password": "Apptitude90to00!@",
     "database": "apptitude",
     "host": "10.0.1.207"
   },
-  "prod": {
+  "production": {
     "username": "apptitudeUser",
     "password": "Apptitudeuser90to00!@",
     "database": "apptitude",

@@ -1,6 +1,6 @@
 /**
  * battle_detail.js
- *  대결상세 스키마
+ *  대결 상세 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');

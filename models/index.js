@@ -11,18 +11,20 @@ const isForce = require('@/config').models.forceSync;
 const dbUser = require('@/config/database/user.json')[config.nodeEnv];
 
 const logger = require('@/config/logger');
+const { DEV, PROD } = require('@/config/const');
 
 // 트랜잭션 설정
 // cls-hooked 네임스페이스 생성
 const namespace = cls.createNamespace('transaction-namespace');
 
-// Sequelize에 cls-hooked 네임스페이스 설정
-Sequelize.useCLS(namespace);
+// 초기 파라미터 가져오기
+const initParams = getInitParam();
 
 // 환경에 따른 초기 파라미터 설정
 function getInitParam() {
   switch (config.nodeEnv) {
-    case 'dev': // 개발환경
+    // 개발환경(MYSQL)
+    case DEV:
       return {
         username: dbUser.username,
         password: dbUser.password,
@@ -30,13 +32,16 @@ function getInitParam() {
         options: {
           host: dbUser.host,
           dialect: 'mysql',
+          // 쿼리 로깅
           logging: (query, time) => {
             logger.debug('[' + time + 'ms] ' + query);
           },
+          // 쿼리 실행시간 측정
           benchmark: true
         }
       };
-    case 'prod': // 운영환경
+    // 운영환경(MySQL)
+    case PROD:
       return {
         username: dbUser.username,
         password: dbUser.password,
@@ -48,7 +53,8 @@ function getInitParam() {
           benchmark: false
         }
       };
-    default: // 로컬환경
+    // 로컬환경(SQLite)
+    default:
       return {
         options: {
           dialect: 'sqlite',
@@ -61,9 +67,8 @@ function getInitParam() {
       };
   }
 }
-
-// 초기 파라미터 가져오기
-const initParams = getInitParam();
+// Sequelize에 cls-hooked 네임스페이스 설정
+Sequelize.useCLS(namespace);
 
 // 데이터베이스 연결 인스턴스 생성
 const sequelize = new Sequelize(
@@ -84,7 +89,7 @@ async function authenticate() {
 }
 authenticate();
 
-// SIGINT 신호 감지후 처리
+// 앱 종료시 커넥션 닫기 처리
 process.on('SIGINT', () => {
   sequelize
     .close()

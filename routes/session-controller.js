@@ -1,6 +1,6 @@
 /**
  * session-controller.js
- *  사용자 컨트롤러
+ *  세션 관련 컨트롤러
  */
 const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
@@ -16,6 +16,7 @@ const {
 } = require('@/config/security/jwt');
 const transaction = require('@/middleware/transaction-handler');
 
+const { ConflictError, NotFoundError, BizError } = require('@/error');
 /**
  * @swagger
  * /sessions:

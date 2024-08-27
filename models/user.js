@@ -1,5 +1,6 @@
 /**
  * user.js
+ *  사용자 스키마
  */
 const { Model, DataTypes } = require('sequelize');
 const { sequelize, syncModel } = require('@/models');
