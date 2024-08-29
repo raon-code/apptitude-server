@@ -150,6 +150,45 @@ async function getBattleList(req, res) {
   response(res, StatusCodes.OK, '조회성공', battleList);
 }
 
+/**
+ * @swagger
+ * /battles/{battleId}:
+ *   get:
+ *     summary: <대상> 조회
+ *     description: <수단>을 이용하여 <대상>을 <어떻게> 조회
+ *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
+ *     responses:
+ *       "200":
+ *         description: 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   description: 상태코드
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: 생성완료
+ *                   example: 응답 메시지
+ *                 data:
+ *                   type: object
+ *                   description: <예>
+ *                   example: 응답 데이터
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.get('/:battleId(\\d+)', getBattle);
 async function getBattle(req, res) {
   const userId = req.user.id;
@@ -171,6 +210,71 @@ async function getBattle(req, res) {
 }
 
 // TODO: 배틀 수정
+/**
+ * @swagger
+ * /battles/{battleId}:
+ *   patch:
+ *     summary: <대상>을 업데이트
+ *     description: 식별값을 통해 <대상>을 수정할 값으로 업데이트
+ *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               updateParams:
+ *                 type: object
+ *                 required:
+ *                  - <필요값-1>
+ *                  - <필요값-2>
+ *                  - <등등..>
+ *             properties:
+ *               <필요값-1>:
+ *                 type: <타입>
+ *                 description: <설명>
+ *                 example: <예>
+ *              <필요값-2>:
+ *                 type: <타입>
+ *                 description: <설명>
+ *                 example: <예>
+ *              <등등..>:
+ *                 type: <타입>
+ *                 description: <설명>
+ *                 example: <예>
+ *     responses:
+ *       200:
+ *         description: 업데이트 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   description: 상태코드
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   description: 생성완료
+ *                   example: 응답 메시지
+ *                 data:
+ *                   type: object
+ *                   description: <예>
+ *                   example: 응답 데이터
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.patch('/:battleId(\\d+)', updateBattle);
 async function updateBattle(req, res) {
   const userId = req.user.id;
@@ -190,6 +294,45 @@ async function updateBattle(req, res) {
 }
 
 // TODO: 배틀 취소 및 종료
+/**
+ * @swagger
+ * /battles/{battleId}:
+ *   delete:
+ *     summary: <대상>을 논리적으로 삭제
+ *     description: 특정 <대상>을 삭제
+ *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
+ *     responses:
+ *       200:
+ *         description: 삭제 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   description: 상태코드
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   description: 생성완료
+ *                   example: 응답 메시지
+ *                 data:
+ *                   type: object
+ *                   description: <예>
+ *                   example: 응답 데이터
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.delete('/battles/:battleId(\\d+)', deleteBattle);
 async function deleteBattle(req, res) {
   // TODO: checkBattleFinished 서비스 추가: 배틀 종료여부 체크
