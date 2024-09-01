@@ -279,16 +279,20 @@ router.patch('/:battleId(\\d+)', updateBattle);
 async function updateBattle(req, res) {
   const userId = req.user.id;
   const battleId = req.param.battleId;
+  const updateBattleDTO = UpdateBattleDTO.fromPlainObject(req.body);
+  updateBattleDTO.validate();
 
-  const isBattleLeader = battleService.isBattleLeader(userId, battleId);
+  const battle = await battleService.getBattle(battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+
+  const isBattleLeader = battleService.isBattleLeader(userId, battle);
   if (!isBattleLeader) {
     throw new BizError('대결 수정 권한이 없습니다.');
   }
 
-  const battle = await battleService.getBattle(battleId);
-
-  const updateBattleDTO = UpdateBattleDTO.fromPlainObject(req.body);
-  const result = await updateProperties(battle, updateBattleDTO);
+  const result = await battleService.updateBattle(battle, updateBattleDTO);
 
   response(res, StatusCodes.OK, '수정성공', result);
 }
@@ -335,9 +339,20 @@ async function updateBattle(req, res) {
  */
 router.delete('/battles/:battleId(\\d+)', deleteBattle);
 async function deleteBattle(req, res) {
-  // TODO: checkBattleFinished 서비스 추가: 배틀 종료여부 체크
-  // TODO: finishBattle 서비스 추가: 배틀 종료
-  // TODO: cancelBattle 서비스 추가: 배틀 취소
+  const battleId = req.param.battleId;
+
+  const battle = await battleService.getBattle(battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+
+  const isBattleFinished = battleService.checkBattleFinished(battle);
+  if (isBattleFinished) {
+    throw new BizError('이미 종료된 대결입니다.');
+  }
+
+  const result = await battleService.finishBattle(battle);
+  response(res, StatusCodes.OK, '삭제성공', result);
 }
 
 module.exports = router;

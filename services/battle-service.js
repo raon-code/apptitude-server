@@ -80,13 +80,11 @@ async function getUserLastBattle(userId) {
 /**
  * 대결 정보 수정
  *
- * @param {number} battleId
+ * @param {Battle} battle
  * @param {UpdateBattleDTO} updateBattleDTO
  * @returns {Battle} 수정된 대결 정보
  */
-async function updateBattle(battleId, updateBattleDTO) {
-  const battle = await getBattle(battleId);
-
+async function updateBattle(battle, updateBattleDTO) {
   updateProperties(battle, updateBattleDTO);
   await battle.save();
 
@@ -96,15 +94,10 @@ async function updateBattle(battleId, updateBattleDTO) {
 /**
  * 대결 종료
  *
- * @param {number} battleId
+ * @param {battle} battle
  * @returns {Battle} 종료된 대결 정보
  */
-async function finishBattle(battleId) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new BizError('대결이 존재하지 않습니다');
-  }
-
+async function finishBattle(battle) {
   battle.statusType = STATUS_TYPE.END.code;
   await battle.save();
 
@@ -114,15 +107,10 @@ async function finishBattle(battleId) {
 /**
  * 대결 취소
  *
- * @param {number} battleId
+ * @param {Battle} battle
  * @returns {Battle} 취소된 대결 정보
  */
-async function cancelBattle(battleId) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new BizError('대결이 존재하지 않습니다');
-  }
-
+async function cancelBattle(battle) {
   battle.statusType = STATUS_TYPE.CANCEL.code;
   await battle.save();
 
@@ -169,15 +157,10 @@ function checkBattleFinished(battle) {
  * 대결방장 여부 확인
  *
  * @param {number} userId 대결방장인지 확인할 사용자 ID
- * @param {number} battleId 대결 ID
+ * @param {Battle} battle 대결
  * @returns {boolean} 대결방장 여부
  */
-async function isBattleLeader(userId, battleId) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new BizError('대결이 존재하지 않습니다');
-  }
-
+async function isBattleLeader(userId, battle) {
   return battle.userId === userId;
 }
 

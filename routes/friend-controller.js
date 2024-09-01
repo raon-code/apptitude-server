@@ -79,7 +79,7 @@ async function createFriend(req, res) {
   const createFriendDTO = CreateFriendDTO.fromPlainObject({ userId, friendId });
   createFriendDTO.validate();
 
-  const newFriend = friendService.createFriend(createFriendDTO);
+  const newFriend = await friendService.createFriend(createFriendDTO);
   response(res, StatusCodes.CREATED, '생성성공', newFriend);
 }
 
@@ -160,7 +160,7 @@ async function getFriendList(req, res) {
   // 보여줄 친구 수
   const size = req.query.size;
 
-  const friendList = friendService.getFriendList(
+  const friendList = await friendService.getFriendList(
     userId,
     filterType,
     orderType,
@@ -220,7 +220,7 @@ async function getFriend(req, res) {
   const userId = req.user.id;
   const friendPkId = req.params.friendPkId;
 
-  const friend = friendService.getFriend(userId, friendPkId);
+  const friend = await friendService.getFriend(userId, friendPkId);
   if (!friend) {
     throw new NotFoundError('친구를 찾을 수 없습니다.');
   }
@@ -274,7 +274,7 @@ async function deleteFriendList(req, res) {
   const userId = req.user.id;
   const friendPkIdList = req.body.friendPkIdList;
 
-  const result = friendService.deleteFriendList(userId, friendPkIdList);
+  const result = await friendService.deleteFriendList(userId, friendPkIdList);
   response(res, StatusCodes.OK, '삭제성공', result);
 }
 
@@ -320,7 +320,12 @@ async function deleteFriend(req, res) {
   const userId = req.user.id;
   const friendPkId = req.params.friendPkId;
 
-  const result = friendService.deleteFriend(userId, friendPkId);
+  const friend = await friendService.getFriend(userId, friendPkId);
+  if (!friend) {
+    throw new NotFoundError('친구를 찾을 수 없습니다.');
+  }
+
+  const result = await friendService.deleteFriend(friend);
   response(res, StatusCodes.OK, '삭제성공', result);
 }
 
