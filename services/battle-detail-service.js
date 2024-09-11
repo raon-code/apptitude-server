@@ -8,22 +8,75 @@ const logger = require('@/config/logger');
 
 const { BizError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
+const { STATUS_TYPE } = require('@/enum/status-type');
+const CreateBattleDetailDTO = require('@/types/dto/create-battle-detail-dto');
 
-async function createBattleDetail() {}
+/**
+ * 대결 상세 생성
+ *
+ * @param {CreateBattleDetailDTO} createBattleDetailDTO
+ * @returns {BattleDetail} 새로 생성된 대결 정보
+ */
+async function createBattleDetail(createBattleDetailDTO) {
+  const newBattleDetail = await BattleDetail.create(createBattleDetailDTO);
+  logger.debug(newBattleDetail);
 
-async function getBattleDetailList(battleId) {
+  return newBattleDetail;
+}
+
+/**
+ * 사용자의 대결 상세 목록 조회
+ *
+ * @param {Object} filter - 필터링 조건을 담은 객체
+ * @returns {BattleDetail[]} 사용자의 대결 상세 목록
+ */
+async function getBattleDetailList(filter) {
+  // 기본적으로 battleId에 대한 필터를 적용
+  const whereClause = {
+    battleId: filter.battleId
+  };
+
+  // 추가적인 필터 조건이 있으면 where 절에 포함
+  if (filter.userId) whereClause.userId = filter.userId;
+  if (filter.statusType) whereClause.statusType = filter.statusType;
+  if (filter.detoxTime) whereClause.detoxTime = filter.detoxTime;
+
   const battleDetailList = await BattleDetail.findAll({
-    where: {
-      battleId
-    }
+    where: whereClause
   });
   logger.debug(battleDetailList);
 
   return battleDetailList;
 }
 
+/**
+ * 대결 상세 조회
+ *
+ * @param {number} battleDetailId
+ * @returns {BattleDetail} 대결 상세 정보
+ */
 async function getBattleDetail(battleDetailId) {
   const battleDetail = await BattleDetail.findByPk(battleDetailId);
+  logger.debug(battleDetail);
+
+  return battleDetail;
+}
+
+/**
+ * 대결 상세 수정
+ *
+ * @param {number} battleDetailId
+ * @param {Object} updateData
+ * @returns {BattleDetail} 수정된 대결 상세 정보
+ */
+async function updateBattleDetail(battleDetailId, updateData) {
+  const battleDetail = await getBattleDetail(battleDetailId);
+  if (!battleDetail) {
+    throw new BizError('대결 상세를 찾을 수 없습니다.');
+  }
+
+  updateProperties(battleDetail, updateData);
+  await battleDetail.save();
   logger.debug(battleDetail);
 
   return battleDetail;
@@ -43,5 +96,6 @@ module.exports = {
   createBattleDetail,
   getBattleDetailList,
   getBattleDetail,
+  updateBattleDetail,
   isEngagedInBattle
 };
