@@ -17,6 +17,7 @@ const battleDetailService = require('@/services/battle-detail-service');
 const { BizError, NotFoundError } = require('@/error');
 
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
+// const UpdateBattleDTO = require('@/types/dto/update-battle-dto');
 const { updateProperties } = require('@/common/object-util');
 
 // 인증 미들웨어를 모든 요청에 적용
@@ -154,19 +155,19 @@ async function getBattleList(req, res) {
  * @swagger
  * /battles/{battleId}:
  *   get:
- *     summary: <대상> 조회
- *     description: <수단>을 이용하여 <대상>을 <어떻게> 조회
- *     tags: [<태그명>]
+ *     summary: 배틀 조회
+ *     description: id를 이용하여 배틀을 조회
+ *     tags: [Battles]
  *     parameters:
- *       - in: query
- *         name: <파라미터명>
- *         required: true   // 필수여부 설정(true, false)
+ *       - in: path
+ *         name: battleId
  *         schema:
- *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
- *         description: <파라미터 설명>
+ *          type: integer
+ *         required: true
+ *         description: 배틀 ID
  *     responses:
  *       "200":
- *         description: 조회 성공
+ *         description: 배틀 조회 성공
  *         content:
  *           application/json:
  *             schema:
@@ -214,16 +215,16 @@ async function getBattle(req, res) {
  * @swagger
  * /battles/{battleId}:
  *   patch:
- *     summary: <대상>을 업데이트
- *     description: 식별값을 통해 <대상>을 수정할 값으로 업데이트
- *     tags: [<태그명>]
+ *     summary: 배틀 데이터를 업데이트
+ *     description: 식별값을 통해 배틀을 수정할 값으로 업데이트
+ *     tags: [Battles]
  *     parameters:
- *       - in: query
- *         name: <파라미터명>
+ *       - in: path
+ *         name: battleId
  *         required: true   // 필수여부 설정(true, false)
  *         schema:
- *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
- *         description: <파라미터 설명>
+ *           type: integer    // 파라미터 타입(string, number, boolean, ...)
+ *         description: 배틀 ID
  *     requestBody:
  *       required: true
  *       content:
@@ -302,16 +303,16 @@ async function updateBattle(req, res) {
  * @swagger
  * /battles/{battleId}:
  *   delete:
- *     summary: <대상>을 논리적으로 삭제
- *     description: 특정 <대상>을 삭제
- *     tags: [<태그명>]
+ *     summary: 배틀을 취소하거나 종료
+ *     description: 상황에 따라 특정 배틀을 취소하거나 종료시킴
+ *     tags: [Battles]
  *     parameters:
- *       - in: query
- *         name: <파라미터명>
+ *       - in: path
+ *         name: battleId
  *         required: true   // 필수여부 설정(true, false)
  *         schema:
- *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
- *         description: <파라미터 설명>
+ *           type: integer    // 파라미터 타입(string, number, boolean, ...)
+ *         description: 배틀 ID
  *     responses:
  *       200:
  *         description: 삭제 성공
