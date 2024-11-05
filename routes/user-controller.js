@@ -27,7 +27,6 @@ const UpdateUserDTO = require('@/types/dto/update-user-dto');
 const { ConflictError, NotFoundError, BizError } = require('@/error');
 const logger = require('@/config/logger');
 
-// TODO: 해당 메서드를 따로 뺄 수는 없을까?
 router.use((req, res, next) => {
   if (shouldSkipAuth(req)) {
     return next();
@@ -45,6 +44,7 @@ function verifyUser(req, res, next) {
   const userId = Number(req.params.id);
   logger.debug(typeof userId);
   if (userId) {
+    // 조건에 맞지 않는 경우 에러 발생
     userService.isOwnUserId(userId, req.user);
   }
   next();
@@ -277,10 +277,15 @@ async function updateUser(req, res) {
   const updateUserDTO = UpdateUserDTO.fromPlainObject(req.body);
   updateUserDTO.validate();
 
-  const user = userService.updateUser(userId, updateUserDTO);
+  const user = await userService.getUser(userId);
+  if (!user) {
+    throw new NotFoundError('사용자를 찾을 수 없습니다.');
+  }
+
+  const updatedUser = await userService.updateUser(user, updateUserDTO);
 
   // 정보가 바뀌었으므로 토큰 재발급
-  const newAccessToken = await reissue(user.refreshJwt);
+  const newAccessToken = await reissue(updatedUser.refreshJwt);
   setJwtTokenCookie(res, newAccessToken);
 
   response(res, StatusCodes.OK, '수정성공', user);

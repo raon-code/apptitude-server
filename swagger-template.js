@@ -4,7 +4,9 @@
  * swagger 작성시 해당 템플릿을 가져다 사용하세요
  */
 
+//////////////////////////////////////////////////
 //////////////// CREATE API 정의 //////////////////
+//////////////////////////////////////////////////
 /**
  * @swagger
  * /api/<세부API경로>:
@@ -12,6 +14,13 @@
  *     summary: <대상>을 생성
  *     description: <주어진 값>으로 <대상>을 생성
  *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
  *     requestBody:
  *       required: true
  *       content:
@@ -37,7 +46,7 @@
  *                 example: <예>
  *     responses:
  *       201:
- *         description: <대상>을 성공적으로 생성
+ *         description: 생성 성공
  *         content:
  *           application/json:
  *             schema:
@@ -45,28 +54,25 @@
  *               properties:
  *                 statusCode:
  *                   type: number
+ *                   description: 상태코드
  *                   example: 201
  *                 message:
  *                   type: string
- *                   example: 'Created'
+ *                   description: 생성완료
+ *                   example: 응답 메시지
  *                 data:
  *                   type: object
- *                   properties:
- *                     <반환값-1>:
- *                       type: <타입>
- *                       description: <설명>
- *                       example: <예>
- *                     <등등..>:
- *                       type: <타입>
- *                       description: <설명>
- *                       example: <예>
+ *                   description: <예>
+ *                   example: 응답 데이터
  *               required:
  *                 - statusCode
  *                 - message
  *                 - data
  */
 
-//////////////// GET API 정의 //////////////////
+//////////////////////////////////////////////////
+////////////////// GET API 정의 ///////////////////
+//////////////////////////////////////////////////
 /**
  * @swagger
  * /api/<세부API경로>:
@@ -74,9 +80,16 @@
  *     summary: <대상> 조회
  *     description: <수단>을 이용하여 <대상>을 <어떻게> 조회
  *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
  *     responses:
  *       "200":
- *         description: <결과 데이터 설명>
+ *         description: 조회 성공
  *         content:
  *           application/json:
  *             schema:
@@ -84,44 +97,39 @@
  *               properties:
  *                 statusCode:
  *                   type: number
+ *                   description: 상태코드
  *                   example: 200
  *                 message:
  *                   type: string
- *                   example: 조회성공
+ *                   description: 생성완료
+ *                   example: 응답 메시지
  *                 data:
  *                   type: object
- *                   example:
- *                     [
- *                       {
- *                         "<결과요소키값-A1>": "<결과요소값-A1>",
- *                         "<결과요소키값-A2>": "<결과요소값-A2>",
- *                       },
- * {                     {
- *                         "<결과요소키값-B1>": "<결과요소값-B1>",
- *                         "<결과요소키값-B2>": "<결과요소값-B2>",
- *                       },
- *                     ]
+ *                   description: <예>
+ *                   example: 응답 데이터
  *               required:
  *                 - statusCode
  *                 - message
  *                 - data
  */
 
-//////////////// UPDATE API 정의 //////////////////
+/////////////////////////////////////////////////
+//////////////// UPDATE API 정의 /////////////////
+/////////////////////////////////////////////////
 /**
  * @swagger
  * /api/<세부API경로>:
- *   patch<or Update>:
+ *   patch:   // 또는 put
  *     summary: <대상>을 업데이트
  *     description: 식별값을 통해 <대상>을 수정할 값으로 업데이트
  *     tags: [<태그명>]
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: <업데이트 대상 ID 설명>
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
  *         schema:
- *           type: string
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
  *     requestBody:
  *       required: true
  *       content:
@@ -150,7 +158,7 @@
  *                 example: <예>
  *     responses:
  *       200:
- *         description: Test updated successfully.
+ *         description: 업데이트 성공
  *         content:
  *           application/json:
  *             schema:
@@ -158,20 +166,25 @@
  *               properties:
  *                 statusCode:
  *                   type: number
- *                   example: 200
+ *                   description: 상태코드
+ *                   example: 201
  *                 message:
  *                   type: string
- *                   example: "업데이트 성공"
+ *                   description: 생성완료
+ *                   example: 응답 메시지
  *                 data:
  *                   type: object
- *                   example: {}
+ *                   description: <예>
+ *                   example: 응답 데이터
  *               required:
  *                 - statusCode
  *                 - message
  *                 - data
  */
 
+//////////////////////////////////////////////////
 //////////////// DELETE API 정의 //////////////////
+//////////////////////////////////////////////////
 /**
  * @swagger
  * /api/<서브API 경로>
@@ -180,15 +193,15 @@
  *     description: 특정 <대상>을 삭제
  *     tags: [<태그명>]
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: <삭제 대상 ID 설명>
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
  *         schema:
- *           type: string
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
  *     responses:
  *       200:
- *         description: Delete successfully.
+ *         description: 삭제 성공
  *         content:
  *           application/json:
  *             schema:
@@ -196,13 +209,16 @@
  *               properties:
  *                 statusCode:
  *                   type: number
- *                   example: 200
+ *                   description: 상태코드
+ *                   example: 201
  *                 message:
  *                   type: string
- *                   example: "삭제 성공"
+ *                   description: 생성완료
+ *                   example: 응답 메시지
  *                 data:
  *                   type: object
- *                   example: {}
+ *                   description: <예>
+ *                   example: 응답 데이터
  *               required:
  *                 - statusCode
  *                 - message

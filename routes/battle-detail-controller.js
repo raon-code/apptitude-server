@@ -18,12 +18,7 @@ const CreateBattleDetailDTO = require('@/types/dto/create-battle-detail-dto'); /
 const { BizError } = require('@/error');
 
 // 인증 미들웨어를 모든 요청에 적용
-router.use((req, res, next) => {
-  // 토큰확인
-  authMiddleware(req, res, next);
-
-  next();
-});
+router.use(authMiddleware);
 
 // 배틀 상세 생성
 router.post('/', createBattleDetail);

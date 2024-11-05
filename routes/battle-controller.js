@@ -12,29 +12,84 @@ const { authMiddleware } = require('@/middleware/auth-handler');
 
 const userService = require('@/services/user-service');
 const battleService = require('@/services/battle-service');
+const battleDetailService = require('@/services/battle-detail-service');
 
 const { BizError, NotFoundError } = require('@/error');
 
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
+const { updateProperties } = require('@/common/object-util');
 
 // 인증 미들웨어를 모든 요청에 적용
-router.use((req, res, next) => {
-  // 토큰확인
-  authMiddleware(req, res, next);
-
-  next();
-});
-
+router.use(authMiddleware);
 /**
  * @swagger
  * /battles:
  *   post:
+ *     summary: 대결 생성
+ *     tags: [Battles]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - startDate
+ *               - endDate
+ *               - reward
+ *               - userId
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: 대결 이름
+ *                 example: 대결이름
+ *               startDate:
+ *                 type: string
+ *                 format: date
+ *                 description: 대결 시작일자
+ *                 example: 2024-01-01
+ *               endDate:
+ *                 type: string
+ *                 format: date
+ *                 description: 대결 종료일자
+ *                 example: 2024-02-01
+ *               reward:
+ *                 type: string
+ *                 description: 보상
+ *                 example: 엽떡 사주기
+ *               userId:
+ *                 type: string
+ *                 description: 사용자 ID
+ *                 example: user123
+ *     responses:
+ *       201:
+ *         description: 대결 생성 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: '생성성공'
+ *                 data:
+ *                   type: object
+ *                   description: 생성한 대결 정보
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
  */
 router.post('/', createBattle);
 async function createBattle(req, res) {
   const userId = req.user.id;
 
   const createBattleDTO = CreateBattleDTO.fromPlainObject(req.body);
+  createBattleDTO.userId = userId;
   createBattleDTO.validate();
 
   const lastBattle = await battleService.getUserLastBattle(userId);
@@ -53,7 +108,6 @@ async function createBattle(req, res) {
   response(res, StatusCodes.CREATED, '생성성공', newBattle);
 }
 
-// TODO: 상대방 유저 대결 목록을 출력할때는 어떻게 보여줄 것인가?
 /**
  * @swagger
  * /battles:
@@ -88,16 +142,65 @@ async function createBattle(req, res) {
  */
 router.get('/', getBattleList);
 async function getBattleList(req, res) {
+  // TODO: 페이징 필요한가?
+
   const userId = req.user.id;
   const battleList = await battleService.getBattleList(userId);
 
   response(res, StatusCodes.OK, '조회성공', battleList);
 }
 
-// TODO: 상대방 유저 대결 목록을 출력할때는 어떻게 보여줄 것인가?
+/**
+ * @swagger
+ * /battles/{battleId}:
+ *   get:
+ *     summary: <대상> 조회
+ *     description: <수단>을 이용하여 <대상>을 <어떻게> 조회
+ *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
+ *     responses:
+ *       "200":
+ *         description: 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   description: 상태코드
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: 생성완료
+ *                   example: 응답 메시지
+ *                 data:
+ *                   type: object
+ *                   description: <예>
+ *                   example: 응답 데이터
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.get('/:battleId(\\d+)', getBattle);
 async function getBattle(req, res) {
-  const battleId = req.user.id;
+  const userId = req.user.id;
+  const battleId = req.param.battleId;
+
+  const isEngagedInBattle = battleDetailService.isEngagedInBattle(
+    userId,
+    battleId
+  );
+  if (!isEngagedInBattle) {
+    throw new BizError('대결에 참여하지 않은 사용자입니다.');
+  }
 
   const battle = await battleService.getBattle(battleId);
   if (!battle) {
@@ -107,17 +210,149 @@ async function getBattle(req, res) {
 }
 
 // TODO: 배틀 수정
+/**
+ * @swagger
+ * /battles/{battleId}:
+ *   patch:
+ *     summary: <대상>을 업데이트
+ *     description: 식별값을 통해 <대상>을 수정할 값으로 업데이트
+ *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               updateParams:
+ *                 type: object
+ *                 required:
+ *                  - <필요값-1>
+ *                  - <필요값-2>
+ *                  - <등등..>
+ *             properties:
+ *               <필요값-1>:
+ *                 type: <타입>
+ *                 description: <설명>
+ *                 example: <예>
+ *              <필요값-2>:
+ *                 type: <타입>
+ *                 description: <설명>
+ *                 example: <예>
+ *              <등등..>:
+ *                 type: <타입>
+ *                 description: <설명>
+ *                 example: <예>
+ *     responses:
+ *       200:
+ *         description: 업데이트 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   description: 상태코드
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   description: 생성완료
+ *                   example: 응답 메시지
+ *                 data:
+ *                   type: object
+ *                   description: <예>
+ *                   example: 응답 데이터
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.patch('/:battleId(\\d+)', updateBattle);
 async function updateBattle(req, res) {
-  // TODO: updateBattle 서비스 추가: 배틀 수정
+  const userId = req.user.id;
+  const battleId = req.param.battleId;
+  const updateBattleDTO = UpdateBattleDTO.fromPlainObject(req.body);
+  updateBattleDTO.validate();
+
+  const battle = await battleService.getBattle(battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+
+  const isBattleLeader = battleService.isBattleLeader(userId, battle);
+  if (!isBattleLeader) {
+    throw new BizError('대결 수정 권한이 없습니다.');
+  }
+
+  const result = await battleService.updateBattle(battle, updateBattleDTO);
+
+  response(res, StatusCodes.OK, '수정성공', result);
 }
 
 // TODO: 배틀 취소 및 종료
+/**
+ * @swagger
+ * /battles/{battleId}:
+ *   delete:
+ *     summary: <대상>을 논리적으로 삭제
+ *     description: 특정 <대상>을 삭제
+ *     tags: [<태그명>]
+ *     parameters:
+ *       - in: query
+ *         name: <파라미터명>
+ *         required: true   // 필수여부 설정(true, false)
+ *         schema:
+ *           type: <타입>    // 파라미터 타입(string, number, boolean, ...)
+ *         description: <파라미터 설명>
+ *     responses:
+ *       200:
+ *         description: 삭제 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: number
+ *                   description: 상태코드
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   description: 생성완료
+ *                   example: 응답 메시지
+ *                 data:
+ *                   type: object
+ *                   description: <예>
+ *                   example: 응답 데이터
+ *               required:
+ *                 - statusCode
+ *                 - message
+ *                 - data
+ */
 router.delete('/battles/:battleId(\\d+)', deleteBattle);
 async function deleteBattle(req, res) {
-  // TODO: checkBattleFinished 서비스 추가: 배틀 종료여부 체크
-  // TODO: finishBattle 서비스 추가: 배틀 종료
-  // TODO: cancelBattle 서비스 추가: 배틀 취소
+  const battleId = req.param.battleId;
+
+  const battle = await battleService.getBattle(battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+
+  const isBattleFinished = battleService.checkBattleFinished(battle);
+  if (isBattleFinished) {
+    throw new BizError('이미 종료된 대결입니다.');
+  }
+
+  const result = await battleService.finishBattle(battle);
+  response(res, StatusCodes.OK, '삭제성공', result);
 }
 
 module.exports = router;

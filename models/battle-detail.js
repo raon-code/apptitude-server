@@ -62,7 +62,7 @@ BattleDetail.init(
 
 // 사용자와 대결상세는 1:N 관계
 User.hasMany(BattleDetail, {
-  as: 'battleDetails',
+  as: 'battleDetail',
   foreignKey: 'userId',
   sourceKey: 'id'
 });
@@ -74,12 +74,12 @@ BattleDetail.belongsTo(User, {
 
 // 대결과 대결상세는 1:M 관계
 Battle.hasMany(BattleDetail, {
-  as: 'battleDetails',
+  as: 'battleDetail',
   foreignKey: 'battleId',
   sourceKey: 'id'
 });
 BattleDetail.belongsTo(Battle, {
-  as: 'user',
+  as: 'battle',
   foreignKey: 'battleId',
   sourceKey: 'id'
 });
