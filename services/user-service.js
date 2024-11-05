@@ -77,16 +77,11 @@ function isOwnUserId(userId, user) {
 /**
  * 사용자 정보 수정
  *
- * @param {number}        userId         사용자 ID
+ * @param {User}         user           사용자
  * @param {UpdateUserDTO} dtoUpdateUser  사용자 수정 DTO
  * @returns {User} 수정된 사용자 정보
  */
-async function updateUser(userId, dtoUpdateUser) {
-  const user = await User.findByPk(userId);
-  if (!user) {
-    throw new BizError('수정할 유저가 존재하지 않습니다.');
-  }
-
+async function updateUser(user, dtoUpdateUser) {
   updateProperties(user, dtoUpdateUser);
   await user.update();
   return user;
