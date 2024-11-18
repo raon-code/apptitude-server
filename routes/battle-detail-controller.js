@@ -23,7 +23,7 @@ router.use(authMiddleware);
 // 배틀 상세 생성
 router.post('/', createBattleDetail);
 async function createBattleDetail(req, res) {
-  // TODO: exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
+  // TODO: [피드백] exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
   //       try-catch로 감쌀 필요 없음
   try {
     const userId = req.user.id;
@@ -34,7 +34,7 @@ async function createBattleDetail(req, res) {
     );
     createBattleDetailDTO.validate();
 
-    // TODO: 해당 배틀에 참가한 사용자인지 확인 필요
+    // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
 
     const newBattleDetail = await battleDetailService.createBattleDetail(
       createBattleDetailDTO
@@ -52,7 +52,7 @@ async function createBattleDetail(req, res) {
 // 배틀 상세 목록 조회
 router.get('/', getBattleDetailList);
 async function getBattleDetailList(req, res) {
-  // TODO: exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
+  // TODO: [피드백] exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
   //       try-catch로 감쌀 필요 없음
   try {
     const battleId = req.params.battleId;
@@ -68,7 +68,7 @@ async function getBattleDetailList(req, res) {
     if (statusType) filter.statusType = statusType;
     if (detoxTime) filter.detoxTime = detoxTime;
 
-    // TODO: 해당 배틀에 참가한 사용자인지 확인 필요
+    // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
 
     const battleDetailList = await battleDetailService.getBattleDetailList(
       battleId
@@ -82,19 +82,19 @@ async function getBattleDetailList(req, res) {
 // 배틀 상세 조회
 router.get('/:battleDetailId(\\d+)', getBattleDetail);
 async function getBattleDetail(req, res) {
-  // TODO: exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
+  // TODO: [피드백] exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
   //       try-catch로 감쌀 필요 없음
   try {
     const battleDetailId = req.params.battleDetailId;
 
-    // TODO: 해당 배틀에 참가한 사용자인지 확인 필요
+    // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
 
     const battleDetail = await battleDetailService.getBattleDetail(
       battleDetailId
     );
 
     if (!battleDetail) {
-      // TODO: 에러를 throw하면 미들웨어가 이를 캐치하여 처리하므로, 직접 response를 호출할 필요 없음
+      // TODO: [피드백] 에러를 throw하면 미들웨어가 이를 캐치하여 처리하므로, 직접 response를 호출할 필요 없음
       return response(
         res,
         StatusCodes.NOT_FOUND,
@@ -110,7 +110,7 @@ async function getBattleDetail(req, res) {
 // 배틀 상세 수정
 router.patch('/:detailId(\\d+)', updateBattleDetail);
 async function updateBattleDetail(req, res) {
-  // TODO: exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
+  // TODO: [피드백] exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
   //       try-catch로 감쌀 필요 없음
   try {
     const battleDetailId = req.params.detailId;
@@ -119,7 +119,7 @@ async function updateBattleDetail(req, res) {
       battleDetailId
     );
     if (!battleDetail) {
-      // TODO: 에러를 throw하면 미들웨어가 이를 캐치하여 처리하므로, 직접 response를 호출할 필요 없음
+      // TODO: [피드백] 에러를 throw하면 미들웨어가 이를 캐치하여 처리하므로, 직접 response를 호출할 필요 없음
       return response(
         res,
         StatusCodes.NOT_FOUND,
@@ -127,11 +127,11 @@ async function updateBattleDetail(req, res) {
       );
     }
 
-    // TODO: 검증 후 조회하면 데이터베이스 리소스 조회를 줄일 수 있음
+    // TODO: [피드백] 검증 후 조회하면 데이터베이스 리소스 조회를 줄일 수 있음
     // DTO 생성 및 검증 (수정 시에는 필요한 필드만 검증)
     const updateData = { ...req.body };
 
-    // TODO: updateBattleDetailDTO를 추가하여 사용해야 함
+    // TODO: [피드백] updateBattleDetailDTO를 추가하여 사용해야 함
     //       업데이트 로직은 생성 로직과 다를 수 있으므로..
     const createBattleDetailDTO =
       CreateBattleDetailDTO.fromPlainObject(updateData);

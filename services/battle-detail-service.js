@@ -30,7 +30,7 @@ async function createBattleDetail(createBattleDetailDTO) {
  * @param {Object} filter - 필터링 조건을 담은 객체
  * @returns {BattleDetail[]} 사용자의 대결 상세 목록
  */
-// TODO: 이미 사용중이었던 getBattleDetailList 함수가 있으므로
+// TODO: [피드백] 이미 사용중이었던 getBattleDetailList 함수가 있으므로
 //       새로운 함수를 만들거나, 기존 함수에 맞추어 비즈니스 로직을 수정해야 함
 async function getBattleDetailList(filter) {
   // 기본적으로 battleId에 대한 필터를 적용
@@ -72,7 +72,7 @@ async function getBattleDetail(battleDetailId) {
  * @returns {BattleDetail} 수정된 대결 상세 정보
  */
 async function updateBattleDetail(battleDetailId, updateData) {
-  // TODO: 이미 컨트롤러 단에서 조회를 하였으므로, 또 조회할 필요가 없음
+  // TODO: [피드백] 이미 컨트롤러 단에서 조회를 하였으므로, 또 조회할 필요가 없음
   const battleDetail = await getBattleDetail(battleDetailId);
   if (!battleDetail) {
     throw new BizError('대결 상세를 찾을 수 없습니다.');
