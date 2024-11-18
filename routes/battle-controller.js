@@ -17,7 +17,7 @@ const battleDetailService = require('@/services/battle-detail-service');
 const { BizError, NotFoundError } = require('@/error');
 
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
-// const UpdateBattleDTO = require('@/types/dto/update-battle-dto');
+const UpdateBattleDTO = require('@/types/dto/update-battle-dto');
 const { updateProperties } = require('@/common/object-util');
 
 // 인증 미들웨어를 모든 요청에 적용
@@ -238,19 +238,6 @@ async function getBattle(req, res) {
  *                  - <필요값-1>
  *                  - <필요값-2>
  *                  - <등등..>
- *             properties:
- *               <필요값-1>:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
- *              <필요값-2>:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
- *              <등등..>:
- *                 type: <타입>
- *                 description: <설명>
- *                 example: <예>
  *     responses:
  *       200:
  *         description: 업데이트 성공
@@ -298,7 +285,6 @@ async function updateBattle(req, res) {
   response(res, StatusCodes.OK, '수정성공', result);
 }
 
-// TODO: 배틀 취소 및 종료
 /**
  * @swagger
  * /battles/{battleId}:
@@ -313,6 +299,11 @@ async function updateBattle(req, res) {
  *         schema:
  *           type: integer    // 파라미터 타입(string, number, boolean, ...)
  *         description: 배틀 ID
+ *       - in: query
+ *         name: isCancel
+ *         required: false
+ *         schema:
+ *           type: boolean
  *     responses:
  *       200:
  *         description: 삭제 성공
@@ -336,11 +327,12 @@ async function updateBattle(req, res) {
  *               required:
  *                 - statusCode
  *                 - message
- *                 - data
+ *                 - datas
  */
 router.delete('/battles/:battleId(\\d+)', deleteBattle);
 async function deleteBattle(req, res) {
   const battleId = req.param.battleId;
+  const { isCancel } = req.query;
 
   const battle = await battleService.getBattle(battleId);
   if (!battle) {
@@ -352,7 +344,13 @@ async function deleteBattle(req, res) {
     throw new BizError('이미 종료된 대결입니다.');
   }
 
-  const result = await battleService.finishBattle(battle);
+  let result = null;
+  if (isCancel) {
+    result = await battleService.cancelBattle(battle);
+  } else {
+    result = await battleService.finishBattle(battle);
+  }
+
   response(res, StatusCodes.OK, '삭제성공', result);
 }
 

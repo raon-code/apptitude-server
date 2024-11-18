@@ -39,7 +39,7 @@ function getJwtPayload(token) {
 }
 
 /**
- * jwt 토큰이 만료되었는지 확인
+ * jwt 토큰(ms)이 만료되었는지 확인
  * 
  * @param {Date} exp jwt 토큰 만료시간
  * @returns 만료되었으면 true, 아니면 false
@@ -50,7 +50,7 @@ function isJwtTokenExpired(exp) {
 }
 
 /**
- * jwt 토큰을 쿠키에 저장
+ * jwt 토큰쿠키에 저장
  * 
  * @param {Response} res 응답 객체
  * @param {string} token jwt 토큰
