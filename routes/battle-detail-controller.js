@@ -23,30 +23,23 @@ router.use(authMiddleware);
 // 배틀 상세 생성
 router.post('/', createBattleDetail);
 async function createBattleDetail(req, res) {
-  // TODO: [피드백] exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
-  //       try-catch로 감쌀 필요 없음
-  try {
-    const userId = req.user.id;
-    const battleId = req.params.battleId;
+  const userId = req.user.id;
 
-    const createBattleDetailDTO = CreateBattleDetailDTO.fromPlainObject(
-      req.body
-    );
-    createBattleDetailDTO.validate();
+  const createBattleDetailDTO = CreateBattleDetailDTO.fromPlainObject(req.body);
+  createBattleDetailDTO.userId = userId;
+  createBattleDetailDTO.validate();
 
-    // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
+  // TODO: 해당 배틀이 배틀 상세를 만들 수 있는 시점인지 확인 필요
+  const battle = await battleService.getBattle(createBattleDetailDTO.battleId);
+  if (!battle) { // 배틀 상세 생성 불가 }
+  if(!checkWaitForBattle(battle)) {// 배틀이 진행중이므로 배틀 상세 생성 불가}
 
-    const newBattleDetail = await battleDetailService.createBattleDetail(
-      createBattleDetailDTO
-    );
-    response(res, StatusCodes.CREATED, '생성 성공', newBattleDetail);
-  } catch (error) {
-    if (error instanceof BizError) {
-      response(res, StatusCodes.BAD_REQUEST, error.message);
-    } else {
-      response(res, StatusCodes.INTERNAL_SERVER_ERROR, '서버 오류');
-    }
-  }
+  battleService.i
+
+  const newBattleDetail = await battleDetailService.createBattleDetail(
+    createBattleDetailDTO
+  );
+  response(res, StatusCodes.CREATED, '생성 성공', newBattleDetail);
 }
 
 // 배틀 상세 목록 조회
