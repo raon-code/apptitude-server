@@ -31,7 +31,9 @@ async function createBattleDetail(req, res) {
 
   // TODO: 해당 배틀이 배틀 상세를 만들 수 있는 시점인지 확인 필요
   const battle = await battleService.getBattle(createBattleDetailDTO.battleId);
-  if (!battle) { // 배틀 상세 생성 불가 }
+  if (!battle) { 
+    // 배틀 상세 생성 불가 
+  }
   if(!checkWaitForBattle(battle)) {// 배틀이 진행중이므로 배틀 상세 생성 불가}
 
   battleService.i
