@@ -31,12 +31,14 @@ async function createBattleDetail(req, res) {
 
   // TODO: 해당 배틀이 배틀 상세를 만들 수 있는 시점인지 확인 필요
   const battle = await battleService.getBattle(createBattleDetailDTO.battleId);
-  if (!battle) { 
-    // 배틀 상세 생성 불가 
+  if (!battle) {
+    // 배틀 상세 생성 불가
+    throw new BizError('대결을 찾을 수 없습니다.');
   }
-  if(!checkWaitForBattle(battle)) {// 배틀이 진행중이므로 배틀 상세 생성 불가}
-
-  battleService.i
+  if (!checkWaitForBattle(battle)) {
+    // 배틀 상태상 배틀상세 생성 불가
+    throw new BizError('대결상세를 만들 수 없는 상태 입니다.');
+  }
 
   const newBattleDetail = await battleDetailService.createBattleDetail(
     createBattleDetailDTO
@@ -47,31 +49,28 @@ async function createBattleDetail(req, res) {
 // 배틀 상세 목록 조회
 router.get('/', getBattleDetailList);
 async function getBattleDetailList(req, res) {
-  // TODO: [피드백] exception-handler.js 미들웨어를 통해 전역으로 예외를 catch하고 있으므로,
-  //       try-catch로 감쌀 필요 없음
-  try {
-    const battleId = req.params.battleId;
+  const battleId = req.params.battleId;
 
-    // 쿼리 파라미터를 사용해 필터링 옵션을 설정
-    const { userId, statusType, detoxTime } = req.query;
-    const filter = {
-      battleId
-    };
+  // 쿼리 파라미터를 사용해 필터링 옵션을 설정
+  const { userId, statusType, detoxTime } = req.query;
+  const filter = {
+    battleId
+  };
 
-    // 필터 조건이 존재하면 추가
-    if (userId) filter.userId = userId;
-    if (statusType) filter.statusType = statusType;
-    if (detoxTime) filter.detoxTime = detoxTime;
+  // 필터 조건이 존재하면 추가
+  if (userId) filter.userId = userId;
+  if (statusType) filter.statusType = statusType;
+  if (detoxTime) filter.detoxTime = detoxTime;
 
-    // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
-
-    const battleDetailList = await battleDetailService.getBattleDetailList(
-      battleId
-    );
-    response(res, StatusCodes.OK, '조회 성공', battleDetailList);
-  } catch (error) {
-    response(res, StatusCodes.INTERNAL_SERVER_ERROR, '서버 오류');
+  // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
+  if (!battleService.isEngagedInBattle(req.user.id, battleId)) {
+    throw new BizError('해당 배틀에 참가한 사용자가 아닙니다.');
   }
+
+  const battleDetailList = await battleDetailService.getBattleDetailList(
+    filter
+  );
+  response(res, StatusCodes.OK, '조회 성공', battleDetailList);
 }
 
 // 배틀 상세 조회

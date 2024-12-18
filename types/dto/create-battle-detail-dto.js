@@ -2,7 +2,7 @@
  * create-battle-detail-dto.js
  *  대결 생성에 필요한 값들을 담은 DTO
  */
-const { STATUS_TYPE } = require('@/enum/status-type');
+const { RESULT_TYPE } = require('@/enum/result-type');
 const { BizError } = require('@/error');
 const Joi = require('joi');
 
@@ -33,7 +33,7 @@ class CreateBattleDetailDTO {
   detoxTotalTime;
   detoxTime;
   resultType;
-  statusType = STATUS_TYPE.WAIT.code;
+  statusType = RESULT_TYPE.PROCEED.code;
   userId;
   battleId;
 
