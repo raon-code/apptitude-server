@@ -71,13 +71,7 @@ async function getBattleDetail(battleDetailId) {
  * @param {Object} updateData
  * @returns {BattleDetail} 수정된 대결 상세 정보
  */
-async function updateBattleDetail(battleDetailId, updateData) {
-  // TODO: [피드백] 이미 컨트롤러 단에서 조회를 하였으므로, 또 조회할 필요가 없음
-  const battleDetail = await getBattleDetail(battleDetailId);
-  if (!battleDetail) {
-    throw new BizError('대결 상세를 찾을 수 없습니다.');
-  }
-
+async function updateBattleDetail(battleDetail, updateData) {
   updateProperties(battleDetail, updateData);
   await battleDetail.save();
   logger.debug(battleDetail);

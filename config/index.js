@@ -57,8 +57,12 @@ const config = {
   kakao: {
     restApiKey: '6b42072c0ab619483e4fe33d615880fe',
     redirectUrl: serverConfig.baseUrl + '/auth/kakao/result'
+  },
+  //
+  apptitude: {
+    // 대기 유효시간(분)
+    validWaitTime: 60
   }
-
   // Others..
 };
 

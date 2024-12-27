@@ -3,17 +3,19 @@
  *  배틀관련 서비스
  */
 const Battle = require('@/models/battle');
+const BattleHistory = require('@/models/battle-history');
 
 const logger = require('@/config/logger');
 
-const { BizError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 const { STATUS_TYPE } = require('@/enum/status-type');
 
-const battleDetailService = require('@/services/battle-detail-service');
-
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
 const BattleDetail = require('@/models/battle-detail');
+const CreateBattleHistoryDTO = require('@/types/dto/create-battle-history-dto');
+
+const { encrypt } = require('@/common/crypto');
+const { getRandomFloat } = require('@/common/math');
 
 /**
  * 대결 생성
@@ -118,14 +120,42 @@ async function cancelBattle(battle) {
 }
 
 /**
+ * 대결 히스토리 생성
  *
+ * @param {CreateBattleHistoryDTO} createBattleHistoryDTO 대결 히스토리 생성 DTO
+ * @returns {BattleHistory} 새로 생성된 대결 히스토리
  */
-async function createInvitationURL() {}
+async function createBattleHistory(createBattleHistoryDTO) {
+  const newBattleHistory = await BattleHistory.create(createBattleHistoryDTO);
+  logger.debug(newBattleHistory);
+
+  return newBattleHistory;
+}
 
 /**
+ * 대결 히스토리 목록 조회
  *
+ * @param {number} battleId 조회할 내역의 대결 ID
+ * @returns {BattleHistory[]} 대결 히스토리 목록
  */
-async function getInvitationHistoryList() {}
+async function getBattleHistoryList(battleId) {
+  const battleHistoryList = await BattleHistory.findAll({
+    where: {
+      battleId
+    }
+  });
+  logger.debug(battleHistoryList);
+
+  return battleHistoryList;
+}
+
+async function createInviteLink(battleId) {
+  const randomNumber = getRandomFloat(1000, 10000);
+  const encryptData = encrypt(`${battleId}:${randomNumber}`);
+  return encryptData;
+}
+
+async function getInvitationList() {}
 
 /**
  *
@@ -172,8 +202,10 @@ module.exports = {
   updateBattle,
   finishBattle,
   cancelBattle,
-  createInvitationURL,
-  getInvitationHistoryList,
+  createBattleHistory,
+  getBattleHistoryList,
+  createInviteLink,
+  getInvitationList,
   checkWaitForBattle,
   checkInBattle,
   checkBattleFinished,
