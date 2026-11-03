@@ -15,10 +15,8 @@
  *  커버리지 메모
  *  - 모듈별 401(인증 없음) 케이스를 1개 이상 둔다.
  *  - 모듈별 대표 400/404 케이스를 둔다.
- *  - /devices, /friends 의 단건 조회는 현재 구현상 404가 발생할 수 없어
- *    (서비스에서 UnauthorizeError/Sequelize 오류로 먼저 실패) 500 응답을 기록한다.
- *  - /battles, /battles/:id/details 생성은 DTO 검증이 항상 실패하므로(400)
- *    성공 케이스가 존재하지 않는다.
+ *  - /devices, /friends 단건 조회는 정상 데이터에서 200, 없는 데이터에서 404를 반환한다.
+ *  - /battles, /battles/:id/details 생성은 유효한 DTO로 201 응답을 기록한다.
  */
 const ACTORS = {
   owner: 1,
@@ -228,7 +226,7 @@ const cases = [
     method: 'patch',
     path: '/battles/101',
     auth: ACTORS.friend,
-    note: 'isBattleLeader가 async라서 await 없이 항상 통과한다'
+    note: '방장이 아닌 사용자는 400으로 거부된다'
   },
   {
     id: 'battles.delete-cancel',
@@ -268,7 +266,7 @@ const cases = [
     method: 'get',
     path: '/battles/102/details',
     auth: ACTORS.friend,
-    note: 'isEngagedInBattle가 async라서 await 없이 항상 통과한다'
+    note: '참여자가 아닌 사용자는 400으로 거부된다'
   },
   {
     id: 'details.get',
@@ -298,7 +296,7 @@ const cases = [
     path: '/battles/102/histories',
     auth: ACTORS.owner,
     body: { detoxTime: 10, battleDate: '2024-01-02T00:00:00.000Z' },
-    note: 'battleDetailService.createBattleHistory 미존재 → TypeError(500)'
+    note: '참여자 대결내역 생성 성공(201)'
   },
   {
     id: 'histories.create-invalid',
@@ -322,7 +320,7 @@ const cases = [
     method: 'post',
     path: '/battles/102/invitations',
     auth: ACTORS.owner,
-    note: 'createInviteLink가 async라서 Promise가 inviteLink로 저장되어 검증 실패(500)'
+    note: '초대 링크 생성 성공(201)'
   },
   {
     id: 'invitations.create-missing-battle',
