@@ -1,56 +1,78 @@
-# 앱티튜드(Apptitude)
+# 앱티튜드(Apptitude) 서버
 
-<!-- 프로젝트 배너 (선택 사항) -->
-![프로젝트 로고](배너 이미지 URL)
+Express + Sequelize 기반 API 서버. 로컬은 SQLite, development/production은 MySQL을 사용한다.
 
-## Tech Stack
-![AppVeyor](https://img.shields.io/static/v1?label=&message=JavaScript&color=yellow) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Node.js&color=green) ![AppVeyor](https://img.shields.io/static/v1?label=&message=express.js&color=black) ![AppVeyor](https://img.shields.io/static/v1?label=&message=SQLite&color=blue) ![AppVeyor](https://img.shields.io/static/v1?label=&message=MYSQL&color=blue) ![AppVeyor](https://img.shields.io/static/v1?label=&message=Sequelize&color=whiteblue)
+## 요구 사항
 
-## 소개
+- Node.js 22 이상
+- npm
 
-- 프로젝트에 대한 간략한 설명: 프로젝트가 무엇이고, 왜 유용한지에 대한 설명을 포함합니다.
-- 프로젝트의 주요 기능: 프로젝트의 핵심 기능이나 주목할 만한 특징을 간략하게 소개합니다.
-- 동기: 이 프로젝트를 시작하게 된 배경이나 문제를 해결하기 위해 만들어진 이유를 설명합니다.
-
-## 시작하기
-
-이 섹션에서는 사용자가 프로젝트를 시작하는 데 필요한 모든 정보를 제공합니다.
-
-### 전제 조건
-
-프로젝트를 설치하고 실행하기 전에 필요한 사전 요구 사항이나 의존성을 명시합니다.
-
-### 설치
-
-프로젝트를 설치하는 단계별 지침을 제공합니다. 예를 들어:
+## 설치
 
 ```bash
-git clone https://github.com/yourusername/yourprojectname.git
-cd yourprojectname
 npm install
+cp .env.example .env
 ```
 
-## 사용 방법
+`.env`의 필수 값을 채운다. `.env`는 커밋하지 않는다(추적 제외).
 
-프로젝트를 사용하는 방법에 대한 예제와 함께, 기본적인 사용 사례를 설명합니다.(test)
+## 실행
 
-## 기여하기
+```bash
+npm start        # local (SQLite)
+npm run start:dev  # development (MySQL)
+npm run start:prod # production (MySQL)
+```
 
-- **이슈 제기**: 사용자가 버그를 발견하거나 새로운 기능을 제안할 수 있는 방법을 설명합니다.
-- **Pull Request**: 사용자가 기여할 수 있는 방법과 프로젝트에 기여하기 위한 가이드라인을 제공합니다.
+서버는 `--env-file-if-exists=.env`로 환경변수를 읽는다. 필수 환경변수가 없으면 부팅 즉시 실패한다.
 
-## 라이선스
+- API 문서: `http://localhost:3001/api-docs`
+- 기본 포트: 3001
 
-이 프로젝트는 [MIT 라이선스](LICENSE) 하에 배포됩니다.
+## 환경변수
 
-## 저자 또는 기여자
+| 이름 | 필수 환경 | 설명 |
+| --- | --- | --- |
+| `JWT_SECRET` | 전체 | JWT 서명 키 (16자 이상) |
+| `CRYPTO_SEED_KEY` | 전체 | 초대 링크 암호화 키 (16자 이상) |
+| `KAKAO_REST_API_KEY` | 전체 | 카카오 로그인 REST API 키 |
+| `DB_HOST` | development, production | MySQL 호스트 |
+| `DB_PORT` | 선택 | MySQL 포트 (기본 3306) |
+| `DB_NAME` | development, production | 데이터베이스 이름 |
+| `DB_USER` | development, production | 데이터베이스 사용자 |
+| `DB_PASSWORD` | development, production | 데이터베이스 비밀번호 |
 
-프로젝트에 기여한 사람들의 목록을 포함합니다.
+운영 배포에서는 저장소 밖에서 주입한다(systemd 예시).
 
-## 감사의 말
+```ini
+[Service]
+EnvironmentFile=/opt/apptitude/.env
+ExecStart=/usr/bin/node --env-file-if-exists=/opt/apptitude/.env server.js
+```
 
-프로젝트에 도움을 준 사람들이나 프로젝트에 영감을 준 다른 프로젝트에 대한 감사의 말을 추가할 수 있습니다.
+## 테스트
 
+```bash
+npm test     # Jest + supertest (SQLite)
+npm run lint # ESLint
+```
 
+테스트는 `tests/setup.js`에서 결정적 환경값을 주입하고, `tests/characterization`이 모든 마운트 엔드포인트의 응답 기준선을 고정한다.
 
+## 디렉토리
 
+```
+routes/        라우터 + 컨트롤러(HTTP 계층)
+services/      비즈니스 로직 + 영속화
+models/        Sequelize 모델
+types/dto/     요청 DTO + Joi 검증
+middleware/    인증, 예외, 트랜잭션, CORS, rate limit
+config/        환경변수 검증, 로거, Swagger
+docs/swagger/  OpenAPI YAML
+docs/agents/   에이전트 워크플로 설정
+```
+
+## 보안
+
+- 비밀값은 환경변수로만 주입한다. 코드/저장소에 하드코딩하지 않는다.
+- 과거 커밋에 노출된 값은 폐기 대상이다. 교체 절차는 `docs/secret-rotation.md` 참고.
