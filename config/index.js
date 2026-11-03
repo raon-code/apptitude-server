@@ -11,8 +11,9 @@ const {
   DEV,
   PROD
 } = require('./const');
+const env = require('./env');
 
-const _nodeEnv = process.env.NODE_ENV || SERVER_DEFAULT.NODE_ENV;
+const _nodeEnv = env.NODE_ENV;
 const serverConfig = getServerConfig(_nodeEnv);
 
 const config = {
@@ -34,11 +35,11 @@ const config = {
   // 암호 설정
   crypto: {
     algorithm: 'aes-256-cbc',
-    seedKey: 'apptitude-crypto-12345'
+    seedKey: env.CRYPTO_SEED_KEY
   },
   // jwt 토큰 설정
   jwt: {
-    secret: 'SLEPe87w7eEue337ehndn3hHDjjKKDK',
+    secret: env.JWT_SECRET,
     option: {
       access: { expiresIn: '1h' },
       refresh: { expiresIn: '7d' }
@@ -55,7 +56,7 @@ const config = {
   },
   // 카카오 API 설정
   kakao: {
-    restApiKey: '6b42072c0ab619483e4fe33d615880fe',
+    restApiKey: env.KAKAO_REST_API_KEY,
     redirectUrl: serverConfig.baseUrl + '/auth/kakao/result'
   },
   //

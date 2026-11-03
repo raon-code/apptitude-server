@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=local node server.js",
-    "start:dev": "NODE_ENV=development node server.js",
-    "start:prod": "NODE_ENV=production node server.js",
+    "start": "NODE_ENV=local node --env-file-if-exists=.env server.js",
+    "start:dev": "NODE_ENV=development node --env-file-if-exists=.env server.js",
+    "start:prod": "NODE_ENV=production node --env-file-if-exists=.env server.js",
     "test": "jest",
     "lint": "eslint ."
   },

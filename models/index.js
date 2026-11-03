@@ -7,8 +7,8 @@ const { Sequelize, Transaction } = require('sequelize');
 const cls = require('cls-hooked');
 
 const config = require('@/config');
+const env = require('@/config/env');
 const isForce = require('@/config').models.forceSync;
-const dbUser = require('@/config/database/user.json')[config.nodeEnv];
 
 const logger = require('@/config/logger');
 const { DEV, PROD } = require('@/config/const');
@@ -26,11 +26,12 @@ function getInitParam() {
     // 개발환경(MYSQL)
     case DEV:
       return {
-        username: dbUser.username,
-        password: dbUser.password,
-        database: dbUser.database,
+        username: env.DB_USER,
+        password: env.DB_PASSWORD,
+        database: env.DB_NAME,
         options: {
-          host: dbUser.host,
+          host: env.DB_HOST,
+          port: env.DB_PORT,
           dialect: 'mysql',
           // 쿼리 로깅
           logging: (query, time) => {
@@ -43,11 +44,12 @@ function getInitParam() {
     // 운영환경(MySQL)
     case PROD:
       return {
-        username: dbUser.username,
-        password: dbUser.password,
-        database: dbUser.database,
+        username: env.DB_USER,
+        password: env.DB_PASSWORD,
+        database: env.DB_NAME,
         options: {
-          host: dbUser.host,
+          host: env.DB_HOST,
+          port: env.DB_PORT,
           dialect: 'mysql',
           logging: false,
           benchmark: false
