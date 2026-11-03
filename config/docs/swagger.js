@@ -48,7 +48,7 @@ const swaggerOption = {
       }
     ]
   },
-  apis: ['./routes/test/*.js', './routes/*.js'] // swagger 연동 대상 파일
+  apis: ['./docs/swagger/*.yaml'] // swagger 연동 대상 파일
 };
 
 const specs = swaggerJsdoc(swaggerOption);

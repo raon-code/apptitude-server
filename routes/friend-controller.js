@@ -17,58 +17,6 @@ const CreateFriendDTO = require('@/types/dto/create-friend-dto');
 // 인증 미들웨어를 모든 요청에 적용
 router.use(authMiddleware);
 
-/**
- * @swagger
- * /friends:
- *  post:
- *    summary: 친구 추가
- *    description: 사용자의 친구를 추가
- *    tags: [Friends]
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            required:
- *              - friendId
- *            properties:
- *              friendId:
- *                type: number
- *                description: 등록할 친구 ID
- *                example: 1
- *    responses:
- *      201:
- *        description: 친구를 성공적으로 생성
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                statusCode:
- *                  type: number
- *                  example: 201
- *                message:
- *                  type: string
- *                  example: 'Created'
- *                data:
- *                  type: object
- *                  description: 생성한 친구 정보
- *                  properties:
- *                    id:
- *                      type: number
- *                      example: 1
- *                    userId:
- *                      type: number
- *                      example: 1
- *                    friendId:
- *                      type: number
- *                      example: 2
- *              required:
- *                - statusCode
- *                - message
- *                - data
- */
 router.post('/', createFriend);
 async function createFriend(req, res) {
   const userId = req.user.id;
@@ -81,67 +29,6 @@ async function createFriend(req, res) {
   response(res, StatusCodes.CREATED, '생성성공', newFriend);
 }
 
-/**
- *  @swagger
- *  /friends:
- *    get:
- *      summary: 친구 목록 조회
- *      description: 사용자의 친구 목록을 조회
- *      tags: [Friends]
- *      parameters:
- *        - in: query
- *          name: filterType
- *          required: false
- *          description: 필터 타입
- *          schema:
- *            type: string
- *        - in: query
- *          name: orderType
- *          required: false
- *          description: 정렬 타입 (asc/desc)
- *          schema:
- *            type: string
- *        - in: query
- *          name: orderBy
- *          required: false
- *          description: 정렬 기준 필드
- *          schema:
- *            type: string
- *        - in: query
- *          name: page
- *          required: false
- *          description: 페이지 번호
- *          schema:
- *            type: integer
- *        - in: query
- *          name: size
- *          required: false
- *          description: 페이지 당 항목 수
- *          schema:
- *            type: integer
- *      responses:
- *        200:
- *          description: 사용자의 전체 친구 목록
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                 statusCode:
- *                   type: number
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: 조회성공
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *              required:
- *                - statusCode
- *                - message
- *                - data
- */
 router.get('/', getFriendList);
 async function getFriendList(req, res) {
   const userId = req.user.id;
@@ -175,44 +62,6 @@ async function getFriendList(req, res) {
   response(res, StatusCodes.OK, '조회성공', friendList);
 }
 
-/**
- * @swagger
- * /friends/{friendPkId}:
- *   get:
- *     summary: 특정 친구 조회
- *     tags:
- *       - Friends
- *     parameters:
- *       - in: path
- *         name: friendPkId
- *         schema:
- *           type: integer
- *         required: true
- *         description: 친구 PK ID
- *     responses:
- *       200:
- *          description: 친구 조회 완료
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                 statusCode:
- *                   type: number
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: 삭제성공
- *                 data:
- *                   type: object
- *                   description: 친구 정보
- *                   example: {}
- *              required:
- *                - statusCode
- *                - message
- *                - data
-
- */
 router.get('/:friendPkId(\\d+)', getFriend);
 async function getFriend(req, res) {
   const friend = await friendService.getFriend(req.user.id, req.params.friendPkId);
@@ -220,47 +69,6 @@ async function getFriend(req, res) {
   response(res, StatusCodes.OK, '조회성공', friend);
 }
 
-/**
- * @swagger
- * /friends:
- *   delete:
- *     summary: 친구 여러명(선택 or 모두) 삭제
- *     tags:
- *       - Friends
- *     parameters:
- *       - in: body
- *         name: friendPkIdList
- *         description: 삭제할 친구의 PK ID 목록
- *         schema:
- *           type: object
- *           properties:
- *             friendPkIdList:
- *               type: array
- *               items:
- *                 type: integer
- *     responses:
- *        200:
- *          description: 친구 삭제 완료
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                 statusCode:
- *                   type: number
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: 삭제성공
- *                 data:
- *                   type: object
- *                   description: 삭제 결과
- *                   example: {}
- *              required:
- *                - statusCode
- *                - message
- *                - data
- */
 router.delete('/', deleteFriendList);
 async function deleteFriendList(req, res) {
   const userId = req.user.id;
@@ -270,43 +78,6 @@ async function deleteFriendList(req, res) {
   response(res, StatusCodes.OK, '삭제성공', result);
 }
 
-/**
- * @swagger
- * /friends/{friendPkId}:
- *   delete:
- *     summary: 특정 친구 삭제
- *     tags:
- *       - Friends
- *     parameters:
- *       - in: path
- *         name: friendPkId
- *         schema:
- *           type: integer
- *         required: true
- *         description: 친구 PK ID
- *     responses:
- *       200:
- *          description: 친구 삭제 완료
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                 statusCode:
- *                   type: number
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: 삭제성공
- *                 data:
- *                   type: object
- *                   description: 삭제 결과
- *                   example: {}
- *              required:
- *                - statusCode
- *                - message
- *                - data
- */
 router.delete('/:friendPkId(\\d+)', deleteFriend);
 async function deleteFriend(req, res) {
   const result = await friendService.deleteFriendById(
