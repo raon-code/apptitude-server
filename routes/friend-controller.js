@@ -13,6 +13,7 @@ const { authMiddleware } = require('@/middleware/auth-handler');
 
 const userService = require('@/services/user-service');
 const friendService = require('@/services/friend-service');
+const CreateFriendDTO = require('@/types/dto/create-friend-dto');
 
 const { ConflictError, NotFoundError, BizError } = require('@/error');
 
