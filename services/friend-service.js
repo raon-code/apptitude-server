@@ -182,6 +182,5 @@ module.exports = {
   getFriendList,
   getFriend,
   deleteFriendList,
-  deleteFriend,
   deleteFriendById
 };
