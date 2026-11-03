@@ -5,8 +5,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # 환경 설정 파일 #
-#.env
-#.env.*.local
+.env
+.env.*
+!.env.example
 
 # 디버그 로그 #
 *.log
@@ -53,3 +54,34 @@ Thumbs.db
 *.dylib
 
 package-lock.json
+
+# 테스트/커버리지 산출물 #
+coverage/
+.nyc_output/
+junit.xml
+
+# 캐시 #
+.cache/
+.eslintcache
+
+# SQLite 런타임 DB #
+*.sqlite3
+*.sqlite-journal
+*.db
+*.db-journal
+
+# 인증서/키 #
+*.pem
+*.key
+*.crt
+*.p12
+
+# 패키지 산출물 #
+*.tgz
+pnpm-debug.log*
+
+# 에디터/임시 파일 #
+*.orig
+*.rej
+*.bak
+.history/
