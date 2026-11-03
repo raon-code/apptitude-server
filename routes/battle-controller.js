@@ -10,15 +10,10 @@ const { StatusCodes } = require('http-status-codes');
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
-const userService = require('@/services/user-service');
 const battleService = require('@/services/battle-service');
-const battleDetailService = require('@/services/battle-detail-service');
-
-const { BizError, NotFoundError } = require('@/error');
 
 const CreateBattleDTO = require('@/types/dto/create-battle-dto');
 const UpdateBattleDTO = require('@/types/dto/update-battle-dto');
-const { updateProperties } = require('@/common/object-util');
 
 // 인증 미들웨어를 모든 요청에 적용
 router.use(authMiddleware);
@@ -87,25 +82,11 @@ router.use(authMiddleware);
  */
 router.post('/', createBattle);
 async function createBattle(req, res) {
-  const userId = req.user.id;
-
   const createBattleDTO = CreateBattleDTO.fromPlainObject(req.body);
-  createBattleDTO.userId = userId;
+  createBattleDTO.userId = req.user.id;
   createBattleDTO.validate();
 
-  const lastBattle = await battleService.getUserLastBattle(userId);
-  if (lastBattle) {
-    // 대결 상태에 따라 생성 불가능한 경우
-    const cannotCreateBattle =
-      battleService.checkWaitForBattle(lastBattle) ||
-      battleService.checkInBattle(lastBattle);
-
-    if (cannotCreateBattle) {
-      throw new BizError('대결을 생성할 수 없습니다. 대결내역을 확인해주세요.');
-    }
-  }
-
-  const newBattle = await battleService.createBattle(createBattleDTO);
+  const newBattle = await battleService.createBattleForUser(createBattleDTO);
   response(res, StatusCodes.CREATED, '생성성공', newBattle);
 }
 
@@ -195,19 +176,7 @@ async function getBattle(req, res) {
   const userId = req.user.id;
   const battleId = req.params.battleId;
 
-  const battle = await battleService.getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isEngagedInBattle = await battleDetailService.isEngagedInBattle(
-    userId,
-    battleId
-  );
-  if (!isEngagedInBattle) {
-    throw new BizError('대결에 참여하지 않은 사용자입니다.');
-  }
-
+  const battle = await battleService.getBattleForUser(battleId, userId);
   response(res, StatusCodes.OK, '조회성공', battle);
 }
 
@@ -271,18 +240,11 @@ async function updateBattle(req, res) {
   const updateBattleDTO = UpdateBattleDTO.fromPlainObject(req.body);
   updateBattleDTO.validate();
 
-  const battle = await battleService.getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isBattleLeader = await battleService.isBattleLeader(userId, battle);
-  if (!isBattleLeader) {
-    throw new BizError('대결 수정 권한이 없습니다.');
-  }
-
-  const result = await battleService.updateBattle(battle, updateBattleDTO);
-
+  const result = await battleService.updateBattleForUser(
+    battleId,
+    userId,
+    updateBattleDTO
+  );
   response(res, StatusCodes.OK, '수정성공', result);
 }
 
@@ -333,22 +295,14 @@ async function updateBattle(req, res) {
 router.delete('/:battleId(\\d+)', deleteBattle);
 async function deleteBattle(req, res) {
   const battleId = req.params.battleId;
+  const userId = req.user.id;
   const { isCancel } = req.query;
 
-  const battle = await battleService.getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isBattleFinished = battleService.checkBattleFinished(battle);
-  if (isBattleFinished) {
-    throw new BizError('이미 종료된 대결입니다.');
-  }
-
-  const result = isCancel
-    ? await battleService.cancelBattle(battle)
-    : await battleService.finishBattle(battle);
-
+  const result = await battleService.deleteBattleForUser(
+    battleId,
+    userId,
+    isCancel
+  );
   response(res, StatusCodes.OK, '삭제성공', result);
 }
 
