@@ -24,7 +24,7 @@ async function createBattleHistory(req, res) {
     req.body
   );
   createBattleHistoryDTO.userId = userId;
-  createBattleHistoryDTO.battleId = req.params.battleId;
+  createBattleHistoryDTO.battleId = Number(req.params.battleId);
   createBattleHistoryDTO.validate();
 
   const newBattleHistory = await battleService.createBattleHistoryForUser(

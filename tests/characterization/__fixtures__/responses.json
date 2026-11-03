@@ -625,7 +625,7 @@
         "detoxTime": 0,
         "resultType": "RT3",
         "userId": 1,
-        "battleId": "103",
+        "battleId": 103,
         "updatedAt": "<timestamp>",
         "createdAt": "<timestamp>"
       }
@@ -725,7 +725,7 @@
         "id": 1,
         "detoxTime": 10,
         "battleDate": "<timestamp>",
-        "battleId": "102",
+        "battleId": 102,
         "userId": 1,
         "updatedAt": "<timestamp>",
         "createdAt": "<timestamp>"

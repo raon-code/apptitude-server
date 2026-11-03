@@ -111,7 +111,7 @@ describe('추가 결함 회귀 테스트', () => {
       .send({ detoxTime: 10, battleDate: '2024-01-01' });
 
     expect(res.status).toBe(201);
-    expect(res.body.data.battleId).toBe(String(battleId));
+    expect(res.body.data.battleId).toBe(battleId);
   });
 
   it('POST /battles/:id/invitations — 초대 링크 생성이 201, 없는 대결은 404', async () => {

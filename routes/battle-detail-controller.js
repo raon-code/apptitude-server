@@ -22,7 +22,7 @@ router.post('/', createBattleDetail);
 async function createBattleDetail(req, res) {
   const createBattleDetailDTO = CreateBattleDetailDTO.fromPlainObject(req.body);
   createBattleDetailDTO.userId = req.user.id;
-  createBattleDetailDTO.battleId = req.params.battleId;
+  createBattleDetailDTO.battleId = Number(req.params.battleId);
   createBattleDetailDTO.validate();
 
   const newBattleDetail =
