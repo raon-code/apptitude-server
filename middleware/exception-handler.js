@@ -6,10 +6,7 @@ const response = require('@/common/response');
 const { DEBUG_MODE } = require('@/config/const');
 const logger = require('@/config/logger');
 const {
-  BizError,
-  UnauthorizeError,
-  NotFoundError,
-  ConflictError
+  AppError
 } = require('@/error');
 
 /**
@@ -78,12 +75,7 @@ function cleanStackTrace(stack) {
  * @returns 정의된 에러이면 true, 아니면 false
  */
 function checkDefinedError(err) {
-  if (err instanceof BizError) return true;
-  else if (err instanceof UnauthorizeError) return true;
-  else if (err instanceof NotFoundError) return true;
-  else if (err instanceof ConflictError) return true;
-
-  return false;
+  return err instanceof AppError;
 }
 
 module.exports = {
