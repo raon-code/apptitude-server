@@ -70,6 +70,22 @@ async function getBattle(battleId) {
   return battle;
 }
 
+async function getBattleOrThrow(battleId) {
+  const battle = await getBattle(battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+  return battle;
+}
+
+async function assertEngaged(userId, battleId, message) {
+  const isEngaged = await battleDetailService.isEngagedInBattle(
+    userId,
+    battleId
+  );
+  if (!isEngaged) throw new BizError(message);
+}
+
 async function getUserLastBattle(userId) {
   const battle = await Battle.findOne({
     where: {
@@ -223,18 +239,8 @@ async function createBattleForUser(createBattleDTO) {
  * @returns {Battle} 대결
  */
 async function getBattleForUser(battleId, userId) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isEngaged = await battleDetailService.isEngagedInBattle(
-    userId,
-    battleId
-  );
-  if (!isEngaged) {
-    throw new BizError('대결에 참여하지 않은 사용자입니다.');
-  }
+  const battle = await getBattleOrThrow(battleId);
+  await assertEngaged(userId, battleId, '대결에 참여하지 않은 사용자입니다.');
 
   return battle;
 }
@@ -248,10 +254,7 @@ async function getBattleForUser(battleId, userId) {
  * @returns {Battle} 수정된 대결
  */
 async function updateBattleForUser(battleId, userId, updateBattleDTO) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
+  const battle = await getBattleOrThrow(battleId);
 
   const isLeader = await isBattleLeader(userId, battle);
   if (!isLeader) {
@@ -270,18 +273,8 @@ async function updateBattleForUser(battleId, userId, updateBattleDTO) {
  * @returns {Battle} 변경된 대결
  */
 async function deleteBattleForUser(battleId, userId, isCancel) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isEngaged = await battleDetailService.isEngagedInBattle(
-    userId,
-    battleId
-  );
-  if (!isEngaged) {
-    throw new BizError('대결에 참여하지 않은 사용자입니다.');
-  }
+  const battle = await getBattleOrThrow(battleId);
+  await assertEngaged(userId, battleId, '대결에 참여하지 않은 사용자입니다.');
 
   if (checkBattleFinished(battle)) {
     throw new BizError('이미 종료된 대결입니다.');
@@ -300,22 +293,13 @@ async function deleteBattleForUser(battleId, userId, isCancel) {
 async function createBattleHistoryForUser(createBattleHistoryDTO, userId) {
   const battleId = createBattleHistoryDTO.battleId;
 
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isEngaged = await battleDetailService.isEngagedInBattle(
+  const battle = await getBattleOrThrow(battleId);
+  await assertEngaged(
     userId,
-    battleId
+    battleId,
+    '대결에 참여하지 않은 사용자는 대결내역을 생성할 수 없습니다.'
   );
-  if (!isEngaged) {
-    throw new BizError(
-      '대결에 참여하지 않은 사용자는 대결내역을 생성할 수 없습니다.'
-    );
-  }
 
-  createBattleHistoryDTO.userId = userId;
   return createBattleHistory(createBattleHistoryDTO);
 }
 
@@ -327,20 +311,12 @@ async function createBattleHistoryForUser(createBattleHistoryDTO, userId) {
  * @returns {BattleHistory[]} 대결내역 목록
  */
 async function getBattleHistoryListForUser(battleId, userId) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
-
-  const isEngaged = await battleDetailService.isEngagedInBattle(
+  const battle = await getBattleOrThrow(battleId);
+  await assertEngaged(
     userId,
-    battleId
+    battleId,
+    '대결에 참여하지 않은 사용자는 대결내역을 조회 할 수 없습니다.'
   );
-  if (!isEngaged) {
-    throw new BizError(
-      '대결에 참여하지 않은 사용자는 대결내역을 조회 할 수 없습니다.'
-    );
-  }
 
   return getBattleHistoryList(battleId);
 }
@@ -350,13 +326,10 @@ async function getBattleHistoryListForUser(battleId, userId) {
  *
  * @param {number} battleId
  * @param {number} userId
- * @returns {string} 초대 URL
+ * @returns {string} 초대 링크 토큰
  */
 async function createInvitationUrl(battleId, userId) {
-  const battle = await getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
+  const battle = await getBattleOrThrow(battleId);
 
   const isLeader = await isBattleLeader(userId, battle);
   if (!isLeader) {
@@ -368,10 +341,7 @@ async function createInvitationUrl(battleId, userId) {
   battle.validWaitTime = config.apptitude.validWaitTime;
   await battle.save();
 
-  return (
-    config.server.baseUrl +
-    `/battles/${battleId}/invitations/${encodeURIComponent(inviteLink)}`
-  );
+  return inviteLink;
 }
 
 module.exports = {
