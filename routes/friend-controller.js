@@ -11,11 +11,8 @@ const { StatusCodes } = require('http-status-codes');
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
-const userService = require('@/services/user-service');
 const friendService = require('@/services/friend-service');
 const CreateFriendDTO = require('@/types/dto/create-friend-dto');
-
-const { ConflictError, NotFoundError, BizError } = require('@/error');
 
 // 인증 미들웨어를 모든 요청에 적용
 router.use(authMiddleware);
@@ -218,13 +215,7 @@ async function getFriendList(req, res) {
  */
 router.get('/:friendPkId(\\d+)', getFriend);
 async function getFriend(req, res) {
-  const userId = req.user.id;
-  const friendPkId = req.params.friendPkId;
-
-  const friend = await friendService.getFriend(userId, friendPkId);
-  if (!friend) {
-    throw new NotFoundError('친구를 찾을 수 없습니다.');
-  }
+  const friend = await friendService.getFriend(req.user.id, req.params.friendPkId);
 
   response(res, StatusCodes.OK, '조회성공', friend);
 }
@@ -318,15 +309,11 @@ async function deleteFriendList(req, res) {
  */
 router.delete('/:friendPkId(\\d+)', deleteFriend);
 async function deleteFriend(req, res) {
-  const userId = req.user.id;
-  const friendPkId = req.params.friendPkId;
+  const result = await friendService.deleteFriendById(
+    req.user.id,
+    req.params.friendPkId
+  );
 
-  const friend = await friendService.getFriend(userId, friendPkId);
-  if (!friend) {
-    throw new NotFoundError('친구를 찾을 수 없습니다.');
-  }
-
-  const result = await friendService.deleteFriend(friend);
   response(res, StatusCodes.OK, '삭제성공', result);
 }
 

@@ -6,7 +6,7 @@ const UserDevice = require('@/models/user-device');
 
 const logger = require('@/config/logger');
 
-const { BizError, UnauthorizeError } = require('@/error');
+const { NotFoundError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 
 const CreateUserDeviceDTO = require('@/types/dto/create-user-device-dto');
@@ -14,10 +14,14 @@ const CreateUserDeviceDTO = require('@/types/dto/create-user-device-dto');
 /**
  * 사용자 기기 생성
  *
+ * 새로 등록한 기기는 현재 사용 중인 기기로 설정한다.
+ *
  * @param {CreateUserDeviceDTO} createUserDeviceDTO
  * @returns {UserDevice} 새로 추가된 사용자 기기 정보
  */
 async function createUserDevice(createUserDeviceDTO) {
+  createUserDeviceDTO.isUsing = true;
+
   const newUserDevice = await UserDevice.create(createUserDeviceDTO);
   logger.debug(newUserDevice);
 
@@ -44,15 +48,18 @@ async function getUserDeviceList(userId) {
 /**
  * 사용자 기기 조회
  *
- * @param {*} deviceId
- * @returns
+ * 없으면 NotFoundError, 본인 기기가 아니면 UnauthorizeError
+ *
+ * @param {number} userId 사용자 ID
+ * @param {number} userDeviceId 사용자 기기 ID
+ * @returns {UserDevice} 사용자 기기 정보
  */
 async function getUserDevice(userId, userDeviceId) {
   const userDevice = await UserDevice.findByPk(userDeviceId);
   logger.debug(userDevice);
 
   if (!userDevice) {
-    return null;
+    throw new NotFoundError('사용자 기기를 찾을 수 없습니다.');
   }
 
   if (userDevice.userId !== userId) {

@@ -11,21 +11,14 @@ const { StatusCodes } = require('http-status-codes');
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
-const { sequelize } = require('@/models');
 const transaction = require('@/middleware/transaction-handler');
 
-const { reissue } = require('@/services/session-service');
 const { setJwtTokenCookie } = require('@/config/security/jwt');
 
 const userService = require('@/services/user-service');
-const loginPlatformService = require('@/services/login-platform-service');
 
 const CreateUserDTO = require('@/types/dto/create-user-dto');
-const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
 const UpdateUserDTO = require('@/types/dto/update-user-dto');
-
-const { ConflictError, NotFoundError, BizError } = require('@/error');
-const logger = require('@/config/logger');
 
 router.use((req, res, next) => {
   if (shouldSkipAuth(req)) {
@@ -140,27 +133,8 @@ async function createUser(req, res) {
   const createUserDTO = CreateUserDTO.fromPlainObject(req.body);
   createUserDTO.validate();
 
-  // 회원가입 여부 체크
-  const loginPlatform = await loginPlatformService.getLoginPlatformByColumn(
-    createUserDTO.loginPlatform.uuid,
-    createUserDTO.loginPlatform.platformType
-  );
-  if (loginPlatform) {
-    throw new ConflictError('이미 가입된 사용자입니다.');
-  }
-
-  // 유저 생성
-  const newUser = await userService.createUser(createUserDTO);
-  createUserDTO.loginPlatform.userId = newUser.id;
-
-  // 로그인 플랫폼 생성
-  const createLoginPlatformDTO = CreateLoginPlatformDTO.fromPlainObject(
-    createUserDTO.loginPlatform
-  );
-  createLoginPlatformDTO.validate();
-  const newLoginPlatform = await loginPlatformService.createLoginPlatform(
-    createLoginPlatformDTO
-  );
+  const { newUser, newLoginPlatform } =
+    await userService.createUserWithLoginPlatform(createUserDTO);
 
   response(res, StatusCodes.CREATED, '생성성공', {
     newUser,
@@ -210,12 +184,7 @@ async function createUser(req, res) {
  */
 router.get('/:id(\\d+)', getUser);
 async function getUser(req, res) {
-  const userId = req.params.id;
-
-  const user = await userService.getUser(userId);
-  if (!user) {
-    throw new NotFoundError('사용자를 찾을 수 없습니다.');
-  }
+  const user = await userService.getUserOrThrow(req.params.id);
 
   response(res, StatusCodes.OK, '조회성공', user);
 }
@@ -272,21 +241,13 @@ async function getUser(req, res) {
  */
 router.patch('/:id(\\d+)', updateUser);
 async function updateUser(req, res) {
-  const userId = req.params.id;
   const updateUserDTO = UpdateUserDTO.fromPlainObject(req.body);
   updateUserDTO.validate();
 
-  const user = await userService.getUser(userId);
-  if (!user) {
-    throw new NotFoundError('사용자를 찾을 수 없습니다.');
-  }
+  const { updatedUser, newAccessToken } =
+    await userService.updateUserWithReissue(req.params.id, updateUserDTO);
 
-  const updatedUser = await userService.updateUser(user, updateUserDTO);
-
-  // 정보가 바뀌었으므로 토큰 재발급
-  const newAccessToken = await reissue(updatedUser.refreshJwt);
   setJwtTokenCookie(res, newAccessToken);
-
   response(res, StatusCodes.OK, '수정성공', updatedUser);
 }
 

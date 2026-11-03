@@ -16,7 +16,6 @@ const {
 } = require('@/config/security/jwt');
 const transaction = require('@/middleware/transaction-handler');
 
-const { ConflictError, NotFoundError, BizError } = require('@/error');
 /**
  * @swagger
  * /sessions:
@@ -106,7 +105,7 @@ async function createSession(req, res) {
  */
 router.delete('/', authMiddleware, deleteSession);
 async function deleteSession(req, res) {
-  sessionService.logout();
+  await sessionService.logout();
 
   // 액세스 토큰을 쿠키에서 삭제
   clearJwtTokenCookie(res);

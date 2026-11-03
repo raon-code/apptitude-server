@@ -151,6 +151,21 @@ async function deleteFriend(friend) {
 }
 
 /**
+ * 특정 친구 삭제
+ *
+ * 조회와 본인 확인까지 함께 처리한다.
+ *
+ * @param {number} userId 사용자 ID
+ * @param {number} friendPkId 친구 PK ID
+ * @returns {number} 삭제된 친구 수
+ */
+async function deleteFriendById(userId, friendPkId) {
+  const friend = await getFriend(userId, friendPkId);
+
+  return deleteFriend(friend);
+}
+
+/**
  * 사용자 친구인지 검증
  */
 function verifyUserFriend(friend, userId) {
@@ -167,5 +182,6 @@ module.exports = {
   getFriendList,
   getFriend,
   deleteFriendList,
-  deleteFriend
+  deleteFriend,
+  deleteFriendById
 };

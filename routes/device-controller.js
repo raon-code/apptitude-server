@@ -11,12 +11,9 @@ const { StatusCodes } = require('http-status-codes');
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
 
-const userService = require('@/services/user-service');
 const deviceService = require('@/services/device-service');
 
 const CreateUserDeviceDTO = require('@/types/dto/create-user-device-dto');
-
-const { ConflictError, NotFoundError, BizError } = require('@/error');
 
 // 인증 미들웨어를 모든 요청에 적용
 router.use(authMiddleware);
@@ -76,11 +73,10 @@ router.use(authMiddleware);
  */
 router.post('/', createUserDevice);
 async function createUserDevice(req, res) {
-  const userId = req.user.id;
-
-  const createUserDeviceDTO = CreateUserDeviceDTO.fromPlainObject(req.body);
-  createUserDeviceDTO.userId = userId;
-  createUserDeviceDTO.isUsing = true;
+  const createUserDeviceDTO = CreateUserDeviceDTO.fromPlainObject({
+    ...req.body,
+    userId: req.user.id
+  });
   createUserDeviceDTO.validate();
 
   const newUserDevice = await deviceService.createUserDevice(
@@ -128,15 +124,10 @@ async function createUserDevice(req, res) {
  */
 router.get('/:deviceId(\\d+)', getUserDevice);
 async function getUserDevice(req, res) {
-  const deviceId = req.params.deviceId;
-
   const userDevice = await deviceService.getUserDevice(
     req.user.id,
-    deviceId
+    req.params.deviceId
   );
-  if (!userDevice) {
-    throw new NotFoundError('사용자 기기를 찾을 수 없습니다.');
-  }
 
   response(res, StatusCodes.OK, '조회성공', userDevice);
 }

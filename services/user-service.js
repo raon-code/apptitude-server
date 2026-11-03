@@ -8,8 +8,10 @@ const logger = require('@/config/logger');
 
 const CreateUserDTO = require('@/types/dto/create-user-dto');
 const UpdateUserDTO = require('@/types/dto/update-user-dto');
-const LoginPlatform = require('@/models/login-platform');
-const { BizError, UnauthorizeError } = require('@/error');
+const CreateLoginPlatformDTO = require('@/types/dto/create-login-platform-dto');
+const loginPlatformService = require('@/services/login-platform-service');
+const { reissue } = require('@/services/session-service');
+const { ConflictError, NotFoundError, UnauthorizeError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 
 /*********************************************
@@ -27,6 +29,40 @@ async function createUser(createUserDTO) {
   logger.debug(newUser);
 
   return newUser;
+}
+
+/**
+ * 사용자와 로그인 플랫폼을 함께 생성
+ *
+ * 이미 가입된 로그인 플랫폼이면 ConflictError
+ *
+ * @param {CreateUserDTO} createUserDTO 사용자 생성 DTO
+ * @returns {{newUser: User, newLoginPlatform: LoginPlatform}} 생성된 사용자, 로그인 플랫폼
+ */
+async function createUserWithLoginPlatform(createUserDTO) {
+  // 회원가입 여부 체크
+  const loginPlatform = await loginPlatformService.getLoginPlatformByColumn(
+    createUserDTO.loginPlatform.uuid,
+    createUserDTO.loginPlatform.platformType
+  );
+  if (loginPlatform) {
+    throw new ConflictError('이미 가입된 사용자입니다.');
+  }
+
+  // 유저 생성
+  const newUser = await createUser(createUserDTO);
+
+  // 로그인 플랫폼 생성
+  const createLoginPlatformDTO = CreateLoginPlatformDTO.fromPlainObject({
+    ...createUserDTO.loginPlatform,
+    userId: newUser.id
+  });
+  createLoginPlatformDTO.validate();
+  const newLoginPlatform = await loginPlatformService.createLoginPlatform(
+    createLoginPlatformDTO
+  );
+
+  return { newUser, newLoginPlatform };
 }
 
 /**
@@ -50,6 +86,21 @@ async function getUserList() {
 async function getUser(userId) {
   const user = await User.findByPk(userId);
   logger.debug(user);
+
+  return user;
+}
+
+/**
+ * 사용자 조회, 사용자가 없으면 NotFoundError
+ *
+ * @param {string} userId 사용자 ID
+ * @returns {User} 사용자 정보
+ */
+async function getUserOrThrow(userId) {
+  const user = await getUser(userId);
+  if (!user) {
+    throw new NotFoundError('사용자를 찾을 수 없습니다.');
+  }
 
   return user;
 }
@@ -87,4 +138,29 @@ async function updateUser(user, dtoUpdateUser) {
   return user;
 }
 
-module.exports = { createUser, getUser, isOwnUserId, updateUser };
+/**
+ * 사용자 정보 수정 후 액세스 토큰 재발급
+ *
+ * @param {string} userId 사용자 ID
+ * @param {UpdateUserDTO} updateUserDTO 사용자 수정 DTO
+ * @returns {{updatedUser: User, newAccessToken: string}} 수정된 사용자 정보, 재발급한 액세스 토큰
+ */
+async function updateUserWithReissue(userId, updateUserDTO) {
+  const user = await getUserOrThrow(userId);
+  const updatedUser = await updateUser(user, updateUserDTO);
+
+  // 정보가 바뀌었으므로 토큰 재발급
+  const newAccessToken = await reissue(updatedUser.refreshJwt);
+
+  return { updatedUser, newAccessToken };
+}
+
+module.exports = {
+  createUser,
+  createUserWithLoginPlatform,
+  getUser,
+  getUserOrThrow,
+  isOwnUserId,
+  updateUser,
+  updateUserWithReissue
+};
