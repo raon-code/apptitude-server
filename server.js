@@ -28,6 +28,7 @@ const corsHandler = require('@/middleware/cors-handler');
 
 // MVC 관련
 const { sequelize } = require('@/models');
+const Common = require('@/models/common');
 const routes = require('@/routes');
 
 const testService = require('@/services/test/test-service');
@@ -64,6 +65,10 @@ async function initialize() {
   // DB 초기화
   await sequelize.sync();
   logger.info('모든 모델이 동기화되었습니다.');
+
+  // 공통코드 시드 완료 대기
+  await Common.ready;
+  logger.info('공통코드 초기화 완료');
 
   // 테스트 초기화
   // await initializeForTest();
