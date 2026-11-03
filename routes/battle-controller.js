@@ -193,7 +193,7 @@ async function getBattleList(req, res) {
 router.get('/:battleId(\\d+)', getBattle);
 async function getBattle(req, res) {
   const userId = req.user.id;
-  const battleId = req.param.battleId;
+  const battleId = req.params.battleId;
 
   const isEngagedInBattle = battleDetailService.isEngagedInBattle(
     userId,
@@ -266,7 +266,7 @@ async function getBattle(req, res) {
 router.patch('/:battleId(\\d+)', updateBattle);
 async function updateBattle(req, res) {
   const userId = req.user.id;
-  const battleId = req.param.battleId;
+  const battleId = req.params.battleId;
   const updateBattleDTO = UpdateBattleDTO.fromPlainObject(req.body);
   updateBattleDTO.validate();
 
@@ -329,9 +329,9 @@ async function updateBattle(req, res) {
  *                 - message
  *                 - datas
  */
-router.delete('/battles/:battleId(\\d+)', deleteBattle);
+router.delete('/:battleId(\\d+)', deleteBattle);
 async function deleteBattle(req, res) {
-  const battleId = req.param.battleId;
+  const battleId = req.params.battleId;
   const { isCancel } = req.query;
 
   const battle = await battleService.getBattle(battleId);
