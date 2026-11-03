@@ -64,7 +64,7 @@ User.hasMany(Friend, {
   sourceKey: 'id'
 });
 Friend.belongsTo(User, {
-  as: 'friend',
+  as: 'friendUser',
   foreignKey: 'friendId',
   sourceKey: 'id'
 });

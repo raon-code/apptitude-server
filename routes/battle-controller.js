@@ -195,7 +195,12 @@ async function getBattle(req, res) {
   const userId = req.user.id;
   const battleId = req.params.battleId;
 
-  const isEngagedInBattle = battleDetailService.isEngagedInBattle(
+  const battle = await battleService.getBattle(battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+
+  const isEngagedInBattle = await battleDetailService.isEngagedInBattle(
     userId,
     battleId
   );
@@ -203,10 +208,6 @@ async function getBattle(req, res) {
     throw new BizError('대결에 참여하지 않은 사용자입니다.');
   }
 
-  const battle = await battleService.getBattle(battleId);
-  if (!battle) {
-    throw new NotFoundError('대결을 찾을 수 없습니다.');
-  }
   response(res, StatusCodes.OK, '조회성공', battle);
 }
 
@@ -275,7 +276,7 @@ async function updateBattle(req, res) {
     throw new NotFoundError('대결을 찾을 수 없습니다.');
   }
 
-  const isBattleLeader = battleService.isBattleLeader(userId, battle);
+  const isBattleLeader = await battleService.isBattleLeader(userId, battle);
   if (!isBattleLeader) {
     throw new BizError('대결 수정 권한이 없습니다.');
   }

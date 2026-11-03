@@ -51,6 +51,10 @@ async function getUserDevice(userId, userDeviceId) {
   const userDevice = await UserDevice.findByPk(userDeviceId);
   logger.debug(userDevice);
 
+  if (!userDevice) {
+    return null;
+  }
+
   if (userDevice.userId !== userId) {
     throw new UnauthorizeError('사용자 기기 정보에 접근할 권한이 없습니다');
   }

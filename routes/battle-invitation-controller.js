@@ -13,7 +13,7 @@ const { authMiddleware } = require('@/middleware/auth-handler');
 const userService = require('@/services/user-service');
 const battleService = require('@/services/battle-service');
 
-const { BizError } = require('@/error');
+const { BizError, NotFoundError } = require('@/error');
 
 const config = require('@/config');
 
@@ -27,16 +27,16 @@ async function createInvitationURL(req, res) {
 
   const battle = await battleService.getBattle(battleId);
   if (!battle) {
-    throw new BizError('대결을 찾을 수 없습니다.');
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
   }
 
-  const isBattleLeader = battleService.isBattleLeader(userId, battle);
+  const isBattleLeader = await battleService.isBattleLeader(userId, battle);
   if (!isBattleLeader) {
     throw new BizError('초대 링크를 생성할 권한이 없습니다.');
   }
 
   // 초대링크 생성
-  const inviteLink = battleService.createInviteLink(battleId);
+  const inviteLink = await battleService.createInviteLink(battleId);
 
   // 초대 관련된 정보 갱신 및 저장
   battle.inviteLink = inviteLink;
@@ -46,7 +46,7 @@ async function createInvitationURL(req, res) {
   const inviteUrl =
     config.server.baseUrl +
     `/battles/${battleId}/invitations/${encodeURIComponent(inviteLink)}`;
-  response(res, StatusCodes.CREATED, { inviteUrl });
+  response(res, StatusCodes.CREATED, '생성 성공', { inviteUrl });
 }
 
 // TODO: 초대내역 조회

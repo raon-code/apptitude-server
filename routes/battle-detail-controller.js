@@ -15,7 +15,7 @@ const battleService = require('@/services/battle-service');
 const battleDetailService = require('@/services/battle-detail-service'); // battle-detail-service 추가
 const CreateBattleDetailDTO = require('@/types/dto/create-battle-detail-dto'); // CreateBattleDetailDTO 추가
 
-const { BizError } = require('@/error');
+const { BizError, NotFoundError } = require('@/error');
 const UpdateBattleDetailDTO = require('@/types/dto/update-battle-detail-dto');
 
 // 인증 미들웨어를 모든 요청에 적용
@@ -66,7 +66,7 @@ async function getBattleDetailList(req, res) {
   if (detoxTime) filter.detoxTime = detoxTime;
 
   // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
-  if (!battleDetailService.isEngagedInBattle(req.user.id, battleId)) {
+  if (!(await battleDetailService.isEngagedInBattle(req.user.id, battleId))) {
     throw new BizError('해당 배틀에 참가한 사용자가 아닙니다.');
   }
 
@@ -83,7 +83,7 @@ async function getBattleDetail(req, res) {
   const battleDetailId = req.params.battleDetailId;
 
   // TODO: [피드백] 해당 배틀에 참가한 사용자인지 확인 필요
-  if (!battleDetailService.isEngagedInBattle(req.user.id, battleId)) {
+  if (!(await battleDetailService.isEngagedInBattle(req.user.id, battleId))) {
     throw new BizError('해당 배틀에 참가한 사용자가 아닙니다.');
   }
 
@@ -92,7 +92,7 @@ async function getBattleDetail(req, res) {
   );
 
   if (!battleDetail) {
-    throw new BizError('대결 상세를 찾을 수 없습니다.');
+    throw new NotFoundError('대결 상세를 찾을 수 없습니다.');
   }
   response(res, StatusCodes.OK, '조회 성공', battleDetail);
 }
@@ -116,7 +116,7 @@ async function updateBattleDetail(req, res) {
     battleDetailId
   );
   if (!battleDetail) {
-    throw new BizError('대결 상세를 찾을 수 없습니다.');
+    throw new NotFoundError('대결 상세를 찾을 수 없습니다.');
   }
 
   const updatedBattleDetail = await battleDetailService.updateBattleDetail(

@@ -68,14 +68,15 @@ async function getFriendList(
     include: [
       {
         model: User,
-        as: 'friend'
+        as: 'friendUser'
         // 필요한 User 속성을 명시적으로 지정합니다.
         // attributes: ['username']
       }
     ],
     order,
     limit: pageSize,
-    offset
+    offset,
+    subQuery: false
   });
   logger.debug(friendList);
 
@@ -93,7 +94,7 @@ async function getFriend(userId, friendPkId) {
     include: [
       {
         model: User,
-        as: 'friend'
+        as: 'friendUser'
       }
     ]
   });

@@ -32,22 +32,21 @@ router.use((req, res, next) => {
     return next();
   }
   return authMiddleware(req, res, next);
-}, verifyUser);
+});
+
+// :id 라우트에서만 본인 여부를 검증한다.
+// router-level 미들웨어에서는 req.params.id가 비어 있어 검증이 항상 건너뛰어진다.
+router.param('id', (req, res, next, id) => {
+  const userId = Number(id);
+  if (userId) {
+    userService.isOwnUserId(userId, req.user);
+  }
+  next();
+});
 
 // Auth 미들웨어를 제외할 경로를 확인하는 함수
 function shouldSkipAuth(req) {
   return req.method === 'POST' && req.path === '/';
-}
-
-// 사용자 확인 미들웨어
-function verifyUser(req, res, next) {
-  const userId = Number(req.params.id);
-  logger.debug(typeof userId);
-  if (userId) {
-    // 조건에 맞지 않는 경우 에러 발생
-    userService.isOwnUserId(userId, req.user);
-  }
-  next();
 }
 
 /**
@@ -288,7 +287,7 @@ async function updateUser(req, res) {
   const newAccessToken = await reissue(updatedUser.refreshJwt);
   setJwtTokenCookie(res, newAccessToken);
 
-  response(res, StatusCodes.OK, '수정성공', user);
+  response(res, StatusCodes.OK, '수정성공', updatedUser);
 }
 
 module.exports = router;

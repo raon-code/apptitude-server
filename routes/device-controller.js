@@ -130,7 +130,10 @@ router.get('/:deviceId(\\d+)', getUserDevice);
 async function getUserDevice(req, res) {
   const deviceId = req.params.deviceId;
 
-  const userDevice = await deviceService.getUserDevice(deviceId);
+  const userDevice = await deviceService.getUserDevice(
+    req.user.id,
+    deviceId
+  );
   if (!userDevice) {
     throw new NotFoundError('사용자 기기를 찾을 수 없습니다.');
   }

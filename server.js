@@ -47,7 +47,9 @@ server.use(bodyParser.json()); // Body JSON 파싱 활성화
 server.use(cookieParser()); // 쿠키 파싱, 손쉬운 쿠키 데이터 조회를 위함
 
 // 미들웨어 설정(비즈니스 로직 전)
-server.use(ddosDefender);
+if (config.nodeEnv !== 'test') {
+  server.use(ddosDefender);
+}
 server.use(corsHandler);
 server.use(authHandler.initialize());
 

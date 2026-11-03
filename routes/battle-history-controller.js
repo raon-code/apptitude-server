@@ -37,13 +37,13 @@ async function createBattleHistory(req, res) {
     throw new NotFoundError('대결을 찾을 수 없습니다.');
   }
 
-  if (!battleDetailService.isEngagedInBattle(userId, battleId)) {
+  if (!(await battleDetailService.isEngagedInBattle(userId, battleId))) {
     throw new BizError(
       '대결에 참여하지 않은 사용자는 대결내역을 생성할 수 없습니다.'
     );
   }
 
-  const newBattleHistory = await battleDetailService.createBattleHistory(
+  const newBattleHistory = await battleService.createBattleHistory(
     createBattleHistoryDTO
   );
   response(res, StatusCodes.CREATED, '생성 성공', newBattleHistory);
@@ -59,7 +59,7 @@ async function getBattleHistoryList(req, res) {
     throw new NotFoundError('대결을 찾을 수 없습니다.');
   }
 
-  if (!battleDetailService.isEngagedInBattle(userId, battleId)) {
+  if (!(await battleDetailService.isEngagedInBattle(userId, battleId))) {
     throw new BizError(
       '대결에 참여하지 않은 사용자는 대결내역을 조회 할 수 없습니다.'
     );
