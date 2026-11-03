@@ -67,7 +67,7 @@ async function initialize() {
   // await initializeForTest();
   logger.info('서버 초기화 성공');
 }
-initialize();
+const ready = initialize();
 
 // 테스트용 서버 초기화
 async function initializeForTest() {
@@ -92,9 +92,12 @@ server.get('/', (req, res) => {
 // Swagger 페이지 설정
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// 서버 포트 설정
-server.listen(config.server.port, () => {
-  logger.info(`Server is running`);
-});
+// 서버 포트 설정 (테스트에서 import할 때는 리스닝하지 않음)
+if (require.main === module) {
+  server.listen(config.server.port, () => {
+    logger.info(`Server is running`);
+  });
+}
 
 module.exports = server;
+module.exports.ready = ready;

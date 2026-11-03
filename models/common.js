@@ -29,9 +29,7 @@ Common.init(
   }
 );
 
-syncModel(Common);
-
 const initCommonData = require('@/models/common.init');
-initCommonData(Common);
+syncModel(Common).then(() => initCommonData(Common));
 
 module.exports = Common;
