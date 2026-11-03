@@ -26,7 +26,9 @@ const validateSchema = Joi.object({
   userId: Joi.number().required().messages({
     'number.base': '대결 생성자 ID는 숫자여야 합니다',
     'any.required': '대결 생성자 ID를 입력해주세요'
-  })
+  }),
+  isRewardPaid: Joi.boolean(),
+  statusType: Joi.string()
 });
 
 class CreateBattleDTO {

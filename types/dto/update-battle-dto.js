@@ -10,7 +10,7 @@ const validateSchema = Joi.object({
 });
 
 class UpdateBattleDTO {
-  constructor({}) {
+  constructor() {
   }
 
   static fromPlainObject(obj) {

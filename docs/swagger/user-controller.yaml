@@ -1,0 +1,168 @@
+paths:
+  /users:
+    post:
+      summary: 사용자를 생성
+      description: 회원입력 정보를 바탕으로 사용자를 생성
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - nickname
+                - gender
+                - ageRange
+                - jobType
+                - jobDetail
+                - profilePhotoPath
+              properties:
+                email:
+                  type: string
+                  description: 이메일
+                  example: sb92120@gmail.com
+                nickname:
+                  type: string
+                  description: 닉네임
+                  example: NoPainNoLife
+                gender:
+                  type: string(enum)
+                  description: 성별(공통코드)
+                  example: GD1
+                ageRange:
+                  type: string(enum)
+                  description: 연령대(공통코드)
+                  example: AR2
+                jobType:
+                  type: string(enum)
+                  description: 직업타입(공통코드)
+                  example: JT0
+                jobDetail:
+                  type: string
+                  description: '직업상세, 직접입력 선택시 활성화'
+                  example: 만년백수
+                profilePhotoPath:
+                  type: string
+                  description: '프로필사진 경로, 호스트 url은 제외'
+                  example: /path/to/the/profile/photo.jpg
+                loginPlatform:
+                  type: object
+                  required:
+                    - platformType
+                    - uuid
+                  properties:
+                    platformType:
+                      type: string(enum)
+                      description: 플랫폼 타입(공통코드)
+                      example: PT0
+                    uuid:
+                      type: string
+                      description: UUID
+                      example: 1234567890
+      responses:
+        '201':
+          description: 사용자를 성공적으로 생성
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 201
+                  message:
+                    type: string
+                    example: Created
+                  data:
+                    type: object
+                    description: 생성한 사용자 정보
+                required:
+                  - statusCode
+                  - message
+                  - data
+  '/users/{id}':
+    get:
+      summary: 사용자 조회
+      description: 특정 사용자를 조회
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 사용자 ID
+          schema:
+            type: number
+            example: 1
+      responses:
+        '200':
+          description: Test retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: 조회성공
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        description: 유저정보
+                required:
+                  - statusCode
+                  - message
+                  - data
+    patch:
+      summary: 사용자 정보 수정
+      description: 사용자 정보를 수정
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: 사용자 ID
+          schema:
+            type: number
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                none:
+                  type: string
+                  description: empty
+                  example: updateDTO 정해지면 채워넣을 예정
+      responses:
+        '200':
+          description: 업데이트 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: 업데이트 성공
+                  data:
+                    type: object
+                    example: {}
+                required:
+                  - statusCode
+                  - message
+                  - data

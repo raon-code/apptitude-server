@@ -1,0 +1,905 @@
+{
+  "tests.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "Created",
+      "data": {
+        "id": 202,
+        "dateTime": "<timestamp>",
+        "title": "characterization title",
+        "contents": "characterization contents"
+      }
+    }
+  },
+  "tests.list": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": [
+        {
+          "id": 201,
+          "dateTime": "<timestamp>",
+          "title": "시드 제목",
+          "contents": "시드 내용"
+        },
+        {
+          "id": 202,
+          "dateTime": "<timestamp>",
+          "title": "characterization title",
+          "contents": "characterization contents"
+        }
+      ]
+    }
+  },
+  "tests.get": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 201,
+        "dateTime": "<timestamp>",
+        "title": "시드 제목",
+        "contents": "시드 내용"
+      }
+    }
+  },
+  "tests.get-missing": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {}
+    }
+  },
+  "tests.get-error-path": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {}
+    }
+  },
+  "tests.update": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "업데이트 성공",
+      "data": {
+        "id": 201,
+        "dateTime": "<timestamp>",
+        "title": "updated title",
+        "contents": "updated contents"
+      }
+    }
+  },
+  "tests.update-missing": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 수정할 데이터가 없습니다. 다시 확인해주세요.",
+      "data": {}
+    }
+  },
+  "tests.delete": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "삭제 성공",
+      "data": {}
+    }
+  },
+  "tests.delete-missing": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 삭제할 데이터가 없습니다. 다시 확인해주세요.",
+      "data": {}
+    }
+  },
+  "auth-tests.protected": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "Auth success",
+      "data": {
+        "user": {
+          "id": 1,
+          "iat": "<iat>",
+          "exp": "<exp>"
+        }
+      }
+    }
+  },
+  "auth-tests.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "users.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성성공",
+      "data": {
+        "newUser": {
+          "id": 4,
+          "email": "characterization@example.com",
+          "nickname": "characterization",
+          "gender": "GD0",
+          "ageRange": "AR2",
+          "jobType": "JT0",
+          "jobDetail": "characterization job",
+          "profilePhotoPath": "/profile/characterization.jpg",
+          "updatedAt": "<timestamp>",
+          "createdAt": "<timestamp>"
+        },
+        "newLoginPlatform": {
+          "id": 2,
+          "platformType": "PT0",
+          "uuid": "characterization-uuid",
+          "userId": 4,
+          "updatedAt": "<timestamp>",
+          "createdAt": "<timestamp>"
+        }
+      }
+    }
+  },
+  "users.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 이메일을 입력해주세요, 닉네임을 입력해주세요, 성별을 입력해주세요, 연령대를 입력해주세요, 직업 유형을 입력해주세요, \"loginPlatform.platformType\" must be [PT0], \"loginPlatform.platformType\" is not allowed to be empty, \"loginPlatform.uuid\" is not allowed to be empty",
+      "data": {}
+    }
+  },
+  "users.create-conflict": {
+    "status": 409,
+    "body": {
+      "statusCode": 409,
+      "message": "Conflict: 이미 가입된 사용자입니다.",
+      "data": {}
+    }
+  },
+  "users.get-self": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 1,
+        "email": "user1@test.local",
+        "nickname": "user1",
+        "gender": null,
+        "ageRange": null,
+        "jobType": null,
+        "jobDetail": null,
+        "profilePhotoPath": null,
+        "refreshJwt": "<refreshJwt>",
+        "withdrawDate": null,
+        "lastLogin": null,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "users.get-other": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "Unauthorized: 사용자 정보가 올바르지 않습니다.",
+      "data": {}
+    }
+  },
+  "users.get-missing": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 사용자를 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "users.update": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "수정성공",
+      "data": {
+        "id": 1,
+        "email": "user1@test.local",
+        "nickname": "user1",
+        "gender": null,
+        "ageRange": null,
+        "jobType": null,
+        "jobDetail": null,
+        "profilePhotoPath": null,
+        "refreshJwt": "<refreshJwt>",
+        "withdrawDate": null,
+        "lastLogin": null,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "users.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "friends.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성성공",
+      "data": {
+        "id": 1,
+        "userId": 1,
+        "friendId": 2,
+        "updatedAt": "<timestamp>",
+        "createdAt": "<timestamp>"
+      }
+    }
+  },
+  "friends.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 친구 ID를 입력해주세요",
+      "data": {}
+    }
+  },
+  "friends.list": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": [
+        {
+          "id": 1,
+          "userId": 1,
+          "friendId": 2,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>",
+          "friendUser": {
+            "id": 2,
+            "email": "user2@test.local",
+            "nickname": "user2",
+            "gender": null,
+            "ageRange": null,
+            "jobType": null,
+            "jobDetail": null,
+            "profilePhotoPath": null,
+            "refreshJwt": null,
+            "withdrawDate": null,
+            "lastLogin": null,
+            "createdAt": "<timestamp>",
+            "updatedAt": "<timestamp>"
+          }
+        }
+      ]
+    }
+  },
+  "friends.get": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 1,
+        "userId": 1,
+        "friendId": 2,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>",
+        "friendUser": {
+          "id": 2,
+          "email": "user2@test.local",
+          "nickname": "user2",
+          "gender": null,
+          "ageRange": null,
+          "jobType": null,
+          "jobDetail": null,
+          "profilePhotoPath": null,
+          "refreshJwt": null,
+          "withdrawDate": null,
+          "lastLogin": null,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>"
+        }
+      }
+    }
+  },
+  "friends.get-missing": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 친구 정보를 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "friends.create-second": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성성공",
+      "data": {
+        "id": 2,
+        "userId": 1,
+        "friendId": 3,
+        "updatedAt": "<timestamp>",
+        "createdAt": "<timestamp>"
+      }
+    }
+  },
+  "friends.delete-one": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "삭제성공",
+      "data": 1
+    }
+  },
+  "friends.delete-list": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "삭제성공",
+      "data": 1
+    }
+  },
+  "friends.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "devices.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성성공",
+      "data": {
+        "id": 1,
+        "uuid": "characterization-device",
+        "osType": "OT1",
+        "osVersion": "17.0",
+        "isUsing": true,
+        "userId": 1,
+        "updatedAt": "<timestamp>",
+        "createdAt": "<timestamp>"
+      }
+    }
+  },
+  "devices.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 기기식별값은 문자열이어야 합니다, \"osType\" must be one of [OT0, OT1, OT99]",
+      "data": {}
+    }
+  },
+  "devices.get": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 1,
+        "uuid": "characterization-device",
+        "osType": "OT1",
+        "osVersion": "17.0",
+        "isUsing": true,
+        "userId": 1,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "devices.get-missing": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 사용자 기기를 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "devices.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "battles.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성성공",
+      "data": {
+        "id": 104,
+        "name": "characterization battle",
+        "startDate": "<timestamp>",
+        "endDate": "<timestamp>",
+        "reward": "커피",
+        "isRewardPaid": false,
+        "statusType": "ST0",
+        "userId": 3,
+        "updatedAt": "<timestamp>",
+        "createdAt": "<timestamp>"
+      }
+    }
+  },
+  "battles.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 대결 이름을 입력해주세요, 시작일을 입력해주세요, 종료일을 입력해주세요, 보상을 입력해주세요",
+      "data": {}
+    }
+  },
+  "battles.list": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": [
+        {
+          "id": 101,
+          "name": "테스트 대결 101",
+          "startDate": "<timestamp>",
+          "endDate": "<timestamp>",
+          "inviteLink": null,
+          "validWaitTime": null,
+          "reward": "커피",
+          "isRewardPaid": false,
+          "statusType": "ST0",
+          "userId": 1,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>"
+        },
+        {
+          "id": 102,
+          "name": "테스트 대결 102",
+          "startDate": "<timestamp>",
+          "endDate": "<timestamp>",
+          "inviteLink": null,
+          "validWaitTime": null,
+          "reward": "커피",
+          "isRewardPaid": false,
+          "statusType": "ST2",
+          "userId": 1,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>"
+        },
+        {
+          "id": 103,
+          "name": "테스트 대결 103",
+          "startDate": "<timestamp>",
+          "endDate": "<timestamp>",
+          "inviteLink": null,
+          "validWaitTime": null,
+          "reward": "커피",
+          "isRewardPaid": false,
+          "statusType": "ST0",
+          "userId": 1,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>"
+        }
+      ]
+    }
+  },
+  "battles.get": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 101,
+        "name": "테스트 대결 101",
+        "startDate": "<timestamp>",
+        "endDate": "<timestamp>",
+        "inviteLink": null,
+        "validWaitTime": null,
+        "reward": "커피",
+        "isRewardPaid": false,
+        "statusType": "ST0",
+        "userId": 1,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "battles.get-missing": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 대결을 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "battles.update": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "수정성공",
+      "data": {
+        "id": 101,
+        "name": "테스트 대결 101",
+        "startDate": "<timestamp>",
+        "endDate": "<timestamp>",
+        "inviteLink": null,
+        "validWaitTime": null,
+        "reward": "커피",
+        "isRewardPaid": false,
+        "statusType": "ST0",
+        "userId": 1,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "battles.update-not-leader": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 대결 수정 권한이 없습니다.",
+      "data": {}
+    }
+  },
+  "battles.delete-cancel": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "삭제성공",
+      "data": {
+        "id": 101,
+        "name": "테스트 대결 101",
+        "startDate": "<timestamp>",
+        "endDate": "<timestamp>",
+        "inviteLink": null,
+        "validWaitTime": null,
+        "reward": "커피",
+        "isRewardPaid": false,
+        "statusType": "ST3",
+        "userId": 1,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "battles.delete-missing": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 대결을 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "battles.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "battles.delete-finish": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "삭제성공",
+      "data": {
+        "id": 102,
+        "name": "테스트 대결 102",
+        "startDate": "<timestamp>",
+        "endDate": "<timestamp>",
+        "inviteLink": null,
+        "validWaitTime": null,
+        "reward": "커피",
+        "isRewardPaid": false,
+        "statusType": "ST4",
+        "userId": 1,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "details.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성 성공",
+      "data": {
+        "id": 104,
+        "detoxTotalTime": 60,
+        "detoxTime": 0,
+        "resultType": "RT3",
+        "userId": 1,
+        "battleId": 103,
+        "updatedAt": "<timestamp>",
+        "createdAt": "<timestamp>"
+      }
+    }
+  },
+  "details.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 디톡스 수행시간을 입력해주세요, 결과타입을 입력해주세요",
+      "data": {}
+    }
+  },
+  "details.list": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회 성공",
+      "data": [
+        {
+          "id": 102,
+          "detoxTotalTime": 60,
+          "detoxTime": 10,
+          "resultType": "RT3",
+          "userId": 1,
+          "battleId": 102,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>"
+        }
+      ]
+    }
+  },
+  "details.list-not-engaged": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 해당 배틀에 참가한 사용자가 아닙니다.",
+      "data": {}
+    }
+  },
+  "details.get": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회 성공",
+      "data": {
+        "id": 102,
+        "detoxTotalTime": 60,
+        "detoxTime": 10,
+        "resultType": "RT3",
+        "userId": 1,
+        "battleId": 102,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "details.get-missing": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 대결 상세를 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "details.update": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "수정 성공",
+      "data": {
+        "id": 102,
+        "detoxTotalTime": 60,
+        "detoxTime": 20,
+        "resultType": "RT3",
+        "userId": 1,
+        "battleId": 102,
+        "createdAt": "<timestamp>",
+        "updatedAt": "<timestamp>"
+      }
+    }
+  },
+  "details.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "histories.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성 성공",
+      "data": {
+        "id": 1,
+        "detoxTime": 10,
+        "battleDate": "<timestamp>",
+        "battleId": 102,
+        "userId": 1,
+        "updatedAt": "<timestamp>",
+        "createdAt": "<timestamp>"
+      }
+    }
+  },
+  "histories.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 디톡스 시간을 입력해주세요, 대결 날짜를 입력해주세요",
+      "data": {}
+    }
+  },
+  "histories.list": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회 성공",
+      "data": [
+        {
+          "id": 1,
+          "detoxTime": 10,
+          "battleDate": "<timestamp>",
+          "battleId": 102,
+          "userId": 1,
+          "createdAt": "<timestamp>",
+          "updatedAt": "<timestamp>"
+        }
+      ]
+    }
+  },
+  "histories.list-missing-battle": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 대결을 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "histories.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "invitations.create": {
+    "status": 201,
+    "body": {
+      "statusCode": 201,
+      "message": "생성 성공",
+      "data": {
+        "inviteUrl": "<inviteUrl>"
+      }
+    }
+  },
+  "invitations.create-missing-battle": {
+    "status": 404,
+    "body": {
+      "statusCode": 404,
+      "message": "Not Found: 대결을 찾을 수 없습니다.",
+      "data": {}
+    }
+  },
+  "invitations.accept": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "data": {}
+    }
+  },
+  "invitations.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "sessions.create": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "세션생성 성공",
+      "data": {
+        "accessToken": "<accessToken>"
+      }
+    }
+  },
+  "sessions.create-unknown-user": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 로그인할 수 없습니다. 다시 확인해주세요.",
+      "data": {}
+    }
+  },
+  "sessions.create-invalid": {
+    "status": 400,
+    "body": {
+      "statusCode": 400,
+      "message": "Bad Request: 플랫폼 타입을 입력해주세요, UUID를 입력해주세요",
+      "data": {}
+    }
+  },
+  "sessions.delete": {
+    "status": 204,
+    "body": {}
+  },
+  "sessions.unauthorized": {
+    "status": 401,
+    "body": {
+      "statusCode": 401,
+      "message": "권한없음",
+      "data": {}
+    }
+  },
+  "auth.kakao.login": {
+    "status": 302,
+    "body": {},
+    "location": "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=test-kakao-rest-api-key&redirect_uri=http://localhost:3001/auth/kakao/result"
+  },
+  "auth.kakao.token": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "access_token": "<access_token>",
+        "token_type": "bearer",
+        "expires_in": "<expires_in>",
+        "refresh_token": "<refresh_token>",
+        "scope": "profile_nickname"
+      }
+    }
+  },
+  "auth.kakao.user": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 123456789,
+        "connected_at": "<timestamp>",
+        "properties": {
+          "nickname": "카카오테스트"
+        },
+        "kakao_account": {
+          "profile": {
+            "nickname": "카카오테스트"
+          }
+        }
+      }
+    }
+  },
+  "auth.kakao.result": {
+    "status": 200,
+    "body": {
+      "statusCode": 200,
+      "message": "조회성공",
+      "data": {
+        "id": 123456789,
+        "connected_at": "<timestamp>",
+        "properties": {
+          "nickname": "카카오테스트"
+        },
+        "kakao_account": {
+          "profile": {
+            "nickname": "카카오테스트"
+          }
+        }
+      }
+    }
+  }
+}

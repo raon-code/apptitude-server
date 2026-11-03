@@ -13,7 +13,7 @@ const validateSchema = Joi.object({
 });
 
 class UpdateUserDTO {
-  constructor({}) {
+  constructor() {
   }
 
   static fromPlainObject(obj) {

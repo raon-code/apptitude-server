@@ -26,7 +26,8 @@ const validateSchema = Joi.object({
   battleId: Joi.number().required().messages({
     'number.base': '대결 ID는 숫자여야 합니다',
     'any.required': '대결 ID를 입력해주세요'
-  })
+  }),
+  statusType: Joi.string()
 });
 
 class CreateBattleDetailDTO {

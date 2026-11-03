@@ -1,0 +1,85 @@
+paths:
+  /devices:
+    post:
+      summary: 유저 디바이스 생성
+      tags:
+        - Devices
+      requestBody:
+        description: New device information
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - uuid
+                - osType
+                - osVersion
+              properties:
+                uuid:
+                  type: string
+                  description: 디바이스 식별 코드
+                  example: 00000000-0000-0000-0000-000000000000
+                osType:
+                  type: string(enum)
+                  description: 운영체제 타입(공통코드)
+                  example: OT0
+                osVersion:
+                  type: string
+                  description: 운영체제 버전
+                  example: 14.0.1
+      responses:
+        '201':
+          description: Successfully created device
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Created
+                  data:
+                    type: object
+                    description: 생성한 디바이스 정보
+                required:
+                  - statusCode
+                  - message
+                  - data
+  '/devices/{deviceId}':
+    get:
+      summary: 특정 사용자 디바이스 조회
+      tags:
+        - Devices
+      parameters:
+        - in: path
+          name: deviceId
+          schema:
+            type: integer
+          required: true
+          description: 디바이스 아이디
+      responses:
+        '200':
+          description: 디바이스 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Ok
+                  data:
+                    type: object
+                    description: Device information
+                    example: {}
+                required:
+                  - statusCode
+                  - message
+                  - data

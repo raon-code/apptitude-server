@@ -1,0 +1,15 @@
+tags:
+  - name: Users
+    description: 사용자 관련 API
+  - name: Friends
+    description: 친구 관련 API
+  - name: Devices
+    description: 기기 관련 API
+  - name: Battles
+    description: 대결 관련 API
+  - name: Sessions
+    description: 사용자 세션 관련 API
+  - name: Auth
+    description: '인증 관련 API(로그인, 로그아웃 등)'
+  - name: Tests
+    description: 테스트용 API

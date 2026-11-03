@@ -15,6 +15,7 @@ BattleDetail.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true, // default: not null
+      autoIncrement: true,
       comment: '대결상세 식별 id'
     },
     detoxTotalTime: {

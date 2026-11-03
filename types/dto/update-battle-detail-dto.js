@@ -9,7 +9,7 @@ const Joi = require('joi');
 const validateSchema = Joi.object({});
 
 class UpdateBattleDetailDTO {
-  constructor({}) {}
+  constructor() {}
 
   static fromPlainObject(obj) {
     return new UpdateBattleDetailDTO(obj);

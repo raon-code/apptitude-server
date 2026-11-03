@@ -28,6 +28,7 @@ const corsHandler = require('@/middleware/cors-handler');
 
 // MVC 관련
 const { sequelize } = require('@/models');
+const Common = require('@/models/common');
 const routes = require('@/routes');
 
 const testService = require('@/services/test/test-service');
@@ -47,7 +48,9 @@ server.use(bodyParser.json()); // Body JSON 파싱 활성화
 server.use(cookieParser()); // 쿠키 파싱, 손쉬운 쿠키 데이터 조회를 위함
 
 // 미들웨어 설정(비즈니스 로직 전)
-server.use(ddosDefender);
+if (config.nodeEnv !== 'test') {
+  server.use(ddosDefender);
+}
 server.use(corsHandler);
 server.use(authHandler.initialize());
 
@@ -63,11 +66,15 @@ async function initialize() {
   await sequelize.sync();
   logger.info('모든 모델이 동기화되었습니다.');
 
+  // 공통코드 시드 완료 대기
+  await Common.ready;
+  logger.info('공통코드 초기화 완료');
+
   // 테스트 초기화
   // await initializeForTest();
   logger.info('서버 초기화 성공');
 }
-initialize();
+const ready = initialize();
 
 // 테스트용 서버 초기화
 async function initializeForTest() {
@@ -92,9 +99,12 @@ server.get('/', (req, res) => {
 // Swagger 페이지 설정
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// 서버 포트 설정
-server.listen(config.server.port, () => {
-  logger.info(`Server is running`);
-});
+// 서버 포트 설정 (테스트에서 import할 때는 리스닝하지 않음)
+if (require.main === module) {
+  server.listen(config.server.port, () => {
+    logger.info(`Server is running`);
+  });
+}
 
 module.exports = server;
+module.exports.ready = ready;

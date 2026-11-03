@@ -29,9 +29,8 @@ Common.init(
   }
 );
 
-syncModel(Common);
-
 const initCommonData = require('@/models/common.init');
-initCommonData(Common);
+// 시드 완료 시점을 server.ready가 기다릴 수 있도록 promise로 노출한다.
+Common.ready = syncModel(Common).then(() => initCommonData(Common));
 
 module.exports = Common;

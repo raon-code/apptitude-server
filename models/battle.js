@@ -14,6 +14,7 @@ Battle.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true, // default: not null
+      autoIncrement: true,
       comment: '대결 식별 id'
     },
     name: {

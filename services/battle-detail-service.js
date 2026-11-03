@@ -3,10 +3,11 @@
  *  대결상세 관련 서비스
  */
 const BattleDetail = require('@/models/battle-detail');
+const Battle = require('@/models/battle');
 
 const logger = require('@/config/logger');
 
-const { BizError, UnauthorizeError } = require('@/error');
+const { BizError, UnauthorizeError, NotFoundError } = require('@/error');
 const { updateProperties } = require('@/common/object-util');
 const { STATUS_TYPE } = require('@/enum/status-type');
 const CreateBattleDetailDTO = require('@/types/dto/create-battle-detail-dto');
@@ -81,7 +82,7 @@ async function updateBattleDetail(battleDetail, updateData) {
 
 async function isEngagedInBattle(userId, battleId) {
   // battleId 에 해당하는 대결상세 조회
-  const battleDetailList = await getBattleDetailList(battleId);
+  const battleDetailList = await getBattleDetailList({ battleId });
   // 배틀 중 userId 요소가 같은지 확인
   //   같으면 해당유저는 대결에 포함된 상태, 아니면 포함되지 않은 상태
   return battleDetailList.some(
@@ -89,10 +90,83 @@ async function isEngagedInBattle(userId, battleId) {
   );
 }
 
+/**
+ * 대결 상태 검증을 포함한 대결상세 생성
+ *
+ * @param {CreateBattleDetailDTO} createBattleDetailDTO
+ * @returns {BattleDetail} 생성된 대결상세
+ */
+async function createBattleDetailForUser(createBattleDetailDTO) {
+  const battle = await Battle.findByPk(createBattleDetailDTO.battleId);
+  if (!battle) {
+    throw new NotFoundError('대결을 찾을 수 없습니다.');
+  }
+
+  if (battle.statusType !== STATUS_TYPE.WAIT.code) {
+    throw new BizError('대결상세를 만들 수 없는 상태 입니다.');
+  }
+
+  return createBattleDetail(createBattleDetailDTO);
+}
+
+/**
+ * 참여자 검증을 포함한 대결상세 목록 조회
+ *
+ * @param {number} battleId
+ * @param {number} userId
+ * @param {Object} filter
+ * @returns {BattleDetail[]} 대결상세 목록
+ */
+async function getBattleDetailListForUser(battleId, userId, filter) {
+  if (!(await isEngagedInBattle(userId, battleId))) {
+    throw new BizError('해당 배틀에 참가한 사용자가 아닙니다.');
+  }
+
+  return getBattleDetailList({ ...filter, battleId });
+}
+
+/**
+ * 참여자 검증을 포함한 대결상세 조회
+ *
+ * @param {number} battleId
+ * @param {number} userId
+ * @param {number} battleDetailId
+ * @returns {BattleDetail} 대결상세
+ */
+async function getBattleDetailForUser(battleId, userId, battleDetailId) {
+  if (!(await isEngagedInBattle(userId, battleId))) {
+    throw new BizError('해당 배틀에 참가한 사용자가 아닙니다.');
+  }
+
+  const battleDetail = await getBattleDetail(battleDetailId);
+  if (!battleDetail) {
+    throw new NotFoundError('대결 상세를 찾을 수 없습니다.');
+  }
+
+  return battleDetail;
+}
+
+/**
+ * 존재 검증을 포함한 대결상세 수정
+ *
+ * @param {number} battleDetailId
+ * @param {Object} updateData
+ * @returns {BattleDetail} 수정된 대결상세
+ */
+async function updateBattleDetailById(battleDetailId, updateData) {
+  const battleDetail = await getBattleDetail(battleDetailId);
+  if (!battleDetail) {
+    throw new NotFoundError('대결 상세를 찾을 수 없습니다.');
+  }
+
+  return updateBattleDetail(battleDetail, updateData);
+}
+
 module.exports = {
   createBattleDetail,
-  getBattleDetailList,
-  getBattleDetail,
-  updateBattleDetail,
-  isEngagedInBattle
+  isEngagedInBattle,
+  createBattleDetailForUser,
+  getBattleDetailListForUser,
+  getBattleDetailForUser,
+  updateBattleDetailById
 };
