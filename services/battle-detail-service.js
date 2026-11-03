@@ -81,7 +81,7 @@ async function updateBattleDetail(battleDetail, updateData) {
 
 async function isEngagedInBattle(userId, battleId) {
   // battleId 에 해당하는 대결상세 조회
-  const battleDetailList = await getBattleDetailList(battleId);
+  const battleDetailList = await getBattleDetailList({ battleId });
   // 배틀 중 userId 요소가 같은지 확인
   //   같으면 해당유저는 대결에 포함된 상태, 아니면 포함되지 않은 상태
   return battleDetailList.some(

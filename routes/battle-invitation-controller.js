@@ -4,7 +4,7 @@
  *
  * BASE URI: /battles/:id/histories
  */
-const router = require('express').Router();
+const router = require('express').Router({ mergeParams: true });
 const { StatusCodes } = require('http-status-codes');
 
 const response = require('@/common/response');

@@ -4,7 +4,7 @@
  *
  * BASE URI: /battles/:id/histories
  */
-const router = require('express').Router();
+const router = require('express').Router({ mergeParams: true });
 const { StatusCodes } = require('http-status-codes');
 
 const response = require('@/common/response');
@@ -14,7 +14,7 @@ const userService = require('@/services/user-service');
 const battleService = require('@/services/battle-service');
 const battleDetailService = require('@/services/battle-detail-service'); // battle-detail-service 추가
 
-const { BizError } = require('@/error');
+const { BizError, NotFoundError } = require('@/error');
 const CreateBattleHistoryDTO = require('@/types/dto/create-battle-history-dto');
 
 // 인증 미들웨어를 모든 요청에 적용
@@ -37,7 +37,7 @@ async function createBattleHistory(req, res) {
     throw new NotFoundError('대결을 찾을 수 없습니다.');
   }
 
-  if (!battleDetailService.isEngagedInBattle(battleId, userId)) {
+  if (!battleDetailService.isEngagedInBattle(userId, battleId)) {
     throw new BizError(
       '대결에 참여하지 않은 사용자는 대결내역을 생성할 수 없습니다.'
     );
@@ -59,15 +59,13 @@ async function getBattleHistoryList(req, res) {
     throw new NotFoundError('대결을 찾을 수 없습니다.');
   }
 
-  if (!battleDetailService.isEngagedInBattle(battleId, userId)) {
+  if (!battleDetailService.isEngagedInBattle(userId, battleId)) {
     throw new BizError(
       '대결에 참여하지 않은 사용자는 대결내역을 조회 할 수 없습니다.'
     );
   }
 
-  const battleHistoryList = await battleDetailService.getBattleHistoryList(
-    battleId
-  );
+  const battleHistoryList = await battleService.getBattleHistoryList(battleId);
   response(res, StatusCodes.OK, '조회 성공', battleHistoryList);
 }
 
