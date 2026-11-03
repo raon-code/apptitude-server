@@ -9,6 +9,7 @@ const { StatusCodes } = require('http-status-codes');
 
 const response = require('@/common/response');
 const { authMiddleware } = require('@/middleware/auth-handler');
+const config = require('@/config');
 
 const battleService = require('@/services/battle-service');
 
@@ -17,10 +18,13 @@ router.use(authMiddleware);
 
 router.post('/', createInvitationURL);
 async function createInvitationURL(req, res) {
-  const inviteUrl = await battleService.createInvitationUrl(
+  const inviteLink = await battleService.createInvitationUrl(
     req.params.battleId,
     req.user.id
   );
+  const inviteUrl =
+    config.server.baseUrl +
+    `/battles/${req.params.battleId}/invitations/${encodeURIComponent(inviteLink)}`;
 
   response(res, StatusCodes.CREATED, '생성 성공', { inviteUrl });
 }
