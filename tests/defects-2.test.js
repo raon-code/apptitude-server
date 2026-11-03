@@ -4,6 +4,7 @@ const { server, seedUsers, seedBattle, tokenFor } = require('./helpers/seed');
 const Friend = require('@/models/friend');
 const UserDevice = require('@/models/user-device');
 const Battle = require('@/models/battle');
+const BattleDetail = require('@/models/battle-detail');
 
 describe('추가 결함 회귀 테스트', () => {
   const ownerId = 9201;
@@ -102,6 +103,25 @@ describe('추가 결함 회귀 테스트', () => {
 
     expect(res.status).toBe(400);
     expect(res.body.message).toContain('참가한 사용자가 아닙니다');
+  });
+
+  it('PATCH /battles/:id/details/:detailId — 식별자 mass assignment 차단', async () => {
+    const before = await BattleDetail.findByPk(battleId);
+    const res = await request(server)
+      .patch(`/battles/${battleId}/details/${battleId}`)
+      .set('Authorization', `Bearer ${ownerToken}`)
+      .send({
+        detoxTime: 20,
+        id: 99999,
+        userId: otherId,
+        battleId: 99999
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.id).toBe(before.id);
+    expect(res.body.data.userId).toBe(before.userId);
+    expect(res.body.data.battleId).toBe(before.battleId);
+    expect(res.body.data.detoxTime).toBe(20);
   });
 
   it('POST /battles/:id/histories — 대결내역 생성이 201', async () => {

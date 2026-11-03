@@ -122,7 +122,7 @@ async function getBattleDetailListForUser(battleId, userId, filter) {
     throw new BizError('해당 배틀에 참가한 사용자가 아닙니다.');
   }
 
-  return getBattleDetailList(filter);
+  return getBattleDetailList({ ...filter, battleId });
 }
 
 /**
@@ -153,7 +153,7 @@ async function getBattleDetailForUser(battleId, userId, battleDetailId) {
  * @param {Object} updateData
  * @returns {BattleDetail} 수정된 대결상세
  */
-async function updateBattleDetailForUser(battleDetailId, updateData) {
+async function updateBattleDetailById(battleDetailId, updateData) {
   const battleDetail = await getBattleDetail(battleDetailId);
   if (!battleDetail) {
     throw new NotFoundError('대결 상세를 찾을 수 없습니다.');
@@ -164,12 +164,9 @@ async function updateBattleDetailForUser(battleDetailId, updateData) {
 
 module.exports = {
   createBattleDetail,
-  getBattleDetailList,
-  getBattleDetail,
-  updateBattleDetail,
   isEngagedInBattle,
   createBattleDetailForUser,
   getBattleDetailListForUser,
   getBattleDetailForUser,
-  updateBattleDetailForUser
+  updateBattleDetailById
 };

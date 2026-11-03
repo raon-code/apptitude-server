@@ -37,9 +37,7 @@ async function getBattleDetailList(req, res) {
 
   // 쿼리 파라미터를 사용해 필터링 옵션을 설정
   const { userId, statusType, detoxTime } = req.query;
-  const filter = {
-    battleId
-  };
+  const filter = {};
 
   // 필터 조건이 존재하면 추가
   if (userId) filter.userId = userId;
@@ -71,13 +69,16 @@ router.patch('/:battleDetailId(\\d+)', updateBattleDetail);
 async function updateBattleDetail(req, res) {
   const battleDetailId = req.params.battleDetailId;
 
-  const updateData = { ...req.body };
-  const updateBattleDetailDTO =
-    UpdateBattleDetailDTO.fromPlainObject(updateData);
+  const updateBattleDetailDTO = UpdateBattleDetailDTO.fromPlainObject(req.body);
   updateBattleDetailDTO.validate();
+  const updateData = Object.fromEntries(
+    ['detoxTotalTime', 'detoxTime', 'resultType', 'statusType']
+      .filter((field) => Object.hasOwn(req.body, field))
+      .map((field) => [field, req.body[field]])
+  );
 
   const updatedBattleDetail =
-    await battleDetailService.updateBattleDetailForUser(
+    await battleDetailService.updateBattleDetailById(
       battleDetailId,
       updateData
     );
