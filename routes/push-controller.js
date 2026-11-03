@@ -1,3 +1,4 @@
+/* eslint-disable no-undef -- 미마운트 스텁(동결 대상): createPush/createPushHistory 미구현 */
 /**
  * push-controller.js
  *  푸쉬 관련 컨트롤러

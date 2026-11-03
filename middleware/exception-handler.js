@@ -57,6 +57,7 @@ function handleException(err, req, res, next) {
  */
 function cleanStackTrace(stack) {
   // ANSI 컬러 코드를 제거하기 위한 정규 표현식
+  // eslint-disable-next-line no-control-regex -- ANSI 이스케이프 제거용 의도된 패턴
   const ansiEscapeRegex = /\x1b\[[0-9;]*m/g;
   // 컬러 코드 제거
   let cleanedStack = stack.replace(ansiEscapeRegex, '');

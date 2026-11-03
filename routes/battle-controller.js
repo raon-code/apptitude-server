@@ -344,12 +344,9 @@ async function deleteBattle(req, res) {
     throw new BizError('이미 종료된 대결입니다.');
   }
 
-  let result = null;
-  if (isCancel) {
-    result = await battleService.cancelBattle(battle);
-  } else {
-    result = await battleService.finishBattle(battle);
-  }
+  const result = isCancel
+    ? await battleService.cancelBattle(battle)
+    : await battleService.finishBattle(battle);
 
   response(res, StatusCodes.OK, '삭제성공', result);
 }
